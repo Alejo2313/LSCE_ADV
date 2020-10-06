@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/fifo/sim/fifo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen_clk_wiz.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Clk_Gen_clk_wiz
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Clk_Gen

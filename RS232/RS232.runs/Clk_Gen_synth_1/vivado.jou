@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Fri Oct  2 17:08:46 2020
+# Process ID: 48132
+# Current directory: D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.runs/Clk_Gen_synth_1
+# Command line: vivado.exe -log Clk_Gen.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source Clk_Gen.tcl
+# Log file: D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.runs/Clk_Gen_synth_1/Clk_Gen.vds
+# Journal file: D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.runs/Clk_Gen_synth_1\vivado.jou
+#-----------------------------------------------------------
+source Clk_Gen.tcl -notrace

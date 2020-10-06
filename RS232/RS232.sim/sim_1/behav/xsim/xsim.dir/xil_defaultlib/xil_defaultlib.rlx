@@ -1,0 +1,13 @@
+0.7
+2020.1
+May 27 2020
+20:09:33
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.sim/sim_1/behav/xsim/glbl.v,1590624368,verilog,,,,glbl,,,,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen.v,1601651015,verilog,,,,Clk_Gen,,,../../../../RS232.srcs/sources_1/ip/Clk_Gen,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen_clk_wiz.v,1601651320,verilog,,D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen.v,,Clk_Gen_clk_wiz,,,../../../../RS232.srcs/sources_1/ip/Clk_Gen,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/fifo/sim/fifo.v,1601651127,verilog,,D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/RS232.srcs/sources_1/ip/Clk_Gen/Clk_Gen_clk_wiz.v,,fifo,,,../../../../RS232.srcs/sources_1/ip/Clk_Gen,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/src/RS232_RX.vhd,1601210231,vhdl,,,,rs232_rx,,,,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/src/RS232_TX.vhd,1601284389,vhdl,,,,rs232_tx,,,,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/src/RS232top.vhd,1601646061,vhdl,,,,rs232top,,,,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/src/ShiftRegister.vhd,1601646087,vhdl,,,,shiftregister,,,,,,,,
+D:/OneDrive/Documentos/Universidad/LCSE/entregas/RS232/test/tb_RS232top.vhd,1601650105,vhdl,,,,rs232top_tb,,,,,,,,
