@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer:  Alejandro Gomez Molina
--- 
+-- Engineer:  Luis Felipe Vélez Flores
 -- Create Date: 20.09.2020 12:03:30
 -- Design Name: 
 -- Module Name: RS232_RX - Behavioral
@@ -9,9 +9,10 @@
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
--- 
+-- RS232_RX FSM. The frequency clock is 20MHz and the tx baudrate is 115200, so the length
+-- of a bit must be 20000000/115200, rounded 174.
 -- Dependencies: 
--- 
+-- Use LCSE_P1.all that constains some constants : pulse width, word length and fsm states.
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
@@ -22,7 +23,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
-
+use work.LCSE_P1.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -43,20 +44,17 @@ end RS232_RX;
 
 architecture Behavioral of RS232_RX is
 
-type RX_STATE_T is (IDLE, START_BIT, RVCDATA, STOP_BIT);
 
 
-Constant MAXCOUNT       : integer := 174;
-constant HALFCOUNT      : integer := 87;
 
 -- signal
 
 signal state_reg, state_reg_n           : RX_STATE_T;
-signal counter_reg, counter_reg_n       : UNSIGNED(7 downto 0);
-signal bit_reg, bit_reg_n               : UNSIGNED(3 downto 0);
-signal Valid_out_reg, Valid_out_reg_n   : STD_LOGIC := '0';
-signal Code_out_reg, Code_out_reg_n     : STD_LOGIC := '0';
-signal Store_out_reg, Store_out_reg_n   : STD_LOGIC := '0';
+signal counter_reg, counter_reg_n       : UNSIGNED(log2c(PULSE_W) -1 downto 0);
+signal bit_reg, bit_reg_n               : UNSIGNED(log2c(WORD_LENGTH) downto 0);
+signal Valid_out_reg, Valid_out_reg_n   : STD_LOGIC;
+signal Code_out_reg, Code_out_reg_n     : STD_LOGIC;
+signal Store_out_reg, Store_out_reg_n   : STD_LOGIC;
 
 
 begin
@@ -95,17 +93,17 @@ begin
             end if;
             
         when START_BIT =>
-            if ( counter_reg = MAXCOUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 state_reg_n <= RVCDATA;
             end if;
             
         when RVCDATA =>
-            if ( bit_reg = 8 ) then
+            if ( bit_reg = WORD_LENGTH ) then
                 state_reg_n <= STOP_BIT;
             end if;
         
         when STOP_BIT =>
-            if ( counter_reg = MAXCOUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 state_reg_n <= IDLE;
             end if;  
     end case;
@@ -126,7 +124,7 @@ begin
         when IDLE =>
             counter_reg_n <= ( others => '0' );
         when START_BIT =>
-            if ( counter_reg = MAXCOUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 counter_reg_n   <= ( others => '0' );
                 bit_reg_n       <= ( others => '0' );  
             end if;
@@ -136,7 +134,7 @@ begin
             if ( counter_reg  = HALFCOUNT ) then
                 code_out_reg_n <= LineRD_in;
                 
-            elsif ( counter_reg = MAXCOUNT ) then
+            elsif ( counter_reg = PULSE_W ) then
                 Valid_out_reg_n <= '1';
                 counter_reg_n <= ( others => '0' );
                 bit_reg_n     <= bit_reg + 1;

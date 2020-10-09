@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer:  Alejandro Gomez Molina
--- 
+-- Engineer:  Luis Felipe Vélez Flores
 -- Create Date: 20.09.2020 12:01:18
 -- Design Name: 
 -- Module Name: RS232_TX - Behavioral
@@ -9,9 +9,10 @@
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
--- 
+-- RS232_TX FSM. The frequency clock is 20MHz and the tx baudrate is 115200, so the length
+-- of a bit must be 20000000/115200, rounded 174.
 -- Dependencies: 
--- 
+-- Use LCSE_P1.all that constains some constants : pulse width, word length and fsm states. 
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
@@ -22,7 +23,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
-
+use work.LCSE_P1.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -44,19 +45,16 @@ end RS232_TX;
 
 
 architecture Behavioral of RS232_TX is
---types
-type TX_STATE_T is (IDLE, START_BIT, SEND_DATA, STOP_BIT);
 
--- Constants
-constant MAX_COUNT                  : integer := 174;   -- Max clock counter = Clk_freq/Baudrate
+
 
 --Signals
 signal state_reg, state_reg_n       : TX_STATE_T;   -- Actual and next state
 signal tx_reg, tx_reg_n             : STD_LOGIC;    -- TX output registers
 signal eot_reg, eot_reg_n           : STD_LOGIC;    -- End of transmition registers
 signal data_reg, data_reg_n         : STD_LOGIC_VECTOR (7 downto 0);    -- Data shift register
-signal bit_reg, bit_reg_n           : unsigned(3 downto 0); -- Sended bit counter
-signal counter_reg, counter_reg_n   : unsigned(7 downto 0); -- Clock counter
+signal bit_reg, bit_reg_n           : unsigned(log2c(WORD_LENGTH) - 1 downto 0); -- Sended bit counter
+signal counter_reg, counter_reg_n   : unsigned(log2c(PULSE_W) -1 downto 0); -- Clock counter
 
 
 begin
@@ -79,7 +77,6 @@ begin
         eot_reg     <= eot_reg_n;
         data_reg    <= data_reg_n;
         bit_reg     <= bit_reg_n;
-        
     end if;
 
 end process;
@@ -101,21 +98,21 @@ begin
             end if;
             
         when START_BIT  =>
-        if ( counter_reg = MAX_COUNT ) then 
+        if ( counter_reg = PULSE_W ) then 
             state_reg_n <= SEND_DATA;
         else
             state_reg_n <= START_BIT;
         end if;
                 
         when SEND_DATA  =>
-            if ( bit_reg = 8 ) then  -- All bits sended
+            if ( bit_reg = WORD_LENGTH -1 and counter_reg = PULSE_W ) then  -- All bits sended
                 state_reg_n <= STOP_BIT;
             else
                 state_reg_n <= SEND_DATA;
             end if;
             
         when STOP_BIT   =>
-            if ( counter_reg = MAX_COUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 state_reg_n <= IDLE;
             else
                 state_reg_n <= STOP_BIT;
@@ -151,7 +148,7 @@ begin
             
         when START_BIT  =>
             tx_reg_n        <= '0';
-            if ( counter_reg = MAX_COUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 counter_reg_n   <= (others => '0');
                 bit_reg_n       <= (others => '0');
                 data_reg_n      <= data;
@@ -160,9 +157,9 @@ begin
         when SEND_DATA  =>
             tx_reg_n    <=  data_reg(0);
             
-            if ( counter_reg = MAX_COUNT ) then
+            if ( counter_reg = PULSE_W ) then
                 bit_reg_n       <= bit_reg + 1;
-                data_reg_n      <= '1'&data_reg(7 downto 1); 
+                data_reg_n      <= '1'&data_reg(log2c(PULSE_W) -1 downto 1); 
                 counter_reg_n   <= (others => '0');
 
             end if;
