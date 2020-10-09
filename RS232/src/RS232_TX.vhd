@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer:  Alejandro Gomez Molina
--- Engineer:  Luis Felipe Vélez Flores
+-- Engineer:  Luis Felipe Velez Flores
 -- Create Date: 20.09.2020 12:01:18
 -- Design Name: 
 -- Module Name: RS232_TX - Behavioral
