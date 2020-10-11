@@ -31,6 +31,7 @@ package LCSE_PKG is
 
     CONSTANT sDMA       :   UNSIGNED( 7 downto 0 ) := X"00";
         CONSTANT DMA_RX_MSB :   UNSIGNED( 7 downto 0 ) := X"00";
+        CONSTANT DMA_RX     :   UNSIGNED( 7 downto 0 ) := X"00";
         CONSTANT DMA_RX_LSB :   UNSIGNED( 7 downto 0 ) := X"02";
         CONSTANT NEW_INST   :   UNSIGNED( 7 downto 0 ) := X"03";
         CONSTANT DMA_TX_MSB :   UNSIGNED( 7 downto 0 ) := X"04";
