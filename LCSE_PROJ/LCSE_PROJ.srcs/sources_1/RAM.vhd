@@ -2,7 +2,7 @@
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.numeric_std.all;
-
+USE IEEE.std_logic_unsigned.all;
 USE work.PIC_pkg.all;
 
 ENTITY ram IS
