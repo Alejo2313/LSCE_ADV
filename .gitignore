@@ -1,0 +1,6 @@
+**.hw/
+**.runs/
+**.sim/
+**.ip_user_files/
+#Remove project files
+*.xpr
