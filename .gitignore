@@ -1,0 +1,9 @@
+#Remove folders
+
+**.cache/
+**.hbs/
+**.hw/
+**.runs/
+**.sim/
+#Remove project files
+*.xpr

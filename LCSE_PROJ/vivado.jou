@@ -1,0 +1,54 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Fri Oct 16 10:06:44 2020
+# Process ID: 20396
+# Current directory: D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent25348 D:\OneDrive\Documentos\Universidad\LCSE\entregas\LCSE_PROJ\LCSE_PROJ.xpr
+# Log file: D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/vivado.log
+# Journal file: D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LCSE_PROJ.xpr
+update_compile_order -fileset sources_1
+close_project
+open_project D:/OneDrive/Documentos/Universidad/LCSE/LSCE_EXP/LSCE_EXP.xpr
+update_compile_order -fileset sources_1
+add_files -norecurse D:/OneDrive/Documentos/Universidad/LCSE/LSCE_EXP/src/desing/LCSE_PKG.vhd
+update_compile_order -fileset sources_1
+add_files -norecurse D:/OneDrive/Documentos/Universidad/LCSE/LSCE_EXP/src/desing/MUX.vhd
+update_compile_order -fileset sources_1
+launch_simulation
+launch_simulation
+launch_simulation
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/LSCE_EXP/src/sim/tb_DMA2_behav.wcfg
+source tb_DMA2.tcl
+relaunch_sim
+restart
+run all
+restart
+run 300 ns
+run 300 ns
+run 300 ns
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+restart
+run 300 ns
+run 300 ns
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+save_wave_config {D:/OneDrive/Documentos/Universidad/LCSE/LSCE_EXP/src/sim/tb_DMA2_behav.wcfg}
+close_sim
