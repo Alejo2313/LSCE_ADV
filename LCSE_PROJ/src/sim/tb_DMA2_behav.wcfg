@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="1197001fs"></ZoomEndTime>
-      <Cursor1Time time="383000fs"></Cursor1Time>
+      <ZoomStartTime time="269667fs"></ZoomStartTime>
+      <ZoomEndTime time="1471668fs"></ZoomEndTime>
+      <Cursor1Time time="1000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="239"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <ValueColumnWidth column_width="95"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="14" />
    <wvobject fp_name="/tb_DMA2/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -64,8 +64,17 @@
       <obj_property name="ElementShortName">dma_state_reg</obj_property>
       <obj_property name="ObjectShortName">dma_state_reg</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_DMA2/RAM_M/rAdrress" type="array">
+      <obj_property name="ElementShortName">rAdrress[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rAdrress[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_DMA2/RAM_M/inBound" type="logic">
+      <obj_property name="ElementShortName">inBound</obj_property>
+      <obj_property name="ObjectShortName">inBound</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_DMA2/RAM_M/contents_ram" type="array">
       <obj_property name="ElementShortName">contents_ram[14:0][7:0]</obj_property>
       <obj_property name="ObjectShortName">contents_ram[14:0][7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
 </wave_config>

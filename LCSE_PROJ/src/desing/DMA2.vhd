@@ -296,14 +296,11 @@ begin
             dev_mem_n( conv_integer(Addess_s(3 downto 0)) ) <= InBus_s;
             
         elsif ( RE_s = '1' ) then
-            OutBus_m_reg_n <= dev_mem( conv_integer(Addess_s(3 downto 0) ));
+            OutBus_s_reg_n <= dev_mem( conv_integer(Addess_s(3 downto 0) ));
         end if;
     end if;
 
 end process;
-
-
-
 
 OutBus_s <= OutBus_s_reg;
 OutBus_m <= OutBus_m_reg;

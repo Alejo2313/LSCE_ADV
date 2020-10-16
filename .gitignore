@@ -2,5 +2,6 @@
 **.runs/
 **.sim/
 **.ip_user_files/
+**.cache/
 #Remove project files
 *.xpr

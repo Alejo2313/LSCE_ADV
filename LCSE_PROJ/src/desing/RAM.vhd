@@ -34,12 +34,16 @@ BEGIN
 
 
 
+rAdrress <= unsigned(address) - sRAM when (inBound = '1') else
+            (others => '0');
+inBound <= '1' when (unsigned(address) >= sRAM AND unsigned(address) <= eRAM) else
+           '0';   
+
 p_ram : process (clk, reset)  -- no reset
 begin
     
   if ( clk'event and clk = '1' ) then
         contents_ram <= contents_ram_n;
-     --   outBus_reg   <= outBus_reg_n;
   end if;
 
 end process;
@@ -48,27 +52,19 @@ LOGIC: process (write_en, inBound, oe, inbus) is
 
 begin
     contents_ram_n <= contents_ram;
-    outBus_reg_n  <= (others => 'Z');
     
     if (unsigned(address) >= sRAM AND unsigned(address) <= eRAM) then
         if ( write_en = '1') then
             contents_ram_n(to_integer(unsigned(address) - sRAM))<= inbus;
-      
-        elsif ( oe = '1' )  then
-            outBus_reg_n <= contents_ram(to_integer(unsigned(address) - sRAM));
         end if;
     end if;
 end process;
 
-  outBus <= contents_ram(to_integer(unsigned(address) - sRAM)) when (oe = '1' AND unsigned(address) >= sRAM AND unsigned(address) <= eRAM) else
-                (others => 'Z');
-    
-    rAdrress <= unsigned(address) - sRAM when (inBound = '1') else
-                (others => '0');
-                
-    
---outBus <= outBus_reg;
 
+            
+    
+outBus <= contents_ram(to_integer(unsigned(address) - sRAM)) when (oe = '1' AND inBound = '1' ) else
+            (others => 'Z');
                     
 -------------------------------------------------------------------------
 
