@@ -3,78 +3,101 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="tb_DMA2_behav.wdb" id="1">
+      <db_ref path="tb_RS232top_behav.wdb" id="1">
          <top_modules>
             <top_module name="lcse_pkg" />
-            <top_module name="tb_DMA2" />
+            <top_module name="tb_RS232top" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="269667fs"></ZoomStartTime>
-      <ZoomEndTime time="1471668fs"></ZoomEndTime>
-      <Cursor1Time time="1000000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="50400001fs"></ZoomEndTime>
+      <Cursor1Time time="4000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="239"></NameColumnWidth>
-      <ValueColumnWidth column_width="95"></ValueColumnWidth>
+      <ValueColumnWidth column_width="85"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
-   <wvobject fp_name="/tb_DMA2/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_DMA2/Reset" type="logic">
+   <WVObjectSize size="20" />
+   <wvobject fp_name="/tb_RS232top/dut/Reset" type="logic">
       <obj_property name="ElementShortName">Reset</obj_property>
       <obj_property name="ObjectShortName">Reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/DMA/Address_m" type="array">
-      <obj_property name="ElementShortName">Address_m[7:0]</obj_property>
-      <obj_property name="ObjectShortName">Address_m[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/Clk" type="logic">
+      <obj_property name="ElementShortName">Clk</obj_property>
+      <obj_property name="ObjectShortName">Clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/DMA/InBus_m" type="array">
-      <obj_property name="ElementShortName">InBus_m[7:0]</obj_property>
-      <obj_property name="ObjectShortName">InBus_m[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/TX" type="logic">
+      <obj_property name="ElementShortName">TX</obj_property>
+      <obj_property name="ObjectShortName">TX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/DMA/OutBus_m" type="array">
-      <obj_property name="ElementShortName">OutBus_m[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OutBus_m[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/RX" type="logic">
+      <obj_property name="ElementShortName">RX</obj_property>
+      <obj_property name="ObjectShortName">RX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/address" type="array">
-      <obj_property name="ElementShortName">address[7:0]</obj_property>
-      <obj_property name="ObjectShortName">address[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/DMA_TX" type="logic">
+      <obj_property name="ElementShortName">DMA_TX</obj_property>
+      <obj_property name="ObjectShortName">DMA_TX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/inbus" type="array">
-      <obj_property name="ElementShortName">inbus[7:0]</obj_property>
-      <obj_property name="ObjectShortName">inbus[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/DMA_RX" type="logic">
+      <obj_property name="ElementShortName">DMA_RX</obj_property>
+      <obj_property name="ObjectShortName">DMA_RX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/outBus" type="array">
-      <obj_property name="ElementShortName">outBus[7:0]</obj_property>
-      <obj_property name="ObjectShortName">outBus[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/IRQ_TX" type="logic">
+      <obj_property name="ElementShortName">IRQ_TX</obj_property>
+      <obj_property name="ObjectShortName">IRQ_TX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/MUX_M/WE" type="logic">
-      <obj_property name="ElementShortName">WE</obj_property>
-      <obj_property name="ObjectShortName">WE</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/IRQ_RX" type="logic">
+      <obj_property name="ElementShortName">IRQ_RX</obj_property>
+      <obj_property name="ObjectShortName">IRQ_RX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/MUX_M/RE" type="logic">
-      <obj_property name="ElementShortName">RE</obj_property>
-      <obj_property name="ObjectShortName">RE</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/Address_s" type="array">
+      <obj_property name="ElementShortName">Address_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">Address_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/DMA/dma_state_reg" type="other">
-      <obj_property name="ElementShortName">dma_state_reg</obj_property>
-      <obj_property name="ObjectShortName">dma_state_reg</obj_property>
+   <wvobject fp_name="/tb_RS232top/Address_s" type="array">
+      <obj_property name="ElementShortName">Address_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">Address_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/rAdrress" type="array">
-      <obj_property name="ElementShortName">rAdrress[7:0]</obj_property>
-      <obj_property name="ObjectShortName">rAdrress[7:0]</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/InBus_s" type="array">
+      <obj_property name="ElementShortName">InBus_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">InBus_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/inBound" type="logic">
-      <obj_property name="ElementShortName">inBound</obj_property>
-      <obj_property name="ObjectShortName">inBound</obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/OutBus_s" type="array">
+      <obj_property name="ElementShortName">OutBus_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OutBus_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_DMA2/RAM_M/contents_ram" type="array">
-      <obj_property name="ElementShortName">contents_ram[14:0][7:0]</obj_property>
-      <obj_property name="ObjectShortName">contents_ram[14:0][7:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+   <wvobject fp_name="/tb_RS232top/dut/WE_s" type="logic">
+      <obj_property name="ElementShortName">WE_s</obj_property>
+      <obj_property name="ObjectShortName">WE_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/RE_s" type="logic">
+      <obj_property name="ElementShortName">RE_s</obj_property>
+      <obj_property name="ObjectShortName">RE_s</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/EOT" type="logic">
+      <obj_property name="ElementShortName">EOT</obj_property>
+      <obj_property name="ObjectShortName">EOT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/dev_mem" type="array">
+      <obj_property name="ElementShortName">dev_mem[3:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">dev_mem[3:0][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/tx_start_reg_n" type="logic">
+      <obj_property name="ElementShortName">tx_start_reg_n</obj_property>
+      <obj_property name="ObjectShortName">tx_start_reg_n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/Transmitter/state_reg" type="other">
+      <obj_property name="ElementShortName">state_reg</obj_property>
+      <obj_property name="ObjectShortName">state_reg</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/Transmitter/Start" type="logic">
+      <obj_property name="ElementShortName">Start</obj_property>
+      <obj_property name="ObjectShortName">Start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_RS232top/dut/Transmitter/state_reg_n" type="other">
+      <obj_property name="ElementShortName">state_reg_n</obj_property>
+      <obj_property name="ObjectShortName">state_reg_n</obj_property>
    </wvobject>
 </wave_config>

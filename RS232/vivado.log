@@ -214,3 +214,476 @@ run 1000 ns
 run 1000 ns
 run 1000 ns
 run all
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+close_sim: Time (s): cpu = 00:00:03 ; elapsed = 00:00:14 . Memory (MB): peak = 1048.422 ; gain = 0.000
+close_project
+open_project D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.xpr
+Scanning sources...
+Finished scanning sources
+WARNING: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sources_1'.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'D:/Xilinx/Vivado/2020.1/data/ip'.
+update_compile_order -fileset sources_1
+launch_simulation
+Command: launch_simulation 
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "tb_RS232top_behav -key {Behavioral:sim_1:Functional:tb_RS232top} -tclbatch {tb_RS232top.tcl} -view {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg
+source tb_RS232top.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 1000ns
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'tb_RS232top_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 1000ns
+launch_simulation: Time (s): cpu = 00:00:05 ; elapsed = 00:00:12 . Memory (MB): peak = 1048.422 ; gain = 0.000
+run 10000 ns
+run 10000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/RS232top.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '3' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:09 . Memory (MB): peak = 1048.422 ; gain = 0.000
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/RS232top.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:08 . Memory (MB): peak = 1048.422 ; gain = 0.000
+run 20000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/RS232_TX.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'RS232_TX'
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:01 ; elapsed = 00:00:07 . Memory (MB): peak = 1049.684 ; gain = 0.000
+run 20000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'tb_RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:08 . Memory (MB): peak = 1075.727 ; gain = 0.000
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'tb_RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:08 . Memory (MB): peak = 1075.727 ; gain = 0.000
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'tb_RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:01 ; elapsed = 00:00:07 . Memory (MB): peak = 1075.727 ; gain = 0.000
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'tb_RS232top'
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '3' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:01 ; elapsed = 00:00:08 . Memory (MB): peak = 1075.727 ; gain = 0.000
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+restart
+INFO: [Simtcl 6-17] Simulation restarted
+run 40000 ns
+run 40000 ns
+run 40000 ns
+restart
+INFO: [Simtcl 6-17] Simulation restarted
+run 40000 ns
+restart
+INFO: [Simtcl 6-17] Simulation restarted
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+relaunch_sim
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-54] Inspecting design source files for 'tb_RS232top' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xvhdl --incr --relax -prj tb_RS232top_vhdl.prj"
+INFO: [VRFC 10-163] Analyzing VHDL file "D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/ShiftRegister.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ShiftRegister'
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+Command: launch_simulation -simset sim_1 -mode behavioral
+INFO: [Vivado 12-5682] Launching behavioral simulation in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.sim/sim_1/behav/xsim'
+"xelab -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log"
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 6653a2e3d4c74425874ee74ab689e1db --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_RS232top_behav xil_defaultlib.tb_RS232top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package xil_defaultlib.lcse_pkg
+Compiling architecture behavioral of entity xil_defaultlib.RS232_TX [rs232_tx_default]
+Compiling architecture behavioral of entity xil_defaultlib.RS232_RX [rs232_rx_default]
+Compiling architecture behavioral of entity xil_defaultlib.ShiftRegister [shiftregister_default]
+Compiling architecture rtl of entity xil_defaultlib.RS232top [rs232top_default]
+Compiling architecture tb of entity xil_defaultlib.tb_rs232top
+Built simulation snapshot tb_RS232top_behav
+INFO: [USF-XSim-69] 'elaborate' step finished in '3' seconds
+Vivado Simulator 2020.1
+Time resolution is 1 ps
+relaunch_sim: Time (s): cpu = 00:00:02 ; elapsed = 00:00:08 . Memory (MB): peak = 1075.727 ; gain = 0.000
+run 40000 ns
+run 40000 ns
+run 40000 ns
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+exit
+INFO: [Common 17-206] Exiting Vivado at Sat Oct 17 12:26:10 2020...

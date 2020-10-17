@@ -89,3 +89,93 @@ run 1000 ns
 run 1000 ns
 run 1000 ns
 run all
+close_sim
+close_project
+open_project D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.xpr
+update_compile_order -fileset sources_1
+launch_simulation
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg
+source tb_RS232top.tcl
+run 10000 ns
+run 10000 ns
+relaunch_sim
+relaunch_sim
+run 20000 ns
+relaunch_sim
+run 20000 ns
+relaunch_sim
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 500 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+run 1000 ns
+relaunch_sim
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+relaunch_sim
+relaunch_sim
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+run 5000 ns
+restart
+run 40000 ns
+run 40000 ns
+run 40000 ns
+restart
+run 40000 ns
+restart
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+run 40000 ns
+relaunch_sim
+run 40000 ns
+run 40000 ns
+run 40000 ns
+close_sim

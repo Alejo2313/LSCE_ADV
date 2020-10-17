@@ -1,19 +1,24 @@
 
 library ieee;
-   use ieee.std_logic_1164.all;
-   use ieee.numeric_std.all;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.LCSE_PKG.all;
    
 entity RS232top is
 
   port (
     Reset       : in  std_logic;   -- Low_level-active asynchronous reset
     Clk         : in  std_logic;   -- System clock (20MHz), rising edge used
-    
+    -- Transmission lines 
     TX          : out std_logic;
     RX          : in  std_logic;
-    
+    -- Events 
+    DMA_TX      : out std_logic;
+    DMA_RX      : out  std_logic; 
+    IRQ_TX      : out std_logic;
+    IRQ_RX      : out  std_logic;   
     -- Slave buses
-    Address_s    : in  STD_LOGIC_VECTOR (7 downto 0);    -- Slave Address bus
+    Address_s   : in  STD_LOGIC_VECTOR (7 downto 0);    -- Slave Address bus
     InBus_s     : in  STD_LOGIC_VECTOR (7 downto 0);    -- Slave input bus
     OutBus_s    : out STD_LOGIC_VECTOR (7 downto 0);    -- slave outpur bus
     WE_s        : in  STD_LOGIC;                        -- slave write enablr
@@ -23,23 +28,31 @@ end RS232top;
 
 architecture RTL of RS232top is
 
-    CONSTANT    sRS232          :  UNSIGNED( 7 downto 0 ):= X"D0";
-    CONSTANT    RS232_BASE      :  UNSIGNED( 7 downto 0 ):= sRS232;
-        CONSTANT RS232_CONF     : UNSIGNED( 7 downto 0 ) := RS232_BASE + 0;
-        CONSTANT RS232_STATUS   : UNSIGNED( 7 downto 0 ) := RS232_BASE + 1;
-        CONSTANT RS232_TX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 2;
-        CONSTANT RS232_RX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
-    CONSTANT    eRS232          :  UNSIGNED( 7 downto 0 ):= RS232_BASE + 3; 
-    constant DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := RS232_BASE;
 
-    type dev_mem_rs is array (to_integer(eRS232 - sRS232 - 1) to 0) of std_logic_vector(7 downto 0);
+    
+    
+    type dev_mem_rs is array (to_integer(eRS232 - sRS232) downto 0) of std_logic_vector(7 downto 0);
 
     signal dev_mem, dev_mem_n : dev_mem_rs :=(others => (others => '0'));
     signal OutBus_s_reg, OutBus_s_reg_n : STD_LOGIC_VECTOR (7 downto 0);
+    signal DMA_RX_reg, DMA_RX_reg_n         : std_logic;
+    signal IRQ_RX_reg, IRQ_RX_reg_n         : std_logic;
+    signal DMA_TX_reg, DMA_TX_reg_n         : std_logic;
+    signal IRQ_TX_reg, IRQ_TX_reg_n         : std_logic;
+    signal tx_start_reg, tx_start_reg_n     : std_logic;
+    signal rx_start_reg, rx_start_reg_n     : std_logic;
+    signal data_in, data_out     : STD_LOGIC_VECTOR (7 downto 0);
     
-    signal tx_start : std_logic;
-    signal rx_start : std_logic;
-
+    constant rx_en   : integer :=  7;
+    constant tx_en   : integer :=  6;
+    
+    constant rx_dma_en : integer :=  3;
+    constant tx_dma_en : integer :=  2;
+    constant rx_irq_en : integer :=  1;
+    constant tx_irq_en : integer :=  0;
+    
+    
+    
  ------------------------------------------------------------------------
   -- Components for Transmitter Block
   ------------------------------------------------------------------------
@@ -97,17 +110,14 @@ architecture RTL of RS232top is
 
 begin  -- RTL
 
-  reset_p <= not(Reset);		  -- active high reset
   
-    tx_start <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(6);
-    rx_start <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(7);
-    
+
   Transmitter: RS232_TX
     port map (
       Clk   => Clk,
       Reset => Reset,
-      Start => tx_start,
-      Data  => dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE)),
+      Start => tx_start_reg,
+      Data  => data_in,
       EOT   => EOT, ---ToDo: RQ DMA, IRQ CORE, BIT STATE. debe durar 1 ciclo
       TX    => TX);
 
@@ -126,42 +136,99 @@ begin  -- RTL
       Clk    => Clk,
       Enable => Valid_Out,  
       D      => Code_Out,
-      Q      => dev_mem(TO_INTEGER(RS232_RX_DATA - RS232_BASE)));
-
-  sinit <= not reset;
-  
-
-LOGIC: process( dev_mem ) is
-begin
-    if ( EOT = '1' ) then
-        dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(6) <= '0'  ;
-        dev_mem(TO_INTEGER(RS232_STATUS - RS232_BASE))(6) <= '1';
-    elsif ( tx_start = '1' ) then
-        dev_mem(TO_INTEGER(RS232_STATUS - RS232_BASE))(6) <= '0';
-    end if;
+      Q      => data_out);
     
+  
+FF:process( clk, reset ) is
+
+begin --TODO DMA have to be on high impedance
+    if( reset = '1' ) then
+        dev_mem        <= (others => (others => '0'));
+        OutBus_s_reg   <= (others => '0') ;
+        DMA_RX_reg     <= '0';
+        IRQ_RX_reg     <= '0';
+        DMA_TX_reg     <= '0';
+        IRQ_TX_reg     <= '0';
+   --     tx_start_reg   <= '0';
+ --       rx_start_reg   <= '0';
+        
+    elsif ( Clk = '1' and Clk'event ) then
+        dev_mem        <= dev_mem_n;
+        OutBus_s_reg   <= OutBus_s_reg_n ;
+        DMA_RX_reg     <= DMA_RX_reg_n;
+        IRQ_RX_reg     <= IRQ_RX_reg_n;
+        DMA_TX_reg     <= DMA_TX_reg_n;
+        IRQ_TX_reg     <= IRQ_TX_reg_n;
+    --    tx_start_reg   <= tx_start_reg_n;
+    --    rx_start_reg   <= rx_start_reg_n;
+    end if;
+end process;
+
+
+
+LOGIC: process( dev_mem, Address_s, EOT, EOR  ) is
+begin
+    DMA_RX_reg_n <= '0';
+    IRQ_RX_reg_n <= '0';
+    DMA_TX_reg_n <= '0';
+    IRQ_TX_reg_n <= '0';
+    
+      tx_start_reg <=   dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
+  data_in <= dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE));
+    
+    if ( EOT = '1' ) then
+        dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en)   <= '0'  ;
+        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(tx_en) <= '1';
+        
+        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_dma_en) = '1') then
+            DMA_TX_reg_n  <= '1';
+        end if;
+        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_irq_en) = '1') then
+            IRQ_TX_reg_n  <= '1';
+        end if;
+        
+    elsif (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en) = '1' ) then
+        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(tx_en) <= '0';
+        DMA_TX_reg_n  <= '0';
+        IRQ_TX_reg_n  <= '0';
+    end if;
     
     if ( EOR = '1' ) then
-        dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(7) <= '0';
-        dev_mem(TO_INTEGER(RS232_STATUS - RS232_BASE))(7) <= '1';
-    elsif ( rx_start = '1' ) then
-        dev_mem(TO_INTEGER(RS232_STATUS - RS232_BASE))(7) <= '0';
+        dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en)     <= '0';
+        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(rx_en)   <= '1';
+        dev_mem_n(TO_INTEGER(RS232_RX_DATA - RS232_BASE)) <= data_out;
+        
+        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_dma_en) = '1') then
+            DMA_RX_reg_n  <= '1';
+        end if;
+        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_irq_en) = '1') then
+            IRQ_RX_reg_n  <= '1';
+        end if;
+        
+    elsif ( dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en) = '1' ) then
+        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(rx_en) <= '0';
+        DMA_RX_reg_n  <= '0';
+        IRQ_RX_reg_n  <= '0';
     end if;
     
- 
-    
-    
+   
     if ( unsigned(Address_s(7 downto 4)) = DEV_MEM_BASE(7 downto 4) )  then
         if( WE_s = '1' ) then
             dev_mem_n( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) ) <= InBus_s;
             
         elsif ( RE_s = '1' ) then
-            OutBus_s_reg_n <= dev_mem( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) );
+            OutBus_s_reg <= dev_mem( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) );
         end if;
     end if;
 
 end process;
 
+
+IRQ_RX  <= IRQ_RX_reg;
+IRQ_TX  <= IRQ_TX_reg;
+DMA_TX  <= DMA_TX_reg;
+DMA_RX  <= DMA_RX_reg;
+OutBus_s <= OutBus_s_reg;
 
 end RTL;
 

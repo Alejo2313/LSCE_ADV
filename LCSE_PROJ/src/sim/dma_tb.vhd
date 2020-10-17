@@ -5,7 +5,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use work.LCSE_PKG.all;
+use work.LCSE_PKG.all; 
 
 entity tb_DMA2 is
 end tb_DMA2;

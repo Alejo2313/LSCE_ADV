@@ -29,84 +29,50 @@ package LCSE_PKG is
 -- MEMORY MAP
 -------------------------------------------------------------------------------
 
-    CONSTANT sDMA       :   UNSIGNED( 7 downto 0 ) := X"00";
-        CONSTANT DMA_RX_MSB :   UNSIGNED( 7 downto 0 ) := X"00";
-        CONSTANT DMA_RX     :   UNSIGNED( 7 downto 0 ) := X"00";
-        CONSTANT DMA_RX_LSB :   UNSIGNED( 7 downto 0 ) := X"02";
-        CONSTANT NEW_INST   :   UNSIGNED( 7 downto 0 ) := X"03";
-        CONSTANT DMA_TX_MSB :   UNSIGNED( 7 downto 0 ) := X"04";
-        CONSTANT DMA_TX_LSB :   UNSIGNED( 7 downto 0 ) := X"05";
-    CONSTANT eDMA       :   UNSIGNED( 7 downto 0 ) := X"05";
-    
-    CONSTANT sRESERVED1 :   UNSIGNED( 7 downto 0 ) := X"06";
-    CONSTANT eRESERVED1 :   UNSIGNED( 7 downto 0 ) := X"0F";
-    
-    CONSTANT sSWITCH    :   UNSIGNED( 7 downto 0 ) := X"10";
-        CONSTANT SWITCH_0   :   UNSIGNED( 7 downto 0 ) := X"10";
-        CONSTANT SWITCH_1   :   UNSIGNED( 7 downto 0 ) := X"11";
-        CONSTANT SWITCH_2   :   UNSIGNED( 7 downto 0 ) := X"12";
-        CONSTANT SWITCH_3   :   UNSIGNED( 7 downto 0 ) := X"13";
-        CONSTANT SWITCH_4   :   UNSIGNED( 7 downto 0 ) := X"14";
-        CONSTANT SWITCH_5   :   UNSIGNED( 7 downto 0 ) := X"15";
-        CONSTANT SWITCH_6   :   UNSIGNED( 7 downto 0 ) := X"16";
-        CONSTANT SWITCH_7   :   UNSIGNED( 7 downto 0 ) := X"17";
-    CONSTANT eSWITCH    :   UNSIGNED( 7 downto 0 ) := X"17";    
 
-    CONSTANT sRESERVED2 :   UNSIGNED( 7 downto 0 ) := X"18";
-    CONSTANT eRESERVED2 :   UNSIGNED( 7 downto 0 ) := X"1F";
+    CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
+    CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
     
-    CONSTANT sLEVER    :   UNSIGNED( 7 downto 0 ) := X"20";
-        CONSTANT LEVER_0   :   UNSIGNED( 7 downto 0 ) := X"20";
-        CONSTANT LEVER_1   :   UNSIGNED( 7 downto 0 ) := X"21";
-        CONSTANT LEVER_2   :   UNSIGNED( 7 downto 0 ) := X"22";
-        CONSTANT LEVER_3   :   UNSIGNED( 7 downto 0 ) := X"23";
-        CONSTANT LEVER_4   :   UNSIGNED( 7 downto 0 ) := X"24";
-        CONSTANT LEVER_5   :   UNSIGNED( 7 downto 0 ) := X"25";
-        CONSTANT LEVER_6   :   UNSIGNED( 7 downto 0 ) := X"26";
-        CONSTANT LEVER_7   :   UNSIGNED( 7 downto 0 ) := X"27";
-        CONSTANT LEVER_8   :   UNSIGNED( 7 downto 0 ) := X"28";
-        CONSTANT LEVER_9   :   UNSIGNED( 7 downto 0 ) := X"29";
-    CONSTANT eLEVER    :   UNSIGNED( 7 downto 0 ) := X"29";
- 
-    CONSTANT sRESERVED3 :   UNSIGNED( 7 downto 0 ) := X"2A";
-    CONSTANT eRESERVED3 :   UNSIGNED( 7 downto 0 ) := X"30";
+    constant DMA_MEM_BASE       : UNSIGNED( 7 downto 0 ) := X"C0";
+    constant DMA_CH1_OFF       : UNSIGNED( 3 downto 0 ) := X"0";
+        constant DMA_CONF_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"0";
+        constant DMA_SRC_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"1";
+        constant DMA_DEST_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"2";
+        constant DMA_CNT_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"3";
+         
+    constant DMA_CH2_OFF       : UNSIGNED( 3 downto 0 ) := X"4";
+        constant DMA_CONF_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"0";
+        constant DMA_SRC_CH2       : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"1";
+        constant DMA_DEST_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"2";
+        constant DMA_CNT_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"3"; 
+        
+    constant DMA_CH3_OFF       : UNSIGNED( 3 downto 0 ) := X"8";
+        constant DMA_CONF_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"0";
+        constant DMA_SRC_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"1";
+        constant DMA_DEST_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"2";
+        constant DMA_CNT_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"3"; 
+        
+    constant DMA_CONF_OFF      : UNSIGNED( 3 downto 0 ) := X"0";
+    constant DMA_SRC_OFF       : UNSIGNED( 3 downto 0 ) := X"1";
+    constant DMA_DEST_OFF      : UNSIGNED( 3 downto 0 ) := X"2";
+    constant DMA_CNT_OFF       : UNSIGNED( 3 downto 0 ) := X"3";
     
-    CONSTANT T_STAT     :   UNSIGNED( 7 downto 0 ) := X"31";
     
-    CONSTANT sRESERVED4 :   UNSIGNED( 7 downto 0 ) := X"32";
-    CONSTANT eRESERVED4 :   UNSIGNED( 7 downto 0 ) := X"3F";
-    
-    CONSTANT sGP_RAM :   UNSIGNED( 7 downto 0 ) := X"40";
-    CONSTANT eGP_RAM :   UNSIGNED( 7 downto 0 ) := X"FF";
-    
--------------------------------------------------------------------------------
--- Constants to define Type 1 instructions (ALU)
--------------------------------------------------------------------------------
-
-  constant TYPE_1        : std_logic_vector(1 downto 0) := "00";
-  constant ALU_ADD       : std_logic_vector(5 downto 0) := "000000";
-  constant ALU_SUB       : std_logic_vector(5 downto 0) := "000001";
-  constant ALU_SHIFTL    : std_logic_vector(5 downto 0) := "000010";
-  constant ALU_SHIFTR    : std_logic_vector(5 downto 0) := "000011";
-  constant ALU_AND       : std_logic_vector(5 downto 0) := "000100";
-  constant ALU_OR        : std_logic_vector(5 downto 0) := "000101";
-  constant ALU_XOR       : std_logic_vector(5 downto 0) := "000110";
-  constant ALU_CMPE      : std_logic_vector(5 downto 0) := "000111";
-  constant ALU_CMPG      : std_logic_vector(5 downto 0) := "001000";
-  constant ALU_CMPL      : std_logic_vector(5 downto 0) := "001001";
-  constant ALU_ASCII2BIN : std_logic_vector(5 downto 0) := "001010";
-  constant ALU_BIN2ASCII : std_logic_vector(5 downto 0) := "001011";
+    CONSTANT    sRS232          :  UNSIGNED( 7 downto 0 ):= X"D0";
+    CONSTANT    RS232_BASE      :  UNSIGNED( 7 downto 0 ):= sRS232;
+        CONSTANT RS232_CONF     : UNSIGNED( 7 downto 0 ) := RS232_BASE + 0;
+        CONSTANT RS232_STATUS   : UNSIGNED( 7 downto 0 ) := RS232_BASE + 1;
+        CONSTANT RS232_TX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 2;
+        CONSTANT RS232_RX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
+    CONSTANT    eRS232          :  UNSIGNED( 7 downto 0 ):= RS232_BASE + 3; 
+    CONSTANT DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := RS232_BASE;
   
   
 
     CONSTANT PULSE_W        : INTEGER := 174;
     CONSTANT HALFCOUNT      : INTEGER := PULSE_W/2;
     CONSTANT WORD_LENGTH    : INTEGER := 8;
-    
-    
-    type TX_STATE_T is (IDLE, START_BIT, SEND_DATA, STOP_BIT);
-    type RX_STATE_T is (IDLE, START_BIT, RVCDATA, STOP_BIT);
-    
+        
     SUBTYPE item_array8_ram IS std_logic_vector (7 downto 0);
     TYPE array8_ram IS array (integer range <>) of item_array8_ram;
     

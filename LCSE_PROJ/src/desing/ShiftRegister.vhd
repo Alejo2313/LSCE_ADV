@@ -48,7 +48,7 @@ begin
 shift: Process( Clk, Reset, Enable, D, Q_new) is
 begin
 
-if( Reset = '0' ) then
+if( Reset = '1' ) then
     Q_new  <= (others => '0');
 
 elsif( Clk'event and Clk = '1' ) then

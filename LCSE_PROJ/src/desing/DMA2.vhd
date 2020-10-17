@@ -25,12 +25,6 @@ USE IEEE.numeric_std.all;
 USE IEEE.std_logic_unsigned.all;
 use work.LCSE_PKG.all;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
-
 entity DMA2 is
     Port ( 
         clk         : in STD_LOGIC;
@@ -58,34 +52,8 @@ end DMA2;
 
 architecture Behavioral of DMA2 is
 
-    constant DMA_MEM_BASE       : UNSIGNED( 7 downto 0 ) := X"C0";
-    
-    
-    constant DMA_CH1_OFF       : UNSIGNED( 3 downto 0 ) := X"0";
-        constant DMA_CONF_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"0";
-        constant DMA_SRC_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"1";
-        constant DMA_DEST_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"2";
-        constant DMA_CNT_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"3";
-         
-    constant DMA_CH2_OFF       : UNSIGNED( 3 downto 0 ) := X"4";
-        constant DMA_CONF_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"0";
-        constant DMA_SRC_CH2       : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"1";
-        constant DMA_DEST_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"2";
-        constant DMA_CNT_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"3"; 
-        
-    constant DMA_CH3_OFF       : UNSIGNED( 3 downto 0 ) := X"8";
-        constant DMA_CONF_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"0";
-        constant DMA_SRC_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"1";
-        constant DMA_DEST_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"2";
-        constant DMA_CNT_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"3"; 
-        
-    constant DMA_CONF_OFF      : UNSIGNED( 3 downto 0 ) := X"0";
-    constant DMA_SRC_OFF       : UNSIGNED( 3 downto 0 ) := X"1";
-    constant DMA_DEST_OFF      : UNSIGNED( 3 downto 0 ) := X"2";
-    constant DMA_CNT_OFF       : UNSIGNED( 3 downto 0 ) := X"3";
-     
-     
-     constant DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE;
+  
+    constant DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE;
     
     type dev_mem_8 is array (0 to 15) of std_logic_vector(7 downto 0);
     type DMA_STATE_T is (IDLE, FETCH, WAIT_FETCH, WRITE, WAIT_WRITE);
@@ -93,7 +61,7 @@ architecture Behavioral of DMA2 is
     
     signal dma_state_reg, dma_state_reg_n : DMA_STATE_T;
     
-    -- Configurarion registers
+-- Configurarion registers
 --              CHANNEL CONFIGURARION REGISTER   
 --    7_____6_________________3_______________________0
 --    |     |                                         |    

@@ -16,9 +16,7 @@ PORT (
 END ram;
 
 ARCHITECTURE behavior OF ram IS
-    CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
-    CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
-    
+
   SIGNAL contents_ram, contents_ram_n: array8_ram(to_integer(eRAM - sRAM - 1) downto 0);
   SIGNAL inBound      : std_logic;
   SIGNAL rAdrress     : UNSIGNED( 7 downto 0);
@@ -34,12 +32,7 @@ BEGIN
 
 
 
-rAdrress <= unsigned(address) - sRAM when (inBound = '1') else
-            (others => '0');
-inBound <= '1' when (unsigned(address) >= sRAM AND unsigned(address) <= eRAM) else
-           '0';   
-
-p_ram : process (clk, reset)  -- no reset
+p_ram : process (clk, reset)  -- no rest
 begin
     
   if ( clk'event and clk = '1' ) then
@@ -48,23 +41,24 @@ begin
 
 end process;
 
-LOGIC: process (write_en, inBound, oe, inbus) is
+LOGIC: process (write_en, inbus, oe, address) is
 
 begin
     contents_ram_n <= contents_ram;
-    
-    if (unsigned(address) >= sRAM AND unsigned(address) <= eRAM) then
-        if ( write_en = '1') then
+    outBus <= (others => 'Z');
+    if (unsigned(address) >= sRAM AND unsigned(address) <= eRAM ) then
+        if ( write_en = '1' ) then
             contents_ram_n(to_integer(unsigned(address) - sRAM))<= inbus;
+        elsif (oe = '1' ) then
+            outBus <= contents_ram(to_integer(unsigned(address) - sRAM));
         end if;
     end if;
+    
 end process;
 
 
             
-    
-outBus <= contents_ram(to_integer(unsigned(address) - sRAM)) when (oe = '1' AND inBound = '1' ) else
-            (others => 'Z');
+
                     
 -------------------------------------------------------------------------
 

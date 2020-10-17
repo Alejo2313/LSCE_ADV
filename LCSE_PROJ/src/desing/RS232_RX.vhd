@@ -23,15 +23,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
-use work.LCSE_P1.all;
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use work.LCSE_PKG.all;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity RS232_RX is
     Port ( Clk : in STD_LOGIC;
@@ -46,6 +39,7 @@ architecture Behavioral of RS232_RX is
 
 
 
+type RX_STATE_T is (IDLE, START_BIT, RVCDATA, STOP_BIT);
 
 -- signal
 
@@ -62,7 +56,7 @@ begin
 
 FFs: process ( clk, reset ) is 
 begin
-    if ( Reset = '0' ) then
+    if ( Reset = '1' ) then
         state_reg       <= IDLE;
         counter_reg     <= ( others => '0' );
         Valid_out_reg   <= '0';

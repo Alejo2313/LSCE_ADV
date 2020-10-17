@@ -41,3 +41,234 @@ add_bp {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/DM
 remove_bps -file {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/DMA2.vhd} -line 294
 add_bp {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/DMA2.vhd} 294
 remove_bps -file {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/desing/DMA2.vhd} -line 294
+update_compile_order -fileset sources_1
+relaunch_sim
+close_sim
+launch_simulation
+relaunch_sim
+launch_simulation
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg
+source tb_DMA2.tcl
+relaunch_sim
+run all
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+save_wave_config {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+file mkdir D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd w ]
+add_files -fileset sim_1 D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/LSCE_EXP.srcs/sim_1/new/RS232_tb.vhd
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top tb_RS232top [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+close_sim
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+launch_simulation
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg
+source tb_RS232top.tcl
+run all
+close_sim
+launch_simulation
+open_wave_config D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg
+source tb_RS232top.tcl
+run 120 ns
+restart
+run 120 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+relaunch_sim
+restart
+run 120 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+relaunch_sim
+relaunch_sim
+relaunch_sim
+restart
+run 140 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+run 20 ns
+restart
+run all
+restart
+run 300 ns
+relaunch_sim
+relaunch_sim
+run all
+restart
+run 600 ns
+run 30 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+relaunch_sim
+run 10 us
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+relaunch_sim
+run 15 us
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+run 300 ns
+relaunch_sim
+run 20 us
+save_wave_config {D:/OneDrive/Documentos/Universidad/LCSE/entregas/LCSE_PROJ/src/sim/tb_DMA2_behav.wcfg}
+close_sim
