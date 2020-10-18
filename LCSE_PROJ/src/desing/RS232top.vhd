@@ -43,6 +43,10 @@ architecture RTL of RS232top is
     signal rx_start_reg, rx_start_reg_n     : std_logic;
     signal data_in, data_out     : STD_LOGIC_VECTOR (7 downto 0);
     
+    
+    signal tx_en_bit : std_logic;
+    signal rx_en_bit : std_logic;
+    
     constant rx_en   : integer :=  7;
     constant tx_en   : integer :=  6;
     
@@ -164,7 +168,8 @@ begin --TODO DMA have to be on high impedance
     end if;
 end process;
 
-
+tx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
+rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);
 
 LOGIC: process( dev_mem, Address_s, EOT, EOR  ) is
 begin
@@ -173,8 +178,7 @@ begin
     DMA_TX_reg_n <= '0';
     IRQ_TX_reg_n <= '0';
     
-      tx_start_reg <=   dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
-  data_in <= dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE));
+    data_in <= dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE));
     
     if ( EOT = '1' ) then
         dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en)   <= '0'  ;

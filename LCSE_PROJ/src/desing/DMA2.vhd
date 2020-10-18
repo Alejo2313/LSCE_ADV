@@ -61,6 +61,12 @@ architecture Behavioral of DMA2 is
     
     signal dma_state_reg, dma_state_reg_n : DMA_STATE_T;
     
+    constant MEM2MEM : std_logic_vector(1 downto 0) := "00";
+    constant MEM2PER : std_logic_vector(1 downto 0) := "01";
+    constant PER2MEM : std_logic_vector(1 downto 0) := "10";
+    
+    signal src1, src1_n:  std_logic_vector(7 downto 0);
+    signal src2, src2_n:  std_logic_vector(3 downto 0);
 -- Configurarion registers
 --              CHANNEL CONFIGURARION REGISTER   
 --    7_____6_________________3_______________________0
@@ -120,18 +126,17 @@ begin
     
         OutBus_s_reg <= (others => 'Z');
         OutBus_m_reg <= (others => '0');
-        Address_m_reg <= (others => '0');
         WE_m_reg <= '0';
         RE_m_reg <= '0';
         dev_mem  <=  (others => (others => '0'));
-        
+        src1 <= (others => '0');
+        src2 <= (others => '0');
         
     elsif (Clk'event and Clk = '1' ) then
         dma_state_reg <= dma_state_reg_n;
         
         OutBus_s_reg <= OutBus_s_reg_n;
         OutBus_m_reg <= OutBus_m_reg_n;
-        Address_m_reg <= Address_m_reg_n;
         WE_m_reg <= WE_m_reg_n;
         RE_m_reg <= RE_m_reg_n;
         dev_mem  <= dev_mem_n;
@@ -142,6 +147,9 @@ begin
         ch_dest_reg   <= ch_dest_reg_n;
         ch_couter_reg <= ch_couter_reg_n;
         
+        src1 <= src1_n;
+        src2 <= src2_n;
+        
     end if;
 
 end process;
@@ -151,7 +159,6 @@ begin
     dma_state_reg_n <= dma_state_reg;
     case dma_state_reg is
         when IDLE =>
-            test2 <= dev_mem(TO_INTEGER(DMA_CONF_CH1));    
             if( Event_RQ(2) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH1))(7) = '1') then
                 dma_state_reg_n <= FETCH;
             elsif( Event_RQ(1) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH2))(7) = '1') then
@@ -192,6 +199,9 @@ begin
     WE_m_reg_n      <= '0';
     RE_m_reg_n      <= '0';
     
+    src1_n <= (others => '0');
+    src2_n <= (others => '0');
+    
     case dma_state_reg is
         when IDLE =>
             ch_conf_reg_n   <= (others => '0');
@@ -220,45 +230,79 @@ begin
             
               
         when FETCH =>
-            Address_m_reg_n <= dev_mem( TO_INTEGER(ch_src_reg)) +
-                               dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
-            RE_m_reg_n <= '1';
             
+            case dev_mem( TO_INTEGER(ch_conf_reg_n))(6 downto 5) is         
+                when MEM2MEM =>
+                    src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    RE_m_reg_n <= '1';
+                when MEM2PER => 
+                    src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    RE_m_reg_n <= '1';
+                when PER2MEM =>                    
+                    src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
+                    src2_n <= (others => '0');
+                    RE_m_reg_n <= '1';
+                when others =>
+                    src1_n <= (others => '0');
+                    src2_n <= (others => '0');
+                    RE_m_reg_n <= '0';
+            end case;
+
                   
         when WAIT_FETCH =>
-             Address_m_reg_n <= Address_m_reg;
+             src1_n <= src1;
+             src2_n <= src2;
              RE_m_reg_n <= '1';
+             
             if( access_m = '1' ) then
                 inBus_m_reg_n <= inBus_m;
                 RE_m_reg_n <= '0';
             end if;
            
         when WRITE =>
-            Address_m_reg_n <= dev_mem( TO_INTEGER(ch_dest_reg)) +
-                               dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
-                               
-            OutBus_m_reg_n <= inBus_m_reg;                   
-            WE_m_reg_n <= '1';
+        
+            case dev_mem( TO_INTEGER(ch_conf_reg_n))(6 downto 5) is         
+                when MEM2MEM =>
+                    src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    WE_m_reg_n <= '1';
+                when MEM2PER => 
+                    src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
+                    src2_n <= (others => '0');
+                    WE_m_reg_n <= '1';
+                when PER2MEM =>                    
+                    src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    WE_m_reg_n <= '1';
+                    WE_m_reg_n <= '1';
+                when others =>
+                    src1_n <= (others => '0');
+                    src2_n <= (others => '0');
+                    WE_m_reg_n <= '0';
+            end case;       
             
-            if ( Access_m = '1' ) then
+            OutBus_m_reg_n <= inBus_m_reg;     
+        when WAIT_WRITE =>
+             src1_n <= src1;
+             src2_n <= src2;
+             WE_m_reg_n <= '1';
+            OutBus_m_reg_n <= OutBus_m_reg;
+            
+            if( access_m = '1' ) then
+                WE_m_reg_n <= '0';
+                
                 dev_mem_n( TO_INTEGER(ch_couter_reg_n))(7 downto 4) <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4) + 1;
                 if ( dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4) = dev_mem( TO_INTEGER(ch_couter_reg_n))(3 downto 0)) then
                     dev_mem_n( TO_INTEGER(ch_couter_reg_n))(7 downto 4) <= (others => '0');
                     dev_mem_n(TO_INTEGER(DMA_CONF_CH1))(7) <= '0';
                 end if;
-            end if;
-            
-        when WAIT_WRITE =>
-            Address_m_reg_n <= Address_m_reg;
-            WE_m_reg_n <= '1';
-            OutBus_m_reg_n <= OutBus_m_reg;
-            
-            if( access_m = '1' ) then
-                WE_m_reg_n <= '0';
-            end if;
-            
+            end if;         
     end case;
-        
+    
+    Address_m_reg <= src1 + src2;
+           
     if ( unsigned(Addess_s(7 downto 4)) = DEV_MEM_BASE(7 downto 4) )  then
         if( WE_s = '1' ) then
             dev_mem_n( conv_integer(Addess_s(3 downto 0)) ) <= InBus_s;

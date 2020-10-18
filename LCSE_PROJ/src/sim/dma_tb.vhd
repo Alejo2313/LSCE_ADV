@@ -9,7 +9,7 @@ use work.LCSE_PKG.all;
 
 entity tb_DMA2 is
 end tb_DMA2;
-
+   
 architecture tb of tb_DMA2 is  
 
     CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
@@ -219,7 +219,7 @@ begin
 
         
         Address_core <= std_logic_vector(DMA_MEM_BASE + DMA_CONF_CH1);
-        outBus_core  <= X"80";
+        outBus_core  <= X"C0";
         WE_core <= '1';
 --        wait for 10 ns;
 --        WE_core <= '0';
@@ -251,12 +251,12 @@ begin
         
         wait for 60 ns;
         
-        Address_core <= std_logic_vector(sRAM  + 2);
-        outBus_core  <= X"FF";
-        WE_core <= '1';
-        wait for 20 ns;
-        WE_core <= '0';
-        wait for 20 ns; 
+--        Address_core <= std_logic_vector(sRAM  + 2);
+--        outBus_core  <= X"FF";
+--        WE_core <= '1';
+--        wait for 20 ns;
+--        WE_core <= '0';
+--        wait for 20 ns; 
 
         -- Stop the clock and hence terminate the simulation
         wait; 

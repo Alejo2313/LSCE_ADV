@@ -52,7 +52,7 @@ begin
         elsif (oe = '1' ) then
             outBus <= contents_ram(to_integer(unsigned(address) - sRAM));
         end if;
-    end if;
+    end if;  
     
 end process;
 
