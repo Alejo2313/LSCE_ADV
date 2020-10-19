@@ -122,28 +122,25 @@ begin
 FF: process (clk, reset) is 
 begin
     if( Reset = '1' ) then
-        dma_state_reg <= IDLE;
-    
-        OutBus_s_reg <= (others => 'Z');
-        OutBus_m_reg <= (others => '0');
-        WE_m_reg <= '0';
-        RE_m_reg <= '0';
-        dev_mem  <=  (others => (others => '0'));
-        src1 <= (others => '0');
-        src2 <= (others => '0');
+        dma_state_reg <= IDLE;    
+        OutBus_m_reg  <= (others => '0');
+        WE_m_reg      <= '0';
+        RE_m_reg      <= '0';
+        dev_mem       <=  (others => (others => '0'));
+        src1          <= (others => '0');
+        src2          <= (others => '0');
         
     elsif (Clk'event and Clk = '1' ) then
         dma_state_reg <= dma_state_reg_n;
         
-        OutBus_s_reg <= OutBus_s_reg_n;
-        OutBus_m_reg <= OutBus_m_reg_n;
-        WE_m_reg <= WE_m_reg_n;
-        RE_m_reg <= RE_m_reg_n;
-        dev_mem  <= dev_mem_n;
-        inBus_m_reg <= inBus_m_reg_n;
+        OutBus_m_reg  <= OutBus_m_reg_n;
+        WE_m_reg      <= WE_m_reg_n;
+        RE_m_reg      <= RE_m_reg_n;
+        dev_mem       <= dev_mem_n;
+        inBus_m_reg   <= inBus_m_reg_n;
         
-        ch_conf_reg  <= ch_conf_reg_n;
-        ch_src_reg   <= ch_src_reg_n;
+        ch_conf_reg   <= ch_conf_reg_n;
+        ch_src_reg    <= ch_src_reg_n;
         ch_dest_reg   <= ch_dest_reg_n;
         ch_couter_reg <= ch_couter_reg_n;
         
@@ -184,12 +181,14 @@ begin
     end case;
 end process;
 
-LOGIC: process(dma_state_reg, Event_RQ,InBus_m, dev_mem, Access_m, Addess_s, InBus_s, WE_s, RE_s) is
-    variable tmp : unsigned(7 downto 0 ) := (others => '0');
+LOGIC: process( dma_state_reg, Event_RQ,InBus_m,dev_mem, Access_m, Addess_s, 
+                InBus_s, WE_s, RE_s,ch_conf_reg, ch_src_reg,ch_dest_reg, ch_couter_reg, 
+                src1, src2, inBus_m_reg, outBus_m_reg) is
 begin
     dev_mem_n <= dev_mem;
-    OutBus_m_reg_n <= (others => 'Z');
-    OutBus_s_reg_n <= (others => 'Z');
+    inBus_m_reg_n   <= inBus_m_reg;
+    OutBus_m_reg_n  <= (others => 'Z');
+    OutBus_s_reg    <= (others => 'Z');
     ch_conf_reg_n   <= ch_conf_reg;
     ch_src_reg_n    <= ch_src_reg;
     ch_dest_reg_n   <= ch_dest_reg;
@@ -231,14 +230,14 @@ begin
               
         when FETCH =>
             
-            case dev_mem( TO_INTEGER(ch_conf_reg_n))(6 downto 5) is         
+            case dev_mem( TO_INTEGER(ch_conf_reg))(6 downto 5) is         
                 when MEM2MEM =>
                     src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
-                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                     RE_m_reg_n <= '1';
                 when MEM2PER => 
                     src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
-                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                     RE_m_reg_n <= '1';
                 when PER2MEM =>                    
                     src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
@@ -263,10 +262,10 @@ begin
            
         when WRITE =>
         
-            case dev_mem( TO_INTEGER(ch_conf_reg_n))(6 downto 5) is         
+            case dev_mem( TO_INTEGER(ch_conf_reg))(6 downto 5) is         
                 when MEM2MEM =>
                     src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
-                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                     WE_m_reg_n <= '1';
                 when MEM2PER => 
                     src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
@@ -274,7 +273,7 @@ begin
                     WE_m_reg_n <= '1';
                 when PER2MEM =>                    
                     src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
-                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4);
+                    src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                     WE_m_reg_n <= '1';
                     WE_m_reg_n <= '1';
                 when others =>
@@ -293,10 +292,10 @@ begin
             if( access_m = '1' ) then
                 WE_m_reg_n <= '0';
                 
-                dev_mem_n( TO_INTEGER(ch_couter_reg_n))(7 downto 4) <= dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4) + 1;
-                if ( dev_mem( TO_INTEGER(ch_couter_reg_n))(7 downto 4) = dev_mem( TO_INTEGER(ch_couter_reg_n))(3 downto 0)) then
-                    dev_mem_n( TO_INTEGER(ch_couter_reg_n))(7 downto 4) <= (others => '0');
-                    dev_mem_n(TO_INTEGER(DMA_CONF_CH1))(7) <= '0';
+                dev_mem_n( TO_INTEGER(ch_couter_reg))(7 downto 4) <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4) + 1;
+                if ( dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4) = dev_mem( TO_INTEGER(ch_couter_reg))(3 downto 0)) then
+                    dev_mem_n( TO_INTEGER(ch_couter_reg))(7 downto 4) <= (others => '0');
+                    dev_mem_n(TO_INTEGER(ch_conf_reg))(7) <= '0';
                 end if;
             end if;         
     end case;
@@ -308,7 +307,7 @@ begin
             dev_mem_n( conv_integer(Addess_s(3 downto 0)) ) <= InBus_s;
             
         elsif ( RE_s = '1' ) then
-            OutBus_s_reg_n <= dev_mem( conv_integer(Addess_s(3 downto 0) ));
+            OutBus_s_reg <= dev_mem( conv_integer(Addess_s(3 downto 0) ));
         end if;
     end if;
 

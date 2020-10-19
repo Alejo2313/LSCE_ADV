@@ -42,8 +42,7 @@ architecture RTL of RS232top is
     signal tx_start_reg, tx_start_reg_n     : std_logic;
     signal rx_start_reg, rx_start_reg_n     : std_logic;
     signal data_in, data_out     : STD_LOGIC_VECTOR (7 downto 0);
-    
-    
+           
     signal tx_en_bit : std_logic;
     signal rx_en_bit : std_logic;
     
@@ -114,13 +113,14 @@ architecture RTL of RS232top is
 
 begin  -- RTL
 
-  
+tx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
+rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);  
 
   Transmitter: RS232_TX
     port map (
       Clk   => Clk,
       Reset => Reset,
-      Start => tx_start_reg,
+      Start => tx_en_bit,
       Data  => data_in,
       EOT   => EOT, ---ToDo: RQ DMA, IRQ CORE, BIT STATE. debe durar 1 ciclo
       TX    => TX);
@@ -164,8 +164,7 @@ begin --TODO DMA have to be on high impedance
     end if;
 end process;
 
-tx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
-rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);
+
 
 LOGIC: process( dev_mem, Address_s, EOT, EOR, data_out,InBus_s, WE_s, RE_s) is
 begin
@@ -214,10 +213,12 @@ begin
     end if;
     
    
-    if ( unsigned(Address_s(7 downto 4)) = DEV_MEM_BASE(7 downto 4) )  then
+    if ( unsigned(Address_s(7 downto 4)) = RS232_BASE(7 downto 4) )  then
         if( WE_s = '1' ) then
             dev_mem_n( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) ) <= InBus_s;
-            
+            if ( unsigned(Address_s) = (RS232_TX_DATA) and dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_dma_en) = '1' ) then
+               dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en) <= '1';
+            end if;
         elsif ( RE_s = '1' ) then
             OutBus_s_reg <= dev_mem( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) );
         end if;

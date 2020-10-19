@@ -65,7 +65,7 @@ package LCSE_PKG is
         CONSTANT RS232_TX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 2;
         CONSTANT RS232_RX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
     CONSTANT    eRS232          :  UNSIGNED( 7 downto 0 ):= RS232_BASE + 3; 
-    CONSTANT DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := RS232_BASE;
+ 
   
   
 

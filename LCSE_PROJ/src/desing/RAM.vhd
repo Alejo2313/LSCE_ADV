@@ -41,7 +41,7 @@ begin
 
 end process;
 
-LOGIC: process (write_en, inbus, oe, address) is
+LOGIC: process (write_en, inbus, oe, address, contents_ram) is
 
 begin
     contents_ram_n <= contents_ram;

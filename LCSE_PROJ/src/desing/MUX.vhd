@@ -62,27 +62,26 @@ architecture Behavioral of MUX is
     SIGNAL Address_n   : STD_LOGIC_VECTOR (7 downto 0);       
     SIGNAL inBus_DMA_n : STD_LOGIC_VECTOR (7 downto 0);     
 begin
+
     core_access <= WE_CORE OR RE_CORE;
     DMA_access  <= WE_DMA OR RE_DMA;
     
-    Address_n <=  Address_core when ( core_access = '1' ) else
-                Address_DMA   when ( DMA_access = '1' )   else
-                Address_n;
-    Address <= Address_n;
-    outBus_n <= outBus_CORE when ( core_access = '1' ) else
-                outBus_DMA   when ( DMA_access = '1' )   else
-                outBus_n;  
+    Address <= Address_core when ( core_access = '1' ) else
+               Address_DMA   when ( DMA_access = '1' )   else
+               (others => '0');
+                
     
-    outBus <= outBus_n;
+    outBus <= outBus_CORE when ( core_access = '1' ) else
+              outBus_DMA   when ( DMA_access = '1' )   else
+              (others => 'Z');  
     
-    inBus_core <=   inBus when ( core_access = '1' ) else
-                    (others => '0');
     
-    inBus_DMA_n <=    inBus when ( DMA_access = '1' ) else
-                    inBus_DMA_n;   
-                    
-     inBus_DMA <= inBus_DMA_n;               
-         
+    inBus_core <= inBus when ( core_access = '1' ) else
+                  (others => 'Z');
+    
+    inBus_DMA <= inBus when ( DMA_access = '1' ) else
+                 (others => 'Z');   
+                             
                     
      WE <=  WE_CORE when ( core_access = '1' ) else
             WE_DMA  when (  DMA_access = '1' ) else

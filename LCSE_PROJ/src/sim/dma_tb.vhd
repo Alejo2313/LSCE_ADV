@@ -6,11 +6,14 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use work.LCSE_PKG.all; 
-
+  
+  
+  
+  
 entity tb_DMA2 is
 end tb_DMA2;
    
-architecture tb of tb_DMA2 is  
+architecture tb of tb_DMA2 is    
 
     CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
     CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
@@ -94,7 +97,21 @@ architecture tb of tb_DMA2 is
                WE : out STD_LOGIC;
                RE : out STD_LOGIC);
     end component;
-
+    component RS232top
+        port (Reset     : in std_logic;
+              Clk       : in std_logic;
+              TX        : out std_logic;
+              RX        : in std_logic;
+              DMA_TX    : out std_logic;
+              DMA_RX    : out std_logic;
+              IRQ_TX    : out std_logic;
+              IRQ_RX    : out std_logic;
+              Address_s : in std_logic_vector (7 downto 0);
+              InBus_s   : in std_logic_vector (7 downto 0);
+              OutBus_s  : out std_logic_vector (7 downto 0);
+              WE_s      : in std_logic;
+              RE_s      : in std_logic);
+    end component;
     signal clk       : std_logic;
     signal Reset     : std_logic;
     
@@ -120,6 +137,13 @@ architecture tb of tb_DMA2 is
     signal RE_s      : std_logic;
     
     
+
+    signal TX        : std_logic;
+    signal RX        : std_logic;
+    signal DMA_TX    : std_logic;
+    signal DMA_RX    : std_logic;
+    signal IRQ_TX    : std_logic;
+    signal IRQ_RX    : std_logic;
 
     constant TbPeriod : time := 20 ns; -- EDIT Put right period here
     signal TbClock : std_logic := '0';
@@ -173,21 +197,36 @@ begin
                address  => Addess_s,
                inBus    => inBus_s,
                outBus   => outBus_s);
-    
+    dut : RS232top
+    port map (Reset     => Reset,
+              Clk       => Clk,
+              TX        => TX,
+              RX        => RX,
+              DMA_TX    => DMA_TX,
+              DMA_RX    => DMA_RX,
+              IRQ_TX    => IRQ_TX,
+              IRQ_RX    => IRQ_RX,
+              Address_s => Addess_s,
+              InBus_s   => InBus_s,
+              OutBus_s  => OutBus_s,
+              WE_s      => WE_s,
+              RE_s      => RE_s);
     -- Clock generation
     TbClock <= not TbClock after TbPeriod/2 when TbSimEnded /= '1' else '0';
 
     -- EDIT: Check that clk is really your main clock signal
     clk <= TbClock;
-
+    Event_RQ(2) <= DMA_TX;
+    Event_RQ(1 downto 0) <= "00";
     stimuli : process
     begin
+        
         -- EDIT Adapt initialization as needed
         InBus_core <= (others => '0');
-        Event_RQ <= (others => '0');
+     --   Event_RQ <= (others => '0');
         WE_core <= '0';
         RE_core <= '0';
-
+        RX <= '1';
         -- Reset generation
         -- EDIT: Check that Reset is really your reset signal
         Reset <= '1';
@@ -216,24 +255,30 @@ begin
         WE_core <= '0';
         wait for 20 ns;
         
+        Address_core <= std_logic_vector(sRAM  + 3);
+        outBus_core  <= X"A4";
+        WE_core <= '1';
+        wait for 20 ns;
+        WE_core <= '0';
+        wait for 20 ns;        
 
         
         Address_core <= std_logic_vector(DMA_MEM_BASE + DMA_CONF_CH1);
-        outBus_core  <= X"C0";
+        outBus_core  <= X"A0";
         WE_core <= '1';
 --        wait for 10 ns;
 --        WE_core <= '0';
         wait for 20 ns;
         
         Address_core <= std_logic_vector(DMA_MEM_BASE + DMA_SRC_CH1);
-        outBus_core  <= std_logic_vector(sRAM  + 0);
+        outBus_core  <= std_logic_vector(sRAM  + 1);
         WE_core <= '1';
 --        wait for 10 ns;
 --        WE_core <= '0';
         wait for 20 ns;
         
         Address_core <= std_logic_vector(DMA_MEM_BASE + DMA_DEST_CH1);
-        outBus_core  <= std_logic_vector(sRAM  + 3);
+        outBus_core  <= std_logic_vector(RS232_TX_DATA);
         WE_core <= '1';
 --        wait for 10 ns;
 --        WE_core <= '0';
@@ -246,17 +291,31 @@ begin
         WE_core <= '0';
         wait for 20 ns;  
         
-        Event_RQ <= "100";
+        
+       Address_core <= std_logic_vector(RS232_TX_DATA);
+       outBus_core    <= X"A1";
+       WE_core     <= '1';
+       wait for TbPeriod; 
+       WE_core     <= '0';
+       wait for TbPeriod;
+       
+       Address_core <= std_logic_vector(RS232_CONF);
+       outBus_core    <= "01001111";
+       WE_core     <= '1';
+       wait for TbPeriod; 
+       WE_core     <= '0';
+       wait for TbPeriod;    
+        
         wait for 20 ns;
         
         wait for 60 ns;
         
---        Address_core <= std_logic_vector(sRAM  + 2);
---        outBus_core  <= X"FF";
---        WE_core <= '1';
---        wait for 20 ns;
---        WE_core <= '0';
---        wait for 20 ns; 
+        Address_core <= std_logic_vector(sRAM  + 2);
+        outBus_core  <= X"FF";
+        WE_core <= '1';
+        wait for 20 ns;
+        WE_core <= '0';
+        wait for 20 ns; 
 
         -- Stop the clock and hence terminate the simulation
         wait; 
