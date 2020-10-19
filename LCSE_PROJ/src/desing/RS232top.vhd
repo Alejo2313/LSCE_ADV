@@ -148,35 +148,33 @@ FF:process( clk, reset ) is
 begin --TODO DMA have to be on high impedance
     if( reset = '1' ) then
         dev_mem        <= (others => (others => '0'));
-        OutBus_s_reg   <= (others => '0') ;
         DMA_RX_reg     <= '0';
         IRQ_RX_reg     <= '0';
         DMA_TX_reg     <= '0';
         IRQ_TX_reg     <= '0';
-   --     tx_start_reg   <= '0';
- --       rx_start_reg   <= '0';
+
         
     elsif ( Clk = '1' and Clk'event ) then
         dev_mem        <= dev_mem_n;
-        OutBus_s_reg   <= OutBus_s_reg_n ;
         DMA_RX_reg     <= DMA_RX_reg_n;
         IRQ_RX_reg     <= IRQ_RX_reg_n;
         DMA_TX_reg     <= DMA_TX_reg_n;
         IRQ_TX_reg     <= IRQ_TX_reg_n;
-    --    tx_start_reg   <= tx_start_reg_n;
-    --    rx_start_reg   <= rx_start_reg_n;
+    
     end if;
 end process;
 
 tx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
 rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);
 
-LOGIC: process( dev_mem, Address_s, EOT, EOR  ) is
+LOGIC: process( dev_mem, Address_s, EOT, EOR, data_out,InBus_s, WE_s, RE_s) is
 begin
     DMA_RX_reg_n <= '0';
     IRQ_RX_reg_n <= '0';
     DMA_TX_reg_n <= '0';
     IRQ_TX_reg_n <= '0';
+    OutBus_s_reg   <= (others => 'Z') ;
+    dev_mem_n <= dev_mem;
     
     data_in <= dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE));
     

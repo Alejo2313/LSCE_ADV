@@ -187,7 +187,7 @@ end process;
 LOGIC: process(dma_state_reg, Event_RQ,InBus_m, dev_mem, Access_m, Addess_s, InBus_s, WE_s, RE_s) is
     variable tmp : unsigned(7 downto 0 ) := (others => '0');
 begin
-    --dev_mem_n <= dev_mem;
+    dev_mem_n <= dev_mem;
     OutBus_m_reg_n <= (others => 'Z');
     OutBus_s_reg_n <= (others => 'Z');
     ch_conf_reg_n   <= ch_conf_reg;
