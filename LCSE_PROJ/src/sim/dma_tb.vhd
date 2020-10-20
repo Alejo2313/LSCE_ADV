@@ -15,37 +15,7 @@ end tb_DMA2;
    
 architecture tb of tb_DMA2 is    
 
-    CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
-    CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
-    
-    constant DMA_MEM_BASE       : UNSIGNED( 7 downto 0 ) := X"C0";
-    
-    
-    constant DMA_CH1_OFF       : UNSIGNED( 3 downto 0 ) := X"0";
-        constant DMA_CONF_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"0";
-        constant DMA_SRC_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"1";
-        constant DMA_DEST_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"2";
-        constant DMA_CNT_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"3";
-         
-    constant DMA_CH2_OFF       : UNSIGNED( 3 downto 0 ) := X"4";
-        constant DMA_CONF_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"0";
-        constant DMA_SRC_CH2       : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"1";
-        constant DMA_DEST_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"2";
-        constant DMA_CNT_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"3"; 
-        
-    constant DMA_CH3_OFF       : UNSIGNED( 3 downto 0 ) := X"8";
-        constant DMA_CONF_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"0";
-        constant DMA_SRC_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"1";
-        constant DMA_DEST_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"2";
-        constant DMA_CNT_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"3"; 
-        
-    constant DMA_CONF_OFF      : UNSIGNED( 3 downto 0 ) := X"0";
-    constant DMA_SRC_OFF       : UNSIGNED( 3 downto 0 ) := X"1";
-    constant DMA_DEST_OFF      : UNSIGNED( 3 downto 0 ) := X"2";
-    constant DMA_CNT_OFF       : UNSIGNED( 3 downto 0 ) := X"3";
-     
-     
-     constant DEV_MEM_BASE       : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE;
+
      
     component DMA2
         port (clk       : in std_logic;
@@ -112,6 +82,8 @@ architecture tb of tb_DMA2 is
               WE_s      : in std_logic;
               RE_s      : in std_logic);
     end component;
+    
+    
     signal clk       : std_logic;
     signal Reset     : std_logic;
     

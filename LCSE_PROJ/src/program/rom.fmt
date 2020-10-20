@@ -1,0 +1,45 @@
+       ; LCSE picoblaze test program
+       ;Memory Map definition
+       CONSTANT sRAM, 10          ; RAM Start address
+       CONSTANT eRAM, 1F          ; RAM end address
+       CONSTANT DMA_MEM_BASE, C0  ;
+       CONSTANT DMA_CONF_CH1, C0  ;
+       CONSTANT DMA_SRC_CH1, C1   ;
+       CONSTANT DMA_DEST_CH1, C2  ;
+       CONSTANT DMA_CNT_CH1, C3   ;
+       CONSTANT DMA_CONF_CH2, C4  ;
+       CONSTANT DMA_SRC_CH2, C5   ;
+       CONSTANT DMA_DEST_CH2, C6  ;
+       CONSTANT DMA_CNT_CH2, C7   ;
+       CONSTANT DMA_CONF_CH3, C8  ;
+       CONSTANT DMA_SRC_CH3, C9   ;
+       CONSTANT DMA_DEST_CH3, CA  ;
+       CONSTANT DMA_CNT_CH3, CB   ;
+       CONSTANT RS232_BASE, D0    ;
+       CONSTANT RS232_CONF, D0    ;
+       CONSTANT RS232_STATUS, D1  ;
+       CONSTANT RS232_TX_DATA, D2 ;
+       CONSTANT RS232_RX_DAT, D3  ;
+start: LOAD s0, A1
+       LOAD s1, sRAM
+       OUTPUT s0, (s1)
+       ADD s1, 01
+       LOAD s0, A2
+       OUTPUT s0, (s1)
+       ADD s1, 01
+       LOAD s0, A3
+       OUTPUT s0, (s1)
+       ADD s1, 01
+       LOAD s0, RS232_TX_DATA
+       OUTPUT s0, DMA_DEST_CH1
+       LOAD s0, sRAM
+       OUTPUT s0, DMA_SRC_CH1
+       LOAD s0, 12
+       OUTPUT s0, DMA_CNT_CH1
+       LOAD s0, A0
+       OUTPUT s0, DMA_CONF_CH1
+       INPUT s0, sRAM
+       OUTPUT s0, RS232_TX_DATA
+       LOAD s0, 4F
+       OUTPUT s0, RS232_CONF
+ loop: JUMP loop

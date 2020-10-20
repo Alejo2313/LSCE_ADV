@@ -46,7 +46,7 @@ LOGIC: process (write_en, inbus, oe, address, contents_ram) is
 begin
     contents_ram_n <= contents_ram;
     outBus <= (others => 'Z');
-    if (unsigned(address) >= sRAM AND unsigned(address) <= eRAM ) then
+    if (unsigned(address) >= sRAM AND unsigned(address) < eRAM ) then
         if ( write_en = '1' ) then
             contents_ram_n(to_integer(unsigned(address) - sRAM))<= inbus;
         elsif (oe = '1' ) then

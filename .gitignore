@@ -6,3 +6,5 @@
 #Remove project files
 *.xpr
 *.zip
+*.exe
+*.hex
