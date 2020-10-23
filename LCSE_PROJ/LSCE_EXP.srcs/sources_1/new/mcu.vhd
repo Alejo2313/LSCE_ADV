@@ -134,6 +134,16 @@ architecture Behavioral of MCU is
               WE_s      : in std_logic;
               RE_s      : in std_logic);
     end component;    
+    
+    component display
+        port (Clk       : in std_logic;
+              Reset     : in std_logic;
+              Address_s : in std_logic_vector (7 downto 0);
+              InBus_s   : in std_logic_vector (7 downto 0);
+              outBus_s  : out std_logic_vector (7 downto 0);
+              WE_s      : in std_logic;
+              RE_s      : in std_logic);
+    end component;
      
     signal         address : std_logic_vector(11 downto 0);
     signal     instruction : std_logic_vector(17 downto 0);
@@ -216,7 +226,7 @@ begin
   
   kcpsm6_sleep <= '0';
   interrupt <= interrupt_ack;
-  kcpsm6_reset <= Reset;
+ -- kcpsm6_reset <= Reset;
 
   
     DMA : DMA2
@@ -283,4 +293,14 @@ begin
               OutBus_s  => OutBus_s,
               WE_s      => WE_s,
               RE_s      => RE_s);
+              
+    DISP7 : display
+    port map (Clk       => Clk,
+              Reset     => Reset,
+              Address_s => Addess_s,
+              InBus_s   => InBus_s,
+              outBus_s  => outBus_s,
+              WE_s      => WE_s,
+              RE_s      => RE_s);
+                           
 end Behavioral;
