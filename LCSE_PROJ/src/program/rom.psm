@@ -28,8 +28,19 @@ CONSTANT RS232_BASE,    D0  ;
 CONSTANT RS232_CONF,    D0  ;
 CONSTANT RS232_STATUS,  D1  ;
 CONSTANT RS232_TX_DATA, D2  ;
-CONSTANT RS232_RX_DAT,  D3  ; 
+CONSTANT RS232_RX_DAT       , D3; 
 
+CONSTANT GPIO_BASE          , E0;
+CONSTANT GPIO_IRQA_MASK     , E0;
+CONSTANT GPIO_IRQB_MASK     , E1;
+CONSTANT GPIO_IRQMODEA_MASK , E2;
+CONSTANT GPIO_IRQMODEB_MASK , E3;
+CONSTANT GPIO_MODEA_REG1    , E4;
+CONSTANT GPIO_MODEA_REG2    , E5;
+CONSTANT GPIO_MODEB_REG1    , E6;
+CONSTANT GPIO_MODEB_REG2    , E7;
+CONSTANT GPIO_A             , E8;
+CONSTANT GPIO_B             , E9;
 
 start:  LOAD    s0  , A1
         LOAD    s1  , sRAM
@@ -44,6 +55,19 @@ start:  LOAD    s0  , A1
         OUTPUT  s0  , (s1)
         ADD     s1  , 01
 
+        LOAD    s0  , 55;
+        OUTPUT  s0  , GPIO_MODEA_REG1
+        OUTPUT  s0  , GPIO_MODEA_REG2
+
+        LOAD    s0  , A0
+        OUTPUT  s0  , GPIO_MODEB_REG1
+   ;     OUTPUT  s0  , GPIO_MODEB_REG2
+        OUTPUT  s0  , GPIO_IRQB_MASK
+
+
+        LOAD    s0  , FF
+        OUTPUT  s0  , GPIO_A
+
         LOAD    s0  , RS232_TX_DATA
         OUTPUT  s0  , DMA_DEST_CH1
         LOAD    s0  , sRAM 
@@ -57,15 +81,9 @@ start:  LOAD    s0  , A1
         INPUT   s0  , sRAM
         OUTPUT  s0  , RS232_TX_DATA
 
-        LOAD   s0   , 4F
+        LOAD    s0  , 4F
         OUTPUT  s0  , RS232_CONF
         
-
-    
-
-
-
-
 
 loop:   Jump    loop
 

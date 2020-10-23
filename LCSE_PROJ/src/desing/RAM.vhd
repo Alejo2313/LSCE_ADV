@@ -14,7 +14,7 @@ PORT (
    inbus    : in std_logic_vector(7 downto 0);
    outBus   : out std_logic_vector(7 downto 0));
 END ram;
-
+  
 ARCHITECTURE behavior OF ram IS
 
   SIGNAL contents_ram, contents_ram_n: array8_ram(to_integer(eRAM - sRAM - 1) downto 0);

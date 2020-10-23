@@ -3,86 +3,78 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="tb_MCU_behav.wdb" id="1">
+      <db_ref path="tb_IRQ_behav.wdb" id="1">
          <top_modules>
-            <top_module name="jtag_loader_pkg" />
             <top_module name="lcse_pkg" />
-            <top_module name="tb_MCU" />
+            <top_module name="tb_IRQ" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="2620001fs"></ZoomEndTime>
-      <Cursor1Time time="0fs"></Cursor1Time>
+      <ZoomStartTime time="118333fs"></ZoomStartTime>
+      <ZoomEndTime time="1176334fs"></ZoomEndTime>
+      <Cursor1Time time="416333fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="232"></NameColumnWidth>
+      <NameColumnWidth column_width="227"></NameColumnWidth>
       <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
-   <wvobject fp_name="/tb_MCU/dut/Clk" type="logic">
+   <WVObjectSize size="14" />
+   <wvobject fp_name="/tb_IRQ/dut/Clk" type="logic">
       <obj_property name="ElementShortName">Clk</obj_property>
       <obj_property name="ObjectShortName">Clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/Reset" type="logic">
+   <wvobject fp_name="/tb_IRQ/dut/Reset" type="logic">
       <obj_property name="ElementShortName">Reset</obj_property>
       <obj_property name="ObjectShortName">Reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/TX" type="logic">
-      <obj_property name="ElementShortName">TX</obj_property>
-      <obj_property name="ObjectShortName">TX</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/Address_s" type="array">
+      <obj_property name="ElementShortName">Address_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">Address_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/processor/reset" type="logic">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/InBus_s" type="array">
+      <obj_property name="ElementShortName">InBus_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">InBus_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/busAccess" type="logic">
-      <obj_property name="ElementShortName">busAccess</obj_property>
-      <obj_property name="ObjectShortName">busAccess</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/outBus_s" type="array">
+      <obj_property name="ElementShortName">outBus_s[7:0]</obj_property>
+      <obj_property name="ObjectShortName">outBus_s[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/Address" type="array">
-      <obj_property name="ElementShortName">Address[7:0]</obj_property>
-      <obj_property name="ObjectShortName">Address[7:0]</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/WE_s" type="logic">
+      <obj_property name="ElementShortName">WE_s</obj_property>
+      <obj_property name="ObjectShortName">WE_s</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/inBus" type="array">
-      <obj_property name="ElementShortName">inBus[7:0]</obj_property>
-      <obj_property name="ObjectShortName">inBus[7:0]</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/RE_s" type="logic">
+      <obj_property name="ElementShortName">RE_s</obj_property>
+      <obj_property name="ObjectShortName">RE_s</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/outBus" type="array">
-      <obj_property name="ElementShortName">outBus[7:0]</obj_property>
-      <obj_property name="ObjectShortName">outBus[7:0]</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQV" type="array">
+      <obj_property name="ElementShortName">IRQV[7:0]</obj_property>
+      <obj_property name="ObjectShortName">IRQV[7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/WE" type="logic">
-      <obj_property name="ElementShortName">WE</obj_property>
-      <obj_property name="ObjectShortName">WE</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQ_E" type="logic">
+      <obj_property name="ElementShortName">IRQ_E</obj_property>
+      <obj_property name="ObjectShortName">IRQ_E</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/MUX_M/RE" type="logic">
-      <obj_property name="ElementShortName">RE</obj_property>
-      <obj_property name="ObjectShortName">RE</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQV_reg" type="array">
+      <obj_property name="ElementShortName">IRQV_reg[7:0]</obj_property>
+      <obj_property name="ObjectShortName">IRQV_reg[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/DMA/Event_RQ" type="array">
-      <obj_property name="ElementShortName">Event_RQ[2:0]</obj_property>
-      <obj_property name="ObjectShortName">Event_RQ[2:0]</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQV_reg_n" type="array">
+      <obj_property name="ElementShortName">IRQV_reg_n[7:0]</obj_property>
+      <obj_property name="ObjectShortName">IRQV_reg_n[7:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/DMA/dma_state_reg" type="other">
-      <obj_property name="ElementShortName">dma_state_reg</obj_property>
-      <obj_property name="ObjectShortName">dma_state_reg</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQ_E_reg" type="logic">
+      <obj_property name="ElementShortName">IRQ_E_reg</obj_property>
+      <obj_property name="ObjectShortName">IRQ_E_reg</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/DMA/dev_mem" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">dev_mem[0:15][7:0]</obj_property>
-      <obj_property name="ObjectShortName">dev_mem[0:15][7:0]</obj_property>
-      <obj_property name="label">dev_mem_dma</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/IRQ_E_reg_n" type="logic">
+      <obj_property name="ElementShortName">IRQ_E_reg_n</obj_property>
+      <obj_property name="ObjectShortName">IRQ_E_reg_n</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/RS232/dev_mem" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">dev_mem[3:0][7:0]</obj_property>
-      <obj_property name="ObjectShortName">dev_mem[3:0][7:0]</obj_property>
-      <obj_property name="label">dev_mem_ram</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/RAM_M/contents_ram" type="array">
-      <obj_property name="ElementShortName">contents_ram[14:0][7:0]</obj_property>
-      <obj_property name="ObjectShortName">contents_ram[14:0][7:0]</obj_property>
+   <wvobject fp_name="/tb_IRQ/dut/OutBus_s_reg" type="array">
+      <obj_property name="ElementShortName">OutBus_s_reg[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OutBus_s_reg[7:0]</obj_property>
    </wvobject>
 </wave_config>

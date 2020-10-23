@@ -30,6 +30,7 @@ package LCSE_PKG is
 -------------------------------------------------------------------------------
 
 
+    CONSTANT IRQ_BASE       : UNSIGNED( 7 downto 0) := X"00" ;
     CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
     CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
     
@@ -66,9 +67,24 @@ package LCSE_PKG is
         CONSTANT RS232_RX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
     CONSTANT    eRS232          :  UNSIGNED( 7 downto 0 ):= RS232_BASE + 3; 
  
-  
-  
-
+    CONSTANT    sDISPLAY          :  UNSIGNED( 7 downto 0 ):= X"D8";
+    
+    
+    CONSTANT    sGPIO               :  UNSIGNED( 7 downto 0 ):= X"E0";
+    CONSTANT    GPIO_BASE           :  UNSIGNED( 7 downto 0 ):= sGPIO;
+        CONSTANT GPIO_IRQA_MASK     :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 0;
+        CONSTANT GPIO_IRQB_MASK     :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 1;
+        CONSTANT GPIO_IRQMODEA_MASK :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 2;
+        CONSTANT GPIO_IRQMODEB_MASK :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 3;
+        CONSTANT GPIO_MODEA_REG1    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 4;
+        CONSTANT GPIO_MODEA_REG2    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 5;
+        CONSTANT GPIO_MODEB_REG1    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 6;
+        CONSTANT GPIO_MODEB_REG2    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 7;
+        CONSTANT GPIO_A             :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 8;
+        CONSTANT GPIO_B             :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 9;
+    CONSTANT eGPIO                  :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 9;
+    
+    
     CONSTANT PULSE_W        : INTEGER := 174;
     CONSTANT HALFCOUNT      : INTEGER := PULSE_W/2;
     CONSTANT WORD_LENGTH    : INTEGER := 8;

@@ -47,7 +47,7 @@ entity DMA2 is
         WE_s        : in  STD_LOGIC;                        -- slave write enablr
         RE_s        : in  STD_LOGIC);                       -- slave read enable 
 end DMA2;
-
+   
 
 
 architecture Behavioral of DMA2 is
