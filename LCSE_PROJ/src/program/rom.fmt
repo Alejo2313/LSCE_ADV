@@ -31,6 +31,7 @@
        CONSTANT GPIO_MODEB_REG2, E7    ;
        CONSTANT GPIO_A, E8             ;
        CONSTANT GPIO_B, E9             ;
+       CONSTANT ISR_VECTOR, 00         ;
 start: LOAD s0, A1
        LOAD s1, sRAM
        OUTPUT s0, (s1)
@@ -46,8 +47,9 @@ start: LOAD s0, A1
        OUTPUT s0, GPIO_MODEA_REG2
        LOAD s0, A0
        OUTPUT s0, GPIO_MODEB_REG1
-       ;     OUTPUT  s0  , GPIO_MODEB_REG2
-       OUTPUT s0, GPIO_IRQB_MASK
+       LOAD s0, 80
+       ;   OUTPUT  s0  , GPIO_IRQMODEB_MASK
+       ;   OUTPUT  s0  , GPIO_IRQB_MASK
        LOAD s0, FF
        OUTPUT s0, GPIO_A
        LOAD s0, RS232_TX_DATA
@@ -62,4 +64,10 @@ start: LOAD s0, A1
        OUTPUT s0, RS232_TX_DATA
        LOAD s0, 4F
        OUTPUT s0, RS232_CONF
+       ENABLE INTERRUPT
  loop: JUMP loop
+       ADDRESS F80
+  ISR: INPUT s8, ISR_VECTOR
+       LOAD s8, 00
+       OUTPUT s8, ISR_VECTOR
+       RETURNI ENABLE

@@ -69,20 +69,16 @@ signal irqModeB     : std_logic_vector(7 downto 0);
 
 
 
-constant irqMaskA_offset : integer := TO_INTEGER(GPIO_IRQA_MASK - GPIO_BASE);
-constant irqMaskB_offset : integer := TO_INTEGER(GPIO_IRQB_MASK - GPIO_BASE);
-
-constant irqModeA_offset : integer := TO_INTEGER(GPIO_IRQMODEA_MASK - GPIO_BASE);
-constant irqModeB_offset : integer := TO_INTEGER(GPIO_IRQMODEB_MASK - GPIO_BASE);
-
-constant modeA1_offset : integer := TO_INTEGER(GPIO_MODEA_REG1 - GPIO_BASE);
-constant modeA2_offset : integer := TO_INTEGER(GPIO_MODEA_REG2 - GPIO_BASE);
-
-constant modeB1_offset : integer := TO_INTEGER(GPIO_MODEB_REG1 - GPIO_BASE);
-constant modeB2_offset : integer := TO_INTEGER(GPIO_MODEB_REG2 - GPIO_BASE);
-
-constant gpioa_offset  : integer := TO_INTEGER(GPIO_A - GPIO_BASE);
-constant gpiob_offset  : integer := TO_INTEGER(GPIO_B - GPIO_BASE);
+constant irqMaskA_offset    : integer := TO_INTEGER(GPIO_IRQA_MASK - GPIO_BASE);
+constant irqMaskB_offset    : integer := TO_INTEGER(GPIO_IRQB_MASK - GPIO_BASE);
+constant irqModeA_offset    : integer := TO_INTEGER(GPIO_IRQMODEA_MASK - GPIO_BASE);
+constant irqModeB_offset    : integer := TO_INTEGER(GPIO_IRQMODEB_MASK - GPIO_BASE);
+constant modeA1_offset      : integer := TO_INTEGER(GPIO_MODEA_REG1 - GPIO_BASE);
+constant modeA2_offset      : integer := TO_INTEGER(GPIO_MODEA_REG2 - GPIO_BASE);
+constant modeB1_offset      : integer := TO_INTEGER(GPIO_MODEB_REG1 - GPIO_BASE);
+constant modeB2_offset      : integer := TO_INTEGER(GPIO_MODEB_REG2 - GPIO_BASE);
+constant gpioa_offset       : integer := TO_INTEGER(GPIO_A - GPIO_BASE);
+constant gpiob_offset       : integer := TO_INTEGER(GPIO_B - GPIO_BASE);
 
 
 
@@ -110,7 +106,7 @@ begin
         dev_mem(gpiob_offset) <= (others => 'Z');
    elsif (Clk'event and clk = '1' ) then
         IRQA_reg <= IRQA_reg_n;
-        IRQB_reg <= IRQA_reg_n;
+        IRQB_reg <= IRQB_reg_n;
         dev_mem <= dev_mem_n;
    end if;     
     
@@ -129,34 +125,34 @@ begin
     port_A: for k in (GPIOA'length -1) downto 0 loop
         case gpioa_mode(k*2 + 1 downto k*2) is
             when "01" =>  --output
-                GPIOA_reg(GPIOA'length - k -1) <= dev_mem(gpioa_offset)(GPIOA'length - k -1);
+                GPIOA_reg(k) <= dev_mem(gpioa_offset)(k);
             when "10" =>  --Input
-                dev_mem_n(gpioa_offset)(GPIOA'length - k -1) <= GPIOA(GPIOA'length - k -1);
-                GPIOA_reg(GPIOA'length - k -1) <= 'Z';
-                if ( GPIOA(GPIOA'length - k -1) /= dev_mem(gpioa_offset)(GPIOA'length - k -1) ) then 
-                    if ( irqMaskA( GPIOA'length - k -1 ) = '1' AND dev_mem(gpioa_offset)(GPIOA'length - k -1) = irqModeA(GPIOA'length - k -1)) then
+                dev_mem_n(gpioa_offset)(k) <= GPIOA(k);
+                GPIOA_reg(k) <= 'Z';
+                if ( GPIOA(k) /= dev_mem(gpioa_offset)(k) ) then 
+                    if ( irqMaskA(k) = '1' AND dev_mem(gpioa_offset)(k) = irqModeA(k)) then
                         IRQA_reg_n <= '1';
                     end if;
                 end if;
             when others =>   
-                GPIOA_reg(GPIOA'length - k -1) <= 'Z';
+                GPIOA_reg(k) <= 'Z';
         end case;      
     end loop;
     
     port_B: for k in (GPIOB'length -1) downto 0 loop
         case gpiob_mode(k*2 + 1 downto k*2) is
             when "01" =>
-                GPIOB_reg(GPIOB'length - k -1) <= dev_mem(gpiob_offset)(GPIOB'length - k -1);
+                GPIOB_reg(k) <= dev_mem(gpiob_offset)(k);
             when "10" =>
-                dev_mem_n(gpiob_offset)(GPIOB'length - k -1) <= GPIOB(GPIOB'length - k -1);
-                GPIOB_reg(GPIOB'length - k -1) <= 'Z';
-                if (  GPIOB(GPIOB'length - k -1) /= dev_mem(gpiob_offset)(GPIOB'length - k -1) ) then 
-                    if ( irqMaskB( GPIOB'length - k -1 ) = '1' AND dev_mem(gpiob_offset)(GPIOB'length - k -1) = irqModeB(GPIOB'length - k -1)) then
+                dev_mem_n(gpiob_offset)(k) <= GPIOB(k);
+                GPIOB_reg(k) <= 'Z';
+                if (  GPIOB(k) /= dev_mem(gpiob_offset)(k) ) then 
+                    if ( irqMaskB(k) = '1' AND dev_mem(gpiob_offset)(k) = irqModeB(k)) then
                         IRQB_reg_n <= '1';
                     end if;
                 end if;                              
             when others =>   
-                GPIOB_reg(GPIOB'length - k -1) <= '0';
+                GPIOB_reg(k) <= '0';
         end case;      
     end loop;  
     

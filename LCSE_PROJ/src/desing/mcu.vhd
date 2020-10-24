@@ -44,7 +44,7 @@ end MCU;
 architecture Behavioral of MCU is
   component kcpsm6 
     generic(                 hwbuild : std_logic_vector(7 downto 0) := X"00";
-                    interrupt_vector : std_logic_vector(11 downto 0) := X"3FF";
+                    interrupt_vector : std_logic_vector(11 downto 0) := X"F80";
              scratch_pad_memory_size : integer := 64);
     port (                   address : out std_logic_vector(11 downto 0);
                          instruction : in std_logic_vector(17 downto 0);
@@ -63,7 +63,7 @@ architecture Behavioral of MCU is
   end component;
 
   component rom                            
-    generic(             C_FAMILY : string := "S6"; 
+    generic(             C_FAMILY : string := "7S"; 
                 C_RAM_SIZE_KWORDS : integer := 1;
              C_JTAG_LOADER_ENABLE : integer := 0);
     Port (      address : in std_logic_vector(11 downto 0);
@@ -236,7 +236,7 @@ begin
     
   processor: kcpsm6
     generic map (  hwbuild => X"00", 
-          interrupt_vector => X"3FF",
+          interrupt_vector => X"F80",
    scratch_pad_memory_size => 64)
     port map(      address => address,
                instruction => instruction,
@@ -256,8 +256,8 @@ begin
                        
                        
   program_rom: rom                    --Name to match your PSM file
-    generic map(             C_FAMILY => "V6",   --Family 'S6', 'V6' or '7S'
-                    C_RAM_SIZE_KWORDS => 1,      --Program size '1', '2' or '4'
+    generic map(             C_FAMILY => "7S",   --Family 'S6', 'V6' or '7S'
+                    C_RAM_SIZE_KWORDS => 4,      --Program size '1', '2' or '4'
                  C_JTAG_LOADER_ENABLE => 0)      --Include JTAG Loader when set to '1' 
     port map(      address => address,      
                instruction => instruction,
@@ -267,7 +267,7 @@ begin
   
   
   kcpsm6_sleep <= '0';
-  interrupt <= interrupt_ack;
+
  -- kcpsm6_reset <= Reset;
 
   
@@ -366,6 +366,6 @@ begin
               WE_s      => WE_s,
               RE_s      => RE_s,
               IRQV      => IRQV,
-              IRQ_E     => open);                           
+              IRQ_E     => interrupt);                           
 end Behavioral;
 

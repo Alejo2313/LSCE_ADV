@@ -58,8 +58,23 @@ begin
         Reset <= '0';
         wait for 125 ns;
         
-        wait for 2000 ns;
-        GPIOB(0) <= '1';
+        wait for 4000 ns;
+        GPIOB(7) <= '1'; 
+        wait for 1000 ns;
+        GPIOB(7) <= '0';
+        wait for 1000 ns;
+        GPIOB(7) <= '1';
+        wait for 1000 ns;
+        GPIOB(7) <= '0';
+        wait for 1000 ns;
+        GPIOB(7) <= '1'; 
+        wait for 1000 ns;
+        GPIOB(7) <= '0';
+        wait for 1000 ns;
+        GPIOB(7) <= '1';
+        wait for 1000 ns;
+        GPIOB(7) <= '0';
+        wait for 1000 ns;        
         
         wait;
     end process;
