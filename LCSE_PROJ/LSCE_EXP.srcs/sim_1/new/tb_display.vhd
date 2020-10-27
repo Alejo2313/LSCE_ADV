@@ -36,7 +36,7 @@ architecture tb of tb_display is
               WE_s        : in std_logic;
               RE_s        : in std_logic;
               out_display : out std_logic_vector (7 downto 0);
-              anode       : out std_logic_vector (2 downto 0));
+              anode       : out std_logic_vector (7 downto 0));
     end component;
 
     signal Clk         : std_logic;
@@ -47,7 +47,7 @@ architecture tb of tb_display is
     signal WE_s        : std_logic;
     signal RE_s        : std_logic;
     signal out_display : std_logic_vector (7 downto 0);
-    signal anode       : std_logic_vector (2 downto 0);
+    signal anode       : std_logic_vector (7 downto 0);
 
     constant TbPeriod : time := 10 ns; -- EDIT Put right period here
     signal TbClock : std_logic := '0';
