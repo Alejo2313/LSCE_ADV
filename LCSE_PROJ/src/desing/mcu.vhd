@@ -73,14 +73,13 @@ architecture Behavioral of MCU is
                     clk : in std_logic);
   end component;
      component ram 
-        PORT (
-           Clk      : in    std_logic;
-           Reset    : in    std_logic;
-           write_en : in    std_logic;
-           oe       : in    std_logic;
-           address  : in    std_logic_vector(7 downto 0);
-           inBus    : in std_logic_vector(7 downto 0);
-           outBus   : out std_logic_vector(7 downto 0));
+        PORT ( Clk      : in    std_logic;
+               Reset    : in    std_logic;
+               write_en : in    std_logic;
+               oe       : in    std_logic;
+               address  : in    std_logic_vector(7 downto 0);
+               inBus    : in std_logic_vector(7 downto 0);
+               outBus   : out std_logic_vector(7 downto 0));
     END component;
     
     component MUX 
@@ -130,7 +129,10 @@ architecture Behavioral of MCU is
               WE_m      : out std_logic;
               RE_m      : out std_logic;
               Access_m  : in std_logic;
+              
               Event_RQ  : in std_logic_vector (2 downto 0);
+              DMA_IRQ     : out STD_LOGIC_VECTOR (2 downto 0);
+              
               Addess_s  : in std_logic_vector (7 downto 0);
               InBus_s   : in std_logic_vector (7 downto 0);
               OutBus_s  : out std_logic_vector (7 downto 0);
@@ -139,13 +141,16 @@ architecture Behavioral of MCU is
     end component;    
     
     component display
-        port (Clk       : in std_logic;
-              Reset     : in std_logic;
-              Address_s : in std_logic_vector (7 downto 0);
-              InBus_s   : in std_logic_vector (7 downto 0);
-              outBus_s  : out std_logic_vector (7 downto 0);
-              WE_s      : in std_logic;
-              RE_s      : in std_logic);
+        port (Clk           : in  std_logic;
+              Reset         : in  std_logic;
+              Address_s     : in  STD_LOGIC_VECTOR (7 downto 0);
+              InBus_s       : in  STD_LOGIC_VECTOR (7 downto 0);
+              outBus_s      : out STD_LOGIC_VECTOR (7 downto 0);
+              WE_s          : in  std_logic;
+              RE_s          : in  std_logic;
+                
+              anode         : out STD_LOGIC_VECTOR(7 downto 0);
+              out_display   : out STD_LOGIC_VECTOR(7 downto 0));
     end component;
     
     component GPIO
@@ -172,9 +177,11 @@ architecture Behavioral of MCU is
               RE_s      : in std_logic;
               IRQV      : in std_logic_vector (7 downto 0);
               IRQ_E     : out std_logic);
-    end component;         
-    signal         address : std_logic_vector(11 downto 0);
-    signal     instruction : std_logic_vector(17 downto 0);
+    end component;      
+    
+       
+    signal address : std_logic_vector(11 downto 0);
+    signal instruction : std_logic_vector(17 downto 0);
     signal     bram_enable : std_logic;
     signal         in_port : std_logic_vector(7 downto 0);
     signal        out_port : std_logic_vector(7 downto 0);
@@ -223,11 +230,12 @@ architecture Behavioral of MCU is
     
     signal GPIOA_IRQ, GPIOB_IRQ : std_logic;
     signal DMA_CH1_IRQ, DMA_CH2_IRQ, DMA_CH3_IRQ : std_logic := '0';
+    Signal DAM_IRQ : std_logic_vector (2 downto 0);
 begin
 
-    IRQV(0) <= DMA_CH1_IRQ;
-    IRQV(1) <= DMA_CH2_IRQ;
-    IRQV(2) <= DMA_CH3_IRQ;
+    IRQV(0) <= DAM_IRQ(0);
+    IRQV(1) <= DAM_IRQ(1);
+    IRQV(2) <= DAM_IRQ(2);
     IRQV(3) <= '0';
     IRQV(4) <= IRQ_TX;
     IRQV(5) <= IRQ_RX;
@@ -235,35 +243,37 @@ begin
     IRQV(7) <= GPIOB_IRQ;
     
   processor: kcpsm6
-    generic map (  hwbuild => X"00", 
-          interrupt_vector => X"F80",
-   scratch_pad_memory_size => 64)
-    port map(      address => address,
-               instruction => instruction,
-               bram_enable => bram_enable,
-                   port_id => Address_core,
-              write_strobe => WE_Core,
-            k_write_strobe => open,
-                  out_port => outBus_core,
-               read_strobe => RE_core,
-                   in_port => inBus_core,
-                 interrupt => interrupt,
-             interrupt_ack => interrupt_ack,
-                     sleep => kcpsm6_sleep,
-                     reset => Reset,
-                       clk => clk);
+    generic map(hwbuild => X"00",                 
+                interrupt_vector        => X"F80",
+                scratch_pad_memory_size => 64)
+                
+    port map(   address         => address,
+                instruction     => instruction,
+                bram_enable     => bram_enable,
+                port_id         => Address_core,
+                write_strobe    => WE_Core,
+                k_write_strobe  => open,
+                out_port        => outBus_core,
+                read_strobe     => RE_core,
+                in_port         => inBus_core,
+                interrupt       => interrupt,
+                interrupt_ack   => interrupt_ack,
+                sleep           => kcpsm6_sleep,
+                reset           => Reset,
+                clk             => clk);
                        
                        
                        
-  program_rom: rom                    --Name to match your PSM file
-    generic map(             C_FAMILY => "7S",   --Family 'S6', 'V6' or '7S'
-                    C_RAM_SIZE_KWORDS => 4,      --Program size '1', '2' or '4'
-                 C_JTAG_LOADER_ENABLE => 0)      --Include JTAG Loader when set to '1' 
-    port map(      address => address,      
-               instruction => instruction,
-                    enable => bram_enable,
-                       rdl => kcpsm6_reset,
-                       clk => clk);                       
+  program_rom: rom              
+    generic map(C_FAMILY             => "7S",   --Family 'S6', 'V6' or '7S'
+                C_RAM_SIZE_KWORDS    => 4,      --Program size '1', '2' or '4'
+                C_JTAG_LOADER_ENABLE => 0)      --Include JTAG Loader when set to '1' 
+                
+    port map(   address     => address,      
+                instruction => instruction,
+                enable      => bram_enable,
+                rdl         => kcpsm6_reset,
+                clk         => clk);                       
   
   
   kcpsm6_sleep <= '0';
@@ -281,6 +291,7 @@ begin
               RE_m      => RE_m,
               Access_m  => Access_m,
               Event_RQ  => Event_RQ,
+              DMA_IRQ   => DAM_IRQ,
               Addess_s  => Addess_s,
               InBus_s   => InBus_s,
               OutBus_s  => OutBus_s,
@@ -293,16 +304,14 @@ begin
                outBus_CORE  => outBus_CORE,
                WE_CORE      => WE_CORE,
                RE_CORE      => RE_CORE,
-               
-               
+                              
                Address_DMA => Address_m, 
                inBus_DMA   => InBus_m,
                outBus_DMA  => OutBus_m,
                WE_DMA      => WE_m,
                RE_DMA      => RE_m,
                busAccess   => Access_m,
-               
-               
+                              
                Address  => Addess_s,
                inBus    => OutBus_s,
                outBus   => inBus_s,
@@ -310,7 +319,9 @@ begin
                RE       => RE_s);
                
     Event_RQ(2) <= DMA_TX;
-    Event_RQ(1 downto 0) <= "00";
+    Event_RQ(1) <= DMA_RX;
+    EVent_RQ(0) <= '0';
+    
                
     RAM_M: RAM
     port map ( Clk      => Clk,
@@ -356,7 +367,11 @@ begin
               InBus_s   => InBus_s,
               outBus_s  => open,
               WE_s      => WE_s,
-              RE_s      => RE_s);
+              RE_s      => RE_s,
+              anode => open,
+              out_display => open);
+              
+              
     IRQ_DEV : IRQ
     port map (Clk       => Clk,
               Reset     => Reset,

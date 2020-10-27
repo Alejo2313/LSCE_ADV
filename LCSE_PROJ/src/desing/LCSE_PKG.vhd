@@ -29,67 +29,66 @@ package LCSE_PKG is
 -- MEMORY MAP
 -------------------------------------------------------------------------------
 
-
-    CONSTANT IRQ_BASE       : UNSIGNED( 7 downto 0) := X"00" ;
-    CONSTANT sRAM       : UNSIGNED( 7 downto 0) := X"10" ;
-    CONSTANT eRAM       : UNSIGNED( 7 downto 0) := X"1F" ;
+    CONSTANT sIRQ                   : UNSIGNED( 7 downto 0) := X"00" ;
+    CONSTANT IRQ_BASE               : UNSIGNED( 7 downto 0) := sIRQ ;
+    CONSTANT eIRQ                   : UNSIGNED( 7 downto 0) := X"00" ;
     
-    constant DMA_MEM_BASE       : UNSIGNED( 7 downto 0 ) := X"C0";
-    constant DMA_CH1_OFF       : UNSIGNED( 3 downto 0 ) := X"0";
-        constant DMA_CONF_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"0";
-        constant DMA_SRC_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"1";
-        constant DMA_DEST_CH1      : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"2";
-        constant DMA_CNT_CH1       : UNSIGNED( 3 downto 0 ) := DMA_CH1_OFF + X"3";
+    CONSTANT sRAM                   : UNSIGNED( 7 downto 0) := X"10" ;
+    CONSTANT eRAM                   : UNSIGNED( 7 downto 0) := X"1F" ;
+    
+    constant sDMA                   : UNSIGNED( 7 downto 0 ) := X"C0";
+    constant DMA_MEM_BASE           : UNSIGNED( 7 downto 0 ) := sDMA;
+    constant DMA_CH1_BASE           : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE + 0;
+        constant DMA_CONF_CH1       : UNSIGNED( 7 downto 0 ) := DMA_CH1_BASE + 0;
+        constant DMA_SRC_CH1        : UNSIGNED( 7 downto 0 ) := DMA_CH1_BASE + 1;
+        constant DMA_DEST_CH1       : UNSIGNED( 7 downto 0 ) := DMA_CH1_BASE + 2;
+        constant DMA_CNT_CH1        : UNSIGNED( 7 downto 0 ) := DMA_CH1_BASE + 3;
          
-    constant DMA_CH2_OFF       : UNSIGNED( 3 downto 0 ) := X"4";
-        constant DMA_CONF_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"0";
-        constant DMA_SRC_CH2       : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"1";
-        constant DMA_DEST_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"2";
-        constant DMA_CNT_CH2      : UNSIGNED( 3 downto 0 ) := DMA_CH2_OFF + X"3"; 
+    constant DMA_CH2_BASE           : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE + 4;
+        constant DMA_CONF_CH2       : UNSIGNED( 7 downto 0 ) := DMA_CH2_BASE + 0;
+        constant DMA_SRC_CH2        : UNSIGNED( 7 downto 0 ) := DMA_CH2_BASE + 1;
+        constant DMA_DEST_CH2       : UNSIGNED( 7 downto 0 ) := DMA_CH2_BASE + 2;
+        constant DMA_CNT_CH2        : UNSIGNED( 7 downto 0 ) := DMA_CH2_BASE + 3; 
         
-    constant DMA_CH3_OFF       : UNSIGNED( 3 downto 0 ) := X"8";
-        constant DMA_CONF_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"0";
-        constant DMA_SRC_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"1";
-        constant DMA_DEST_CH3      : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"2";
-        constant DMA_CNT_CH3       : UNSIGNED( 3 downto 0 ) := DMA_CH3_OFF + X"3"; 
-        
-    constant DMA_CONF_OFF      : UNSIGNED( 3 downto 0 ) := X"0";
-    constant DMA_SRC_OFF       : UNSIGNED( 3 downto 0 ) := X"1";
-    constant DMA_DEST_OFF      : UNSIGNED( 3 downto 0 ) := X"2";
-    constant DMA_CNT_OFF       : UNSIGNED( 3 downto 0 ) := X"3";
+    constant DMA_CH3_BASE           : UNSIGNED( 7 downto 0 ) := DMA_MEM_BASE + 8;
+        constant DMA_CONF_CH3       : UNSIGNED( 7 downto 0 ) := DMA_CH3_BASE + 0;
+        constant DMA_SRC_CH3        : UNSIGNED( 7 downto 0 ) := DMA_CH3_BASE + 1;
+        constant DMA_DEST_CH3       : UNSIGNED( 7 downto 0 ) := DMA_CH3_BASE + 2;
+        constant DMA_CNT_CH3        : UNSIGNED( 7 downto 0 ) := DMA_CH3_BASE + 3; 
+    constant eDMA                   : UNSIGNED( 7 downto 0 ) := X"CF";    
     
     
-    CONSTANT    sRS232          :  UNSIGNED( 7 downto 0 ):= X"D0";
-    CONSTANT    RS232_BASE      :  UNSIGNED( 7 downto 0 ):= sRS232;
-        CONSTANT RS232_CONF     : UNSIGNED( 7 downto 0 ) := RS232_BASE + 0;
-        CONSTANT RS232_STATUS   : UNSIGNED( 7 downto 0 ) := RS232_BASE + 1;
-        CONSTANT RS232_TX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 2;
-        CONSTANT RS232_RX_DATA  : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
-    CONSTANT    eRS232          :  UNSIGNED( 7 downto 0 ):= RS232_BASE + 3; 
+    CONSTANT sRS232                 : UNSIGNED( 7 downto 0 ) := X"D0";
+    CONSTANT RS232_BASE             : UNSIGNED( 7 downto 0 ) := sRS232;
+        CONSTANT RS232_CONF         : UNSIGNED( 7 downto 0 ) := RS232_BASE + 0;
+        CONSTANT RS232_STATUS       : UNSIGNED( 7 downto 0 ) := RS232_BASE + 1;
+        CONSTANT RS232_TX_DATA      : UNSIGNED( 7 downto 0 ) := RS232_BASE + 2;
+        CONSTANT RS232_RX_DATA      : UNSIGNED( 7 downto 0 ) := RS232_BASE + 3; 
+    CONSTANT    eRS232              : UNSIGNED( 7 downto 0 ) := X"D7"; 
  
-    CONSTANT    sDISPLAY          :  UNSIGNED( 7 downto 0 ):= X"D8";
-        CONSTANT     DISPLAY_BASE     :  UNSIGNED( 7 downto 0 ):= sDISPLAY;
-        CONSTANT     DISPLAY_EN       :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 0;
-        CONSTANT     DISPLAY_ANODE    :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 1;
-        CONSTANT     DISPLAY_01       :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 2;
-        CONSTANT     DISPLAY_23       :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 3;
-        CONSTANT     DISPLAY_45       :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 4;
-        CONSTANT     DISPLAY_67       :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 5;
-    CONSTANT     eDISPLAY         :  UNSIGNED( 7 downto 0 ):= DISPLAY_BASE + 5;
+    CONSTANT sDISPLAY               : UNSIGNED( 7 downto 0 ) := X"D8";
+        CONSTANT DISPLAY_BASE       : UNSIGNED( 7 downto 0 ) := sDISPLAY;
+        CONSTANT DISPLAY_EN         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 0;
+        CONSTANT DISPLAY_ANODE      : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 1;
+        CONSTANT DISPLAY_01         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 2;
+        CONSTANT DISPLAY_23         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 3;
+        CONSTANT DISPLAY_45         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 4;
+        CONSTANT DISPLAY_67         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 5;
+    CONSTANT eDISPLAY               : UNSIGNED( 7 downto 0 ) := X"DF";
     
-    CONSTANT    sGPIO               :  UNSIGNED( 7 downto 0 ):= X"E0";
-    CONSTANT    GPIO_BASE           :  UNSIGNED( 7 downto 0 ):= sGPIO;
-        CONSTANT GPIO_IRQA_MASK     :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 0;
-        CONSTANT GPIO_IRQB_MASK     :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 1;
-        CONSTANT GPIO_IRQMODEA_MASK :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 2;
-        CONSTANT GPIO_IRQMODEB_MASK :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 3;
-        CONSTANT GPIO_MODEA_REG1    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 4;
-        CONSTANT GPIO_MODEA_REG2    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 5;
-        CONSTANT GPIO_MODEB_REG1    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 6;
-        CONSTANT GPIO_MODEB_REG2    :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 7;
-        CONSTANT GPIO_A             :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 8;
-        CONSTANT GPIO_B             :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 9;
-    CONSTANT eGPIO                  :  UNSIGNED( 7 downto 0 ):= GPIO_BASE + 9;
+    CONSTANT sGPIO                  : UNSIGNED( 7 downto 0 ) := X"E0";
+    CONSTANT GPIO_BASE              : UNSIGNED( 7 downto 0 ) := sGPIO;
+        CONSTANT GPIO_IRQA_MASK     : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 0;
+        CONSTANT GPIO_IRQB_MASK     : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 1;
+        CONSTANT GPIO_IRQMODEA_MASK : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 2;
+        CONSTANT GPIO_IRQMODEB_MASK : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 3;
+        CONSTANT GPIO_MODEA_REG1    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 4;
+        CONSTANT GPIO_MODEA_REG2    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 5;
+        CONSTANT GPIO_MODEB_REG1    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 6;
+        CONSTANT GPIO_MODEB_REG2    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 7;
+        CONSTANT GPIO_A             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 8;
+        CONSTANT GPIO_B             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 9;
+    CONSTANT eGPIO                  : UNSIGNED( 7 downto 0 ) := X"EF";
     
     
     CONSTANT PULSE_W        : INTEGER := 174;

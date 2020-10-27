@@ -64,8 +64,8 @@ start:  LOAD    s0  , A1
         OUTPUT  s0  , GPIO_MODEB_REG1
 
         LOAD    s0  , 80
-     ;   OUTPUT  s0  , GPIO_IRQMODEB_MASK
-     ;   OUTPUT  s0  , GPIO_IRQB_MASK
+        OUTPUT  s0  , GPIO_IRQMODEB_MASK
+        OUTPUT  s0  , GPIO_IRQB_MASK
 
         LOAD    s0  , FF
         OUTPUT  s0  , GPIO_A

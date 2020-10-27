@@ -1,4 +1,4 @@
-
+    
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -53,7 +53,7 @@ architecture RTL of RS232top is
     constant tx_dma_en : integer :=  2;
     constant rx_irq_en : integer :=  1;
     constant tx_irq_en : integer :=  0;
-    
+
     
     
  ------------------------------------------------------------------------
@@ -213,7 +213,7 @@ begin
     end if;
     
    
-    if ( unsigned(Address_s(7 downto 4)) = RS232_BASE(7 downto 4) )  then
+    if ( unsigned(Address_s) >= sRS232 and unsigned(Address_s) <= eRS232  )  then
         if( WE_s = '1' ) then
             dev_mem_n( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) ) <= InBus_s;
             if ( unsigned(Address_s) = (RS232_TX_DATA) and dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_dma_en) = '1' ) then

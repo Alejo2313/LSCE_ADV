@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="5811000fs"></ZoomStartTime>
-      <ZoomEndTime time="6879001fs"></ZoomEndTime>
-      <Cursor1Time time="6103000fs"></Cursor1Time>
+      <ZoomStartTime time="875000fs"></ZoomStartTime>
+      <ZoomEndTime time="861875001fs"></ZoomEndTime>
+      <Cursor1Time time="178875000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="222"></NameColumnWidth>
+      <NameColumnWidth column_width="217"></NameColumnWidth>
       <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="14" />
    <wvobject fp_name="/tb_MCU/dut/Clk" type="logic">
       <obj_property name="ElementShortName">Clk</obj_property>
       <obj_property name="ObjectShortName">Clk</obj_property>
@@ -64,53 +64,13 @@
    <wvobject fp_name="/tb_MCU/dut/GPIOB" type="array">
       <obj_property name="ElementShortName">GPIOB[7:0]</obj_property>
       <obj_property name="ObjectShortName">GPIOB[7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem" type="array">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">dev_mem[0:9][7:0]</obj_property>
       <obj_property name="ObjectShortName">dev_mem[0:9][7:0]</obj_property>
       <obj_property name="label">dev_mem_GPIO</obj_property>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[0]" type="array">
-         <obj_property name="ElementShortName">[0][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[0][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[1]" type="array">
-         <obj_property name="ElementShortName">[1][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[1][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[2]" type="array">
-         <obj_property name="ElementShortName">[2][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[2][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[3]" type="array">
-         <obj_property name="ElementShortName">[3][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[3][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[4]" type="array">
-         <obj_property name="ElementShortName">[4][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[4][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[5]" type="array">
-         <obj_property name="ElementShortName">[5][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[5][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[6]" type="array">
-         <obj_property name="ElementShortName">[6][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[6][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[7]" type="array">
-         <obj_property name="ElementShortName">[7][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[7][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[8]" type="array">
-         <obj_property name="ElementShortName">[8][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[8][7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/dev_mem[9]" type="array">
-         <obj_property name="ElementShortName">[9][7:0]</obj_property>
-         <obj_property name="ObjectShortName">[9][7:0]</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="/tb_MCU/dut/IRQV" type="array">
       <obj_property name="ElementShortName">IRQV[7:0]</obj_property>
@@ -119,29 +79,5 @@
    <wvobject fp_name="/tb_MCU/dut/IRQ_DEV/IRQV_reg" type="array">
       <obj_property name="ElementShortName">IRQV_reg[7:0]</obj_property>
       <obj_property name="ObjectShortName">IRQV_reg[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/processor/interrupt" type="logic">
-      <obj_property name="ElementShortName">interrupt</obj_property>
-      <obj_property name="ObjectShortName">interrupt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/IRQ_DEV/IRQ_E" type="logic">
-      <obj_property name="ElementShortName">IRQ_E</obj_property>
-      <obj_property name="ObjectShortName">IRQ_E</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/interrupt" type="logic">
-      <obj_property name="ElementShortName">interrupt</obj_property>
-      <obj_property name="ObjectShortName">interrupt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/GPIO_DEV/IRQB_reg" type="logic">
-      <obj_property name="ElementShortName">IRQB_reg</obj_property>
-      <obj_property name="ObjectShortName">IRQB_reg</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/processor/interrupt" type="logic">
-      <obj_property name="ElementShortName">interrupt</obj_property>
-      <obj_property name="ObjectShortName">interrupt</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_MCU/dut/GPIOB_IRQ" type="logic">
-      <obj_property name="ElementShortName">GPIOB_IRQ</obj_property>
-      <obj_property name="ObjectShortName">GPIOB_IRQ</obj_property>
    </wvobject>
 </wave_config>
