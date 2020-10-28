@@ -36,7 +36,8 @@ entity MCU is
            Reset : in STD_LOGIC;
            TX    : out STD_LOGIC;
            RX    : in STD_LOGIC;
-           
+           anode         : out STD_LOGIC_VECTOR(7 downto 0);
+           out_display   : out STD_LOGIC_VECTOR(7 downto 0);
            GPIOA  : inout STD_LOGIC_VECTOR (7 downto 0);
            GPIOB  : inout STD_LOGIC_VECTOR (7 downto 0) );
 end MCU;
@@ -217,6 +218,10 @@ architecture Behavioral of MCU is
     signal WE_s      : std_logic;
     signal RE_s      : std_logic;
     
+    signal anode_s         : STD_LOGIC_VECTOR(7 downto 0);
+    signal out_display_s   : STD_LOGIC_VECTOR(7 downto 0);
+    
+    
     signal DMA_TX    : std_logic;
     signal DMA_RX    : std_logic;
     signal IRQ_TX    : std_logic;
@@ -231,6 +236,9 @@ architecture Behavioral of MCU is
     signal GPIOA_IRQ, GPIOB_IRQ : std_logic;
     signal DMA_CH1_IRQ, DMA_CH2_IRQ, DMA_CH3_IRQ : std_logic := '0';
     Signal DAM_IRQ : std_logic_vector (2 downto 0);
+    
+    
+
 begin
 
     IRQV(0) <= DAM_IRQ(0);
@@ -368,8 +376,8 @@ begin
               outBus_s  => open,
               WE_s      => WE_s,
               RE_s      => RE_s,
-              anode => open,
-              out_display => open);
+              anode => anode,
+              out_display => out_display);
               
               
     IRQ_DEV : IRQ
