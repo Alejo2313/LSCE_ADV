@@ -29,8 +29,10 @@
        CONSTANT GPIO_MODEA_REG2, E5    ;
        CONSTANT GPIO_MODEB_REG1, E6    ;
        CONSTANT GPIO_MODEB_REG2, E7    ;
-       CONSTANT GPIO_A, E8             ;
-       CONSTANT GPIO_B, E9             ;
+       CONSTANT GPIO_AFMODEA_REG, E8
+       CONSTANT GPIO_AFMODEB_REG, E9
+       CONSTANT GPIO_A, EA             ;
+       CONSTANT GPIO_B, EB             ;
        CONSTANT ISR_VECTOR, 00         ;
 start: LOAD s0, A1
        LOAD s1, sRAM
@@ -44,12 +46,15 @@ start: LOAD s0, A1
        ADD s1, 01
        LOAD s0, 55                     ;
        OUTPUT s0, GPIO_MODEA_REG1
+       LOAD s0, 5F                     ;
        OUTPUT s0, GPIO_MODEA_REG2
        LOAD s0, A0
        OUTPUT s0, GPIO_MODEB_REG1
        LOAD s0, 80
        OUTPUT s0, GPIO_IRQMODEB_MASK
        OUTPUT s0, GPIO_IRQB_MASK
+       LOAD s0, 02
+       OUTPUT s0, GPIO_AFMODEA_REG
        LOAD s0, FF
        OUTPUT s0, GPIO_A
        LOAD s0, RS232_TX_DATA
@@ -58,7 +63,7 @@ start: LOAD s0, A1
        OUTPUT s0, DMA_SRC_CH1
        LOAD s0, 12
        OUTPUT s0, DMA_CNT_CH1
-       LOAD s0, A0
+       LOAD s0, A0                     ;
        OUTPUT s0, DMA_CONF_CH1
        INPUT s0, sRAM
        OUTPUT s0, RS232_TX_DATA

@@ -86,8 +86,10 @@ package LCSE_PKG is
         CONSTANT GPIO_MODEA_REG2    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 5;
         CONSTANT GPIO_MODEB_REG1    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 6;
         CONSTANT GPIO_MODEB_REG2    : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 7;
-        CONSTANT GPIO_A             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 8;
-        CONSTANT GPIO_B             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 9;
+        CONSTANT GPIO_AFMODEA_REG   : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 8;
+        CONSTANT GPIO_AFMODEB_REG   : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 9;
+        CONSTANT GPIO_A             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 10;
+        CONSTANT GPIO_B             : UNSIGNED( 7 downto 0 ) := GPIO_BASE + 11;
     CONSTANT eGPIO                  : UNSIGNED( 7 downto 0 ) := X"EF";
     
     

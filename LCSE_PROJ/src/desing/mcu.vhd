@@ -34,8 +34,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity MCU is
     Port ( Clk :   in STD_LOGIC;
            Reset : in STD_LOGIC;
-           TX    : out STD_LOGIC;
-           RX    : in STD_LOGIC;
+--           TX    : out STD_LOGIC;
+--           RX    : in STD_LOGIC;
            anode         : out STD_LOGIC_VECTOR(7 downto 0);
            out_display   : out STD_LOGIC_VECTOR(7 downto 0);
            GPIOA  : inout STD_LOGIC_VECTOR (7 downto 0);
@@ -165,7 +165,13 @@ architecture Behavioral of MCU is
               IRQA      : out std_logic;
               IRQB      : out std_logic;
               GPIOA     : inout std_logic_vector (7 downto 0);
-              GPIOB     : inout std_logic_vector (7 downto 0));
+              GPIOB     : inout std_logic_vector (7 downto 0);
+              -- Alternate functions
+              GPIOA_AF_IN  : in STD_LOGIC_VECTOR (7 downto 0);
+              GPIOB_AF_IN  : in STD_LOGIC_VECTOR (7 downto 0);
+           
+             GPIOA_AF_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+             GPIOB_AF_OUT : out STD_LOGIC_VECTOR (7 downto 0));
     end component;
     
     component IRQ
@@ -237,6 +243,11 @@ architecture Behavioral of MCU is
     signal DMA_CH1_IRQ, DMA_CH2_IRQ, DMA_CH3_IRQ : std_logic := '0';
     Signal DAM_IRQ : std_logic_vector (2 downto 0);
     
+    signal TX, RX : std_logic;
+    
+    signal GPIOA_AF_IN, GPIOB_AF_IN  : std_logic_vector (7 downto 0);
+    signal GPIOA_AF_OUT, GPIOB_AF_OUT  : std_logic_vector (7 downto 0);
+    
     
 
 begin
@@ -249,6 +260,7 @@ begin
     IRQV(5) <= IRQ_RX;
     IRQV(6) <= GPIOA_IRQ;
     IRQV(7) <= GPIOB_IRQ;
+    
     
   processor: kcpsm6
     generic map(hwbuild => X"00",                 
@@ -351,13 +363,18 @@ begin
               IRQA      => GPIOA_IRQ,
               IRQB      => GPIOB_IRQ,
               GPIOA     => GPIOA,
-              GPIOB     => GPIOB);
+              GPIOB     => GPIOB,
+              GPIOA_AF_IN   => GPIOA_AF_IN, 
+              GPIOB_AF_IN   => GPIOB_AF_IN,
+              
+              GPIOA_AF_OUT  => GPIOA_AF_OUT, 
+              GPIOB_AF_OUT  => GPIOB_AF_OUT );
                              
     RS232 : RS232top    
     port map (Reset     => Reset,
               Clk       => Clk,
-              TX        => TX,
-              RX        => RX,
+              TX        => GPIOA_AF_IN(0),
+              RX        => GPIOA_AF_OUT(1),
               DMA_TX    => DMA_TX,
               DMA_RX    => DMA_RX,
               IRQ_TX    => IRQ_TX,

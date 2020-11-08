@@ -13,8 +13,8 @@ architecture tb of tb_MCU is
     component MCU
         port (Clk   : in std_logic;
               Reset : in std_logic;
-              TX    : out std_logic;
-              RX    : in std_logic;
+--              TX    : out std_logic;
+--              RX    : in std_logic;
               GPIOA : inout std_logic_vector (7 downto 0);
               GPIOB : inout std_logic_vector (7 downto 0));
     end component;
@@ -35,8 +35,8 @@ begin
     dut : MCU
     port map (Clk   => Clk,
               Reset => Reset,
-              TX    => TX,
-              RX    => RX,
+--              TX    => TX,
+--              RX    => RX,
               GPIOA => GPIOA,
               GPIOB => GPIOB);
 
@@ -51,12 +51,15 @@ begin
         -- EDIT Adapt initialization as needed
         RX <= '0';
         GPIOB <= (others => 'Z');
+        GPIOA(1) <= '1';
         -- Reset generation
         -- EDIT: Check that Reset is really your reset signal
         Reset <= '1';
         wait for 100 ns;
         Reset <= '0';
         wait for 125 ns;
+        
+        
         
         wait for 4000 ns;
         GPIOB(7) <= '1'; 
@@ -74,8 +77,21 @@ begin
         GPIOB(7) <= '1';
         wait for 1000 ns;
         GPIOB(7) <= '0';
-        wait for 1000 ns;        
+        wait for 10000 ns;        
         
+        
+        GPIOA(1) <= '1',
+           '0' after 500 ns,    -- StartBit
+           '1' after 9150 ns,   -- LSb
+           '0' after 17800 ns,
+           '0' after 26450 ns,
+           '1' after 35100 ns,
+           '1' after 43750 ns,
+           '1' after 52400 ns,
+           '1' after 61050 ns,
+           '0' after 69700 ns,  -- MSb
+           '1' after 78350 ns,  -- Stopbit
+           '1' after 87000 ns;
         wait;
     end process;
 

@@ -200,7 +200,7 @@ begin
     
     LOGIC: process( dma_state_reg, Event_RQ,InBus_m,dev_mem, Access_m, Addess_s, 
                     InBus_s, WE_s, RE_s,ch_conf_reg, ch_src_reg,ch_dest_reg, ch_couter_reg, 
-                    src1, src2, inBus_m_reg, outBus_m_reg) is
+                    src1, src2, inBus_m_reg, outBus_m_reg, index_irq_reg) is
     begin
         -- Default default values to avoid latches
         dev_mem_n       <= dev_mem;

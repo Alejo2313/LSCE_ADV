@@ -95,83 +95,12 @@ begin
     end if;
  end process;
  
---process(Address_s, inBus_s,WE_s, RE_s, mem_r,cnt_r,index_r,D, outDisp_r,S,anode_r,d_r,D) is
---begin
---    outBus_r <= (others => 'Z');
---    mem_n <= mem_r;
---    cnt_n <= cnt_r + 1;
---    index_n <= index_r;
---    outDisp_n <= outDisp_r;
---    anode_n <= anode_r;
---    d_n <= d_r;
-    
---    if (TO_INTEGER(cnt_r) = 400) then
---        cnt_n <= (others => '0');        
---        index_n <= index_r + 1;
---        outDisp_n <= S;  
---        anode_n <= (others => '1');
---        -- 
---        if ((mem_r(0)(7) and (mem_r(1)(TO_INTEGER(index_r)))) = '1') then
---            case index_r is
---                when "000" => 
---                    anode_n(0) <= '0';
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_01-DISPLAY_BASE))(3 downto 0);
-                     
---                when "001" =>
---                    anode_n(1) <= '0';
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_01-DISPLAY_BASE))(7 downto 4);
-                     
---                when "010" =>
---                    anode_n(2) <= '0'; 
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_23-DISPLAY_BASE))(3 downto 0);
-                     
---                when "011" =>
---                    anode_n(3) <= '0'; 
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_23-DISPLAY_BASE))(7 downto 4);
-                    
---                when "100" =>
---                    anode_n(4) <= '0'; 
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_45-DISPLAY_BASE))(3 downto 0);
-                     
---                when "101" =>
---                    anode_n(5) <= '0'; 
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_45-DISPLAY_BASE))(7 downto 4);
-                     
---                when "110" =>
---                    anode_n(6) <= '0'; 
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_67-DISPLAY_BASE))(3 downto 0);
-                    
---                when "111" =>
---                    anode_n(7) <= '0';
---                    d_n <= mem_r(TO_INTEGER(DISPLAY_67-DISPLAY_BASE))(7 downto 4);
-                     
---                when others =>
---                    d_n <= "0000";
-                            
---            end case;         
---        else
---            d_n <= "0000";
---        end if;       
---    end if;
+disp_vector <=  mem_r(TO_INTEGER(DISPLAY_01 - DISPLAY_BASE))&
+                mem_r(TO_INTEGER(DISPLAY_23 - DISPLAY_BASE))&
+                mem_r(TO_INTEGER(DISPLAY_45 - DISPLAY_BASE))&
+                mem_r(TO_INTEGER(DISPLAY_67 - DISPLAY_BASE));
 
-
---    if( UNSIGNED(Address_s(7 downto 3)) = DISPLAY_BASE(7 downto 3)) then
---        if (WE_s = '1') then
---            mem_n(TO_INTEGER(UNSIGNED(Address_s) - DISPLAY_BASE)) <= InBus_s;
---        elsif (RE_s = '1') then
---            outBus_r <= mem_r(TO_INTEGER(UNSIGNED(Address_s) - DISPLAY_BASE));
---        end if; 
---    end if;
-
---end process;
-
-
-disp_vector <=  mem_r(TO_INTEGER(DISPLAY_01-DISPLAY_BASE))&
-                mem_r(TO_INTEGER(DISPLAY_23-DISPLAY_BASE))&
-                mem_r(TO_INTEGER(DISPLAY_45-DISPLAY_BASE))&
-                mem_r(TO_INTEGER(DISPLAY_67-DISPLAY_BASE));
-
-logic: process(cnt_r, index_r, d_r, anode_r, outDisp_r, mem_r, WE_s, RE_s) is
+logic: process(cnt_r, index_r, d_r, anode_r, outDisp_r, mem_r, WE_s, RE_s,disp_vector, Address_s, InBus_s ) is
 begin
     outBus_r    <= (others => 'Z');
     mem_n       <= mem_r;

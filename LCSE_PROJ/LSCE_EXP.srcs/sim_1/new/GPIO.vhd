@@ -39,7 +39,14 @@ entity GPIO is
            IRQB  : out STD_LOGIC;
            -- IO ports 
            GPIOA : inout STD_LOGIC_VECTOR (7 downto 0);
-           GPIOB : inout STD_LOGIC_VECTOR (7 downto 0));
+           GPIOB : inout STD_LOGIC_VECTOR (7 downto 0);
+           -- Alternate functions
+           GPIOA_AF_IN  : in STD_LOGIC_VECTOR (7 downto 0);
+           GPIOB_AF_IN  : in STD_LOGIC_VECTOR (7 downto 0);
+           
+           GPIOA_AF_OUT : out STD_LOGIC_VECTOR (7 downto 0);
+           GPIOB_AF_OUT : out STD_LOGIC_VECTOR (7 downto 0)
+           );
 end GPIO;
 
 architecture Behavioral of GPIO is
@@ -52,6 +59,7 @@ architecture Behavioral of GPIO is
     signal IRQA_reg, IRQA_reg_n : STD_LOGIC;
     signal IRQB_reg, IRQB_reg_n : STD_LOGIC;
     signal GPIOA_reg, GPIOB_reg : std_logic_vector(7 downto 0);
+    signal GPIOA_AF_OUT_reg, GPIOB_AF_OUT_reg : std_logic_vector(7 downto 0);
     
     signal OutBus_s_reg         : std_logic_vector(7 downto 0);
     
@@ -62,7 +70,8 @@ architecture Behavioral of GPIO is
     signal irqMaskB             : std_logic_vector(7 downto 0);
     signal irqModeA             : std_logic_vector(7 downto 0);
     signal irqModeB             : std_logic_vector(7 downto 0);
-    
+    signal AFModeA              : std_logic_vector(7 downto 0);
+    signal AFModeB              : std_logic_vector(7 downto 0);
     
     -- Constants
     constant irqMaskA_offset    : integer := TO_INTEGER(GPIO_IRQA_MASK - GPIO_BASE);
@@ -75,6 +84,8 @@ architecture Behavioral of GPIO is
     constant modeB2_offset      : integer := TO_INTEGER(GPIO_MODEB_REG2 - GPIO_BASE);
     constant gpioa_offset       : integer := TO_INTEGER(GPIO_A - GPIO_BASE);
     constant gpiob_offset       : integer := TO_INTEGER(GPIO_B - GPIO_BASE);
+    constant AFmodeA_offset     : integer := TO_INTEGER(GPIO_AFMODEA_REG - GPIO_BASE);
+    constant AFmodeB_offset     : integer := TO_INTEGER(GPIO_AFMODEB_REG - GPIO_BASE);
     
     constant INPUT_MODE         : std_logic_vector(1 downto 0) := "01";
     constant OUTPUT_MODE        : std_logic_vector(1 downto 0) := "10";
@@ -94,6 +105,9 @@ begin
     irqModeA   <= dev_mem(irqModeA_offset);
     irqModeB   <= dev_mem(modeA2_offset);
     
+    AFModeA    <= dev_mem(AFmodeA_offset);
+    AFModeB    <= dev_mem(AFmodeB_offset);
+    
     
     FF: process( Clk, Reset) is 
     begin
@@ -112,7 +126,7 @@ begin
         
     end process;
     
-    GPIO:process( GPIOA, dev_mem, GPIOA, GPIOB, irqMaskA, irqMaskB, irqModeA, irqModeB, Address_s, WE_s, RE_s, InBus_s,gpioa_mode, gpiob_mode) is
+    GPIO:process( GPIOA, dev_mem, GPIOA, GPIOB,GPIOA_AF_IN, GPIOB_AF_IN, irqMaskA, irqMaskB, irqModeA, irqModeB, Address_s, WE_s, RE_s, InBus_s,gpioa_mode, gpiob_mode, AFModeA,AFModeB) is
     begin
         -- Set deafult values
         IRQA_reg_n <= '0';
@@ -120,6 +134,10 @@ begin
         dev_mem_n <= dev_mem;
         GPIOA_reg <= GPIOA;
         GPIOB_reg <= GPIOB;
+        
+        GPIOA_AF_OUT_reg <= (others => 'Z');
+        GPIOB_AF_OUT_reg <= (others => 'Z');
+        
         OutBus_s_reg <= (others => 'Z');
         
         -- GPIO logic
@@ -127,6 +145,7 @@ begin
             case gpioa_mode(k*2 + 1 downto k*2) is  -- check GPIO mode
                 when INPUT_MODE =>  --output
                     GPIOA_reg(k) <= dev_mem(gpioa_offset)(k);   --Set the stored value
+                    
                 when OUTPUT_MODE =>  --Input
                     dev_mem_n(gpioa_offset)(k) <= GPIOA(k);     -- Store input value
                     GPIOA_reg(k) <= 'Z'; -- Set to high impedance to avoid collision                 
@@ -136,8 +155,17 @@ begin
                             IRQA_reg_n <= '1';
                         end if;
                     end if;
+                when AF_MODE =>
+                    if( AFModeA(k) = '0') then
+                        GPIOA_reg(k) <= GPIOA_AF_IN(k);
+                    else    
+                        GPIOA_reg(k) <= 'Z'; -- Set to high impedance to avoid collision
+                        GPIOA_AF_OUT_reg(k) <= GPIOA(k); 
+                    end if;  
+                    
                 when others =>   
                     GPIOA_reg(k) <= 'Z';
+                    GPIOA_AF_OUT_reg(k) <= 'Z';
             end case;      
         end loop;
         
@@ -145,6 +173,7 @@ begin
             case gpiob_mode(k*2 + 1 downto k*2) is
                 when INPUT_MODE =>  -- Output
                     GPIOB_reg(k) <= dev_mem(gpiob_offset)(k); -- Set the stored value
+                    
                 when OUTPUT_MODE =>  -- Input 
                     dev_mem_n(gpiob_offset)(k) <= GPIOB(k);
                     GPIOB_reg(k) <= 'Z'; -- Set to high impedance to avoid collision
@@ -153,9 +182,18 @@ begin
                         if ( irqMaskB(k) = '1' AND dev_mem(gpiob_offset)(k) = irqModeB(k)) then
                             IRQB_reg_n <= '1';
                         end if;
+                    end if;
+                    
+                when AF_MODE =>
+                    if( AFModeB(k) = '0') then
+                        GPIOB_reg(k) <= GPIOB_AF_IN(k);
+                    else
+                        GPIOB_reg(k) <= 'Z'; -- Set to high impedance to avoid collision    
+                        GPIOB_AF_OUT_reg(k) <= GPIOB(k); 
                     end if;                              
                 when others =>   
                     GPIOB_reg(k) <= 'Z';
+                    GPIOB_AF_OUT_reg(k) <= 'Z';
             end case;      
         end loop;  
         
@@ -174,6 +212,9 @@ begin
     IRQB  <= IRQB_reg;  
     GPIOA <= GPIOA_reg;
     GPIOB <= GPIOB_reg;
+    GPIOA_AF_OUT <= GPIOA_AF_OUT_reg;
+    GPIOB_AF_OUT <= GPIOB_AF_OUT_reg;
+    
     outBus_s <= OutBus_s_reg;
 
 end Behavioral;
