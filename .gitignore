@@ -8,3 +8,7 @@
 *.zip
 *.exe
 *.hex
+*.log
+*.jou
+*.backup
+*.str
