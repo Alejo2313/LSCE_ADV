@@ -67,8 +67,10 @@ start: LOAD s0, A1
        OUTPUT s0, DMA_CONF_CH1
        INPUT s0, sRAM
        OUTPUT s0, RS232_TX_DATA
-       LOAD s0, 4F
+       LOAD s0, CF
        OUTPUT s0, RS232_CONF
+       LOAD s8, 00
+       OUTPUT s8, ISR_VECTOR
        ENABLE INTERRUPT
  loop: JUMP loop
        ADDRESS F80

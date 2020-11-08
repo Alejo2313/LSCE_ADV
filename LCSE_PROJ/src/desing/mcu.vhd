@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity MCU is
-    Port ( Clk :   in STD_LOGIC;
+    Port ( Clk_100Mhz :   in STD_LOGIC;
            Reset : in STD_LOGIC;
 --           TX    : out STD_LOGIC;
 --           RX    : in STD_LOGIC;
@@ -43,6 +43,18 @@ entity MCU is
 end MCU;
 
 architecture Behavioral of MCU is
+
+    component clk_20Mhz
+    port
+     (-- Clock in ports
+      -- Clock out ports
+      Clk          : out    std_logic;
+      -- Status and control signals
+      reset             : in     std_logic;
+      Clk_100Mhz           : in     std_logic
+     );
+    end component;
+
   component kcpsm6 
     generic(                 hwbuild : std_logic_vector(7 downto 0) := X"00";
                     interrupt_vector : std_logic_vector(11 downto 0) := X"F80";
@@ -244,7 +256,7 @@ architecture Behavioral of MCU is
     Signal DAM_IRQ : std_logic_vector (2 downto 0);
     
     signal TX, RX : std_logic;
-    
+    signal Clk    : std_logic;
     signal GPIOA_AF_IN, GPIOB_AF_IN  : std_logic_vector (7 downto 0);
     signal GPIOA_AF_OUT, GPIOB_AF_OUT  : std_logic_vector (7 downto 0);
     
@@ -260,6 +272,16 @@ begin
     IRQV(5) <= IRQ_RX;
     IRQV(6) <= GPIOA_IRQ;
     IRQV(7) <= GPIOB_IRQ;
+  
+  main_clk : clk_20Mhz
+   port map ( 
+  -- Clock out ports  
+   Clk => Clk,
+  -- Status and control signals                
+   reset => reset,
+   -- Clock in ports
+   Clk_100Mhz => Clk_100Mhz
+ );
     
     
   processor: kcpsm6

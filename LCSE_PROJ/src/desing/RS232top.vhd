@@ -108,7 +108,7 @@ architecture RTL of RS232top is
   signal EOR         : std_logic;
   signal EOT        : std_logic;
   signal reset_p    : std_logic;
-
+  signal rx_in      : std_logic;
 
 
 begin  -- RTL
@@ -125,11 +125,14 @@ rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);
       EOT   => EOT, ---ToDo: RQ DMA, IRQ CORE, BIT STATE. debe durar 1 ciclo
       TX    => TX);
 
+    rx_in <= RX when rx_en_bit = '1' else
+             '1';
+             
   Receiver: RS232_RX   -- Add enable and baudrate, add more config options 
     port map (
       Clk       => Clk,
       Reset     => Reset,
-      LineRD_in => RX,
+      LineRD_in => rx_in,
       Valid_out => Valid_out,
       Code_out  => Code_out,
       Store_out => EOR); --- ToDo: RQ DMA, IRQ CORE, BIT STATE 

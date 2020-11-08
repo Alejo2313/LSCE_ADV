@@ -30,6 +30,7 @@ entity RS232_RX is
     Port ( Clk : in STD_LOGIC;
            Reset : in STD_LOGIC;
            LineRD_in : in STD_LOGIC;
+           
            Valid_out : out STD_LOGIC;
            Code_out : out STD_LOGIC;
            Store_out : out STD_LOGIC);

@@ -11,7 +11,7 @@ end tb_MCU;
 architecture tb of tb_MCU is
 
     component MCU
-        port (Clk   : in std_logic;
+        port (Clk_100Mhz   : in std_logic;
               Reset : in std_logic;
 --              TX    : out std_logic;
 --              RX    : in std_logic;
@@ -26,14 +26,14 @@ architecture tb of tb_MCU is
     signal GPIOA : std_logic_vector (7 downto 0);
     signal GPIOB : std_logic_vector (7 downto 0);
 
-    constant TbPeriod : time := 50 ns; -- EDIT Put right period here
+    constant TbPeriod : time := 10 ns; -- EDIT Put right period here
     signal TbClock : std_logic := '0';
     signal TbSimEnded : std_logic := '0';
 
 begin
 
     dut : MCU
-    port map (Clk   => Clk,
+    port map (Clk_100Mhz   => Clk,
               Reset => Reset,
 --              TX    => TX,
 --              RX    => RX,
@@ -77,7 +77,7 @@ begin
         GPIOB(7) <= '1';
         wait for 1000 ns;
         GPIOB(7) <= '0';
-        wait for 10000 ns;        
+        wait for 100 us;        
         
         
         GPIOA(1) <= '1',

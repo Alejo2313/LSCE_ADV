@@ -90,8 +90,11 @@ start:  LOAD    s0  , A1
         INPUT   s0  , sRAM
         OUTPUT  s0  , RS232_TX_DATA
 
-        LOAD    s0  , 4F
+        LOAD    s0  , CF
         OUTPUT  s0  , RS232_CONF
+
+        LOAD    s8, 00
+        OUTPUT  s8, ISR_VECTOR
         
         ENABLE INTERRUPT
 loop:   Jump    loop
