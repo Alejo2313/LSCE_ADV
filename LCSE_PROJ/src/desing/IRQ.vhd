@@ -55,11 +55,13 @@ begin
 FF: process (Clk, Reset) is 
 begin
     if ( Reset = '1' ) then
-        IRQV_reg <= (others => '0');
+        IRQV_reg  <= (others => '0');
         IRQ_E_reg <= '0';
+        
     elsif (Clk'event and Clk = '1' ) then
-        IRQV_reg <= IRQV_reg_n;
+        IRQV_reg  <= IRQV_reg_n;
         IRQ_E_reg <= IRQ_E_reg_n;
+        
     end if;
 end process;
 
@@ -72,6 +74,7 @@ begin
     for k in (IRQV_reg'length -1) downto 0 loop
         tmp:= IRQV_reg(k) or tmp;
     end loop;
+    
     IRQ_E_reg_n <= tmp;
  
     IRQV_reg_n <= IRQV_reg or IRQV;

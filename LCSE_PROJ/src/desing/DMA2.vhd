@@ -118,9 +118,15 @@ architecture Behavioral of DMA2 is
     signal src1, src1_n                     : STD_LOGIC_VECTOR(7 downto 0);
     signal src2, src2_n                     : STD_LOGIC_VECTOR(3 downto 0);
     
-
+    signal ch1_en, ch2_en, ch3_en  : std_logic;
 begin
 
+    -- Common used signals (syntax sugar)
+    ch1_en <= dev_mem(TO_INTEGER(DMA_CONF_CH1_OFF))(7);
+    ch2_en <= dev_mem(TO_INTEGER(DMA_CONF_CH2_OFF))(7);
+    ch3_en <= dev_mem(TO_INTEGER(DMA_CONF_CH3_OFF))(7);
+    
+   
     FF: process (clk, reset) is 
     begin
         if( Reset = '1' ) then
@@ -167,18 +173,20 @@ begin
     
     end process;
     
-    NSL: process( dma_state_reg, Event_RQ, dev_mem, Access_m) is 
+    -- Next State logic
+    NSL: process(   ch1_en, ch2_en, ch3_en, dma_state_reg, 
+                    Event_RQ, dev_mem, Access_m) is 
     begin
     
         dma_state_reg_n <= dma_state_reg;
         
         case dma_state_reg is
             when IDLE => -- Check for enable channel with active events
-                if( Event_RQ(2) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH1_OFF))(7) = '1') then
+                if( Event_RQ(2) = '1' and ch1_en = '1') then
                     dma_state_reg_n <= FETCH;
-                elsif( Event_RQ(1) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH2_OFF))(7) = '1') then
+                elsif( Event_RQ(1) = '1' and ch2_en = '1') then
                     dma_state_reg_n <= FETCH;
-                elsif( Event_RQ(0) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH3_OFF))(7) = '1') then
+                elsif( Event_RQ(0) = '1' and ch3_en = '1') then
                     dma_state_reg_n <= FETCH;
                 end if;
                   
@@ -198,9 +206,11 @@ begin
         end case;
     end process;
     
+    -- LOGIC process
     LOGIC: process( dma_state_reg, Event_RQ,InBus_m,dev_mem, Access_m, Addess_s, 
                     InBus_s, WE_s, RE_s,ch_conf_reg, ch_src_reg,ch_dest_reg, ch_couter_reg, 
-                    src1, src2, inBus_m_reg, outBus_m_reg, index_irq_reg) is
+                    src1, src2, inBus_m_reg, outBus_m_reg, index_irq_reg,
+                    ch1_en, ch2_en, ch3_en) is
     begin
         -- Default default values to avoid latches
         dev_mem_n       <= dev_mem;
@@ -228,19 +238,21 @@ begin
                 ch_couter_reg_n <= (others => '0');
                 index_irq_reg_n <= (others => '0');
                 -- Select the active channel with higher priority
-                if( Event_RQ(2) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH1_OFF))(7) = '1') then
+                if( Event_RQ(2) = '1' and ch1_en = '1') then        --Channel 1
                     ch_conf_reg_n   <= DMA_CONF_CH1_OFF;
                     ch_src_reg_n    <= DMA_SRC_CH1_OFF;
                     ch_dest_reg_n   <= DMA_DEST_CH1_OFF;
                     ch_couter_reg_n <= DMA_CNT_CH1_OFF;
                     index_irq_reg_n <= "00";
-                elsif( Event_RQ(1) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH2_OFF))(7) = '1') then
+                    
+                elsif( Event_RQ(1) = '1' and ch2_en = '1') then     --Channel 2
                     ch_conf_reg_n   <= DMA_CONF_CH2_OFF;
                     ch_src_reg_n    <= DMA_SRC_CH2_OFF;
                     ch_dest_reg_n   <= DMA_DEST_CH2_OFF;
                     ch_couter_reg_n <= DMA_CNT_CH2_OFF;
                     index_irq_reg_n <= "01";
-                elsif( Event_RQ(0) = '1' and dev_mem(TO_INTEGER(DMA_CONF_CH3_OFF))(7) = '1') then
+                    
+                elsif( Event_RQ(0) = '1' and ch3_en = '1') then     --Channel 3
                     ch_conf_reg_n   <= DMA_CONF_CH3_OFF;
                     ch_src_reg_n    <= DMA_SRC_CH3_OFF;
                     ch_dest_reg_n   <= DMA_DEST_CH3_OFF;
@@ -253,24 +265,27 @@ begin
                 -- Calculate fetch address according with the operation mode
                 case dev_mem( TO_INTEGER(ch_conf_reg))(6 downto 5) is         
                     when MEM2MEM =>  -- Source address is incremented using the counter
-                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
-                        src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
+                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));                 --base address
+                        src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);  --counter reg
                         RE_m_reg_n <= '1';
+                        
                     when MEM2PER =>  -- Source address is incremented
-                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
-                        src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
+                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));                 --base address
+                        src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);  --counter reg
                         RE_m_reg_n <= '1';
+                        
                     when PER2MEM => -- Source address no change                   
-                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));
-                        src2_n <= (others => '0');
+                        src1_n <= dev_mem( TO_INTEGER(ch_src_reg));                 --base address
+                        src2_n <= (others => '0');                                  --'0'
                         RE_m_reg_n <= '1';
+                        
                     when others => 
                         src1_n <= (others => '0');
                         src2_n <= (others => '0');
                         RE_m_reg_n <= '0';
                 end case;
                  
-            when WAIT_FETCH =>
+            when WAIT_FETCH =>  --Wait for bus access
                  src1_n <= src1;
                  src2_n <= src2;
                  RE_m_reg_n <= '1';
@@ -280,22 +295,25 @@ begin
                     RE_m_reg_n <= '0';
                 end if;
                
-            when WRITE =>
+            when WRITE => --Write data to destination
                 -- Calculate write address according with the operation mode
                 case dev_mem( TO_INTEGER(ch_conf_reg))(6 downto 5) is         
                     when MEM2MEM =>  -- Write address is incremented using the counter
                         src1_n <= dev_mem( TO_INTEGER(ch_dest_reg)); 
                         src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                         WE_m_reg_n <= '1';
+                        
                     when MEM2PER => -- Write address no change
                         src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
                         src2_n <= (others => '0');
                         WE_m_reg_n <= '1';
+                        
                     when PER2MEM =>  -- Write address is incremented using the counter                   
                         src1_n <= dev_mem( TO_INTEGER(ch_dest_reg));
                         src2_n <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4);
                         WE_m_reg_n <= '1';
                         WE_m_reg_n <= '1';
+                        
                     when others =>
                         src1_n <= (others => '0');
                         src2_n <= (others => '0');
@@ -312,13 +330,17 @@ begin
                 
                 if( access_m = '1' ) then
                     WE_m_reg_n <= '0';
-                    
+                    --Increment counter
                     dev_mem_n( TO_INTEGER(ch_couter_reg))(7 downto 4) <= dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4) + 1;
+                    -- Check counter end 
                     if ( dev_mem( TO_INTEGER(ch_couter_reg))(7 downto 4) = dev_mem( TO_INTEGER(ch_couter_reg))(3 downto 0)) then
+                        -- Reset counter
                         dev_mem_n( TO_INTEGER(ch_couter_reg))(7 downto 4) <= (others => '0');
+                        -- Disable channel
                         dev_mem_n(TO_INTEGER(ch_conf_reg))(7) <= '0';
-                        
+                        -- Check if is interrupt enabled
                         if( dev_mem( TO_INTEGER(ch_conf_reg))(irq_en_bit) = '1' ) then
+                            -- Set interrupt
                             dma_irq_reg_n( TO_INTEGER(index_irq_reg) ) <= '1';
                         end if;                    
                     end if;
@@ -342,11 +364,11 @@ begin
     
     end process;
     
-    OutBus_s <= OutBus_s_reg;
-    OutBus_m <= OutBus_m_reg;
-    Address_m <= Address_m_reg;
-    WE_m <= WE_m_reg;
-    RE_m <= RE_m_reg;
-    DMA_IRQ <= dma_irq_reg;
+    OutBus_s    <= OutBus_s_reg;
+    OutBus_m    <= OutBus_m_reg;
+    Address_m   <= Address_m_reg;
+    WE_m        <= WE_m_reg;
+    RE_m        <= RE_m_reg;
+    DMA_IRQ     <= dma_irq_reg;
 
 end Behavioral;

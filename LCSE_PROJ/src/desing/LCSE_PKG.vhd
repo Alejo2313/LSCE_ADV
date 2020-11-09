@@ -69,7 +69,7 @@ package LCSE_PKG is
     CONSTANT sDISPLAY               : UNSIGNED( 7 downto 0 ) := X"D8";
         CONSTANT DISPLAY_BASE       : UNSIGNED( 7 downto 0 ) := sDISPLAY;
         CONSTANT DISPLAY_EN         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 0;
-        CONSTANT DISPLAY_ANODE      : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 1;
+        CONSTANT DISPLAY_IEN        : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 1;
         CONSTANT DISPLAY_01         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 2;
         CONSTANT DISPLAY_23         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 3;
         CONSTANT DISPLAY_45         : UNSIGNED( 7 downto 0 ) := DISPLAY_BASE + 4;

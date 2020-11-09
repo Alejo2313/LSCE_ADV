@@ -56,10 +56,11 @@ architecture Behavioral of GPIO is
     signal dev_mem, dev_mem_n   : dev_mem_8;
     
     -- IRQ and GPIO registers
+    signal GPIOA_AF_OUT_reg, GPIOB_AF_OUT_reg : std_logic_vector(7 downto 0);
     signal IRQA_reg, IRQA_reg_n : STD_LOGIC;
     signal IRQB_reg, IRQB_reg_n : STD_LOGIC;
     signal GPIOA_reg, GPIOB_reg : std_logic_vector(7 downto 0);
-    signal GPIOA_AF_OUT_reg, GPIOB_AF_OUT_reg : std_logic_vector(7 downto 0);
+    
     
     signal OutBus_s_reg         : std_logic_vector(7 downto 0);
     

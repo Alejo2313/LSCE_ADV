@@ -33,29 +33,41 @@ architecture RTL of RS232top is
     
     type dev_mem_rs is array (to_integer(eRS232 - sRS232) downto 0) of std_logic_vector(7 downto 0);
 
-    signal dev_mem, dev_mem_n : dev_mem_rs :=(others => (others => '0'));
-    signal OutBus_s_reg, OutBus_s_reg_n : STD_LOGIC_VECTOR (7 downto 0);
+    -- Register offset
+    constant RS232_TX_DATA_offset   : integer   := TO_INTEGER(RS232_TX_DATA - RS232_BASE);
+    constant RS232_CONF_offset      : integer   := TO_INTEGER(RS232_CONF - RS232_BASE);
+    constant RS232_STATUS_offset    : integer   := TO_INTEGER(RS232_STATUS - RS232_BASE);
+    constant RS232_RX_DATA_offset   : integer   := TO_INTEGER(RS232_RX_DATA - RS232_BASE);
+    -- Bit index
+    constant rx_en                  : integer   :=  7;
+    constant tx_en                  : integer   :=  6;
+    constant rx_dma_en              : integer   :=  3;
+    constant tx_dma_en              : integer   :=  2;
+    constant rx_irq_en              : integer   :=  1;
+    constant tx_irq_en              : integer   :=  0;
+    
+    
+    --Signals   
+    signal dev_mem, dev_mem_n               : dev_mem_rs :=(others => (others => '0'));
+    signal OutBus_s_reg, OutBus_s_reg_n     : STD_LOGIC_VECTOR (7 downto 0);
     signal DMA_RX_reg, DMA_RX_reg_n         : std_logic;
     signal IRQ_RX_reg, IRQ_RX_reg_n         : std_logic;
     signal DMA_TX_reg, DMA_TX_reg_n         : std_logic;
     signal IRQ_TX_reg, IRQ_TX_reg_n         : std_logic;
     signal tx_start_reg, tx_start_reg_n     : std_logic;
     signal rx_start_reg, rx_start_reg_n     : std_logic;
-    signal data_in, data_out     : STD_LOGIC_VECTOR (7 downto 0);
+    signal data_in, data_out                : STD_LOGIC_VECTOR (7 downto 0);
            
-    signal tx_en_bit : std_logic;
-    signal rx_en_bit : std_logic;
+    signal tx_en_bit    : std_logic;
+    signal rx_en_bit    : std_logic;
     
-    constant rx_en   : integer :=  7;
-    constant tx_en   : integer :=  6;
-    
-    constant rx_dma_en : integer :=  3;
-    constant tx_dma_en : integer :=  2;
-    constant rx_irq_en : integer :=  1;
-    constant tx_irq_en : integer :=  0;
+    signal rx_dma_bit   : std_logic;
+    signal tx_irq_bit   : std_logic;   
+    signal tx_dma_bit   : std_logic;
+    signal rx_irq_bit   : std_logic;
 
-    
-    
+
+
  ------------------------------------------------------------------------
   -- Components for Transmitter Block
   ------------------------------------------------------------------------
@@ -110,11 +122,18 @@ architecture RTL of RS232top is
   signal reset_p    : std_logic;
   signal rx_in      : std_logic;
 
-
 begin  -- RTL
 
-tx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en);
-rx_en_bit <= dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en);  
+tx_en_bit   <= dev_mem(RS232_CONF_offset)(tx_en);
+rx_en_bit   <= dev_mem(RS232_CONF_offset)(rx_en);
+
+tx_dma_bit  <= dev_mem(RS232_CONF_offset)(tx_dma_en);
+rx_dma_bit  <= dev_mem(RS232_CONF_offset)(rx_dma_en);
+
+tx_irq_bit  <= dev_mem(RS232_CONF_offset)(tx_irq_en);
+rx_irq_bit  <= dev_mem(RS232_CONF_offset)(rx_irq_en);
+
+data_in     <= dev_mem(RS232_TX_DATA_offset);
 
   Transmitter: RS232_TX
     port map (
@@ -167,50 +186,50 @@ begin --TODO DMA have to be on high impedance
     end if;
 end process;
 
-
-
-LOGIC: process( dev_mem, Address_s, EOT, EOR, data_out,InBus_s, WE_s, RE_s) is
+LOGIC: process( dev_mem, Address_s, EOT, EOR, 
+                data_out,InBus_s, WE_s, RE_s,
+                tx_en_bit, rx_en_bit, tx_dma_bit, rx_dma_bit, 
+                tx_irq_bit, rx_irq_bit) is
 begin
-    DMA_RX_reg_n <= '0';
-    IRQ_RX_reg_n <= '0';
-    DMA_TX_reg_n <= '0';
-    IRQ_TX_reg_n <= '0';
-    OutBus_s_reg   <= (others => 'Z') ;
-    dev_mem_n <= dev_mem;
-    
-    data_in <= dev_mem(TO_INTEGER(RS232_TX_DATA - RS232_BASE));
+    DMA_RX_reg_n    <= '0';
+    IRQ_RX_reg_n    <= '0';
+    DMA_TX_reg_n    <= '0';
+    IRQ_TX_reg_n    <= '0';
+    OutBus_s_reg    <= (others => 'Z') ;
+    dev_mem_n       <= dev_mem;
     
     if ( EOT = '1' ) then
-        dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en)   <= '0'  ;
-        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(tx_en) <= '1';
+        dev_mem_n(RS232_CONF_offset)(tx_en)   <= '0'  ;
+        dev_mem_n(RS232_STATUS_offset)(tx_en) <= '1';
         
-        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_dma_en) = '1') then
+        if (tx_dma_bit = '1') then
             DMA_TX_reg_n  <= '1';
         end if;
-        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_irq_en) = '1') then
+        if (tx_irq_bit = '1') then
             IRQ_TX_reg_n  <= '1';
         end if;
         
-    elsif (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en) = '1' ) then
-        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(tx_en) <= '0';
+    elsif (tx_en_bit = '1' ) then
+        dev_mem_n(RS232_STATUS_offset)(tx_en) <= '0';
         DMA_TX_reg_n  <= '0';
         IRQ_TX_reg_n  <= '0';
     end if;
     
     if ( EOR = '1' ) then
-        dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en)     <= '0';
-        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(rx_en)   <= '1';
-        dev_mem_n(TO_INTEGER(RS232_RX_DATA - RS232_BASE)) <= data_out;
+        dev_mem_n(RS232_CONF_offset)(rx_en)     <= '0';
+        dev_mem_n(RS232_STATUS_offset)(rx_en)   <= '1';
+        dev_mem_n(RS232_RX_DATA_offset)         <= data_out;
         
-        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_dma_en) = '1') then
+        if (rx_dma_bit = '1') then
             DMA_RX_reg_n  <= '1';
         end if;
-        if (dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_irq_en) = '1') then
+        
+        if (rx_irq_bit = '1') then
             IRQ_RX_reg_n  <= '1';
         end if;
         
-    elsif ( dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(rx_en) = '1' ) then
-        dev_mem_n(TO_INTEGER(RS232_STATUS - RS232_BASE))(rx_en) <= '0';
+    elsif ( rx_en_bit = '1' ) then
+        dev_mem_n(RS232_STATUS_offset)(rx_en) <= '0';
         DMA_RX_reg_n  <= '0';
         IRQ_RX_reg_n  <= '0';
     end if;
@@ -219,8 +238,8 @@ begin
     if ( unsigned(Address_s) >= sRS232 and unsigned(Address_s) <= eRS232  )  then
         if( WE_s = '1' ) then
             dev_mem_n( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) ) <= InBus_s;
-            if ( unsigned(Address_s) = (RS232_TX_DATA) and dev_mem(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_dma_en) = '1' ) then
-               dev_mem_n(TO_INTEGER(RS232_CONF - RS232_BASE))(tx_en) <= '1';
+            if ( unsigned(Address_s) = (RS232_TX_DATA) and tx_dma_bit = '1' ) then
+               dev_mem_n(RS232_CONF_offset)(tx_en) <= '1';
             end if;
         elsif ( RE_s = '1' ) then
             OutBus_s_reg <= dev_mem( TO_INTEGER(UNSIGNED(Address_s(3 downto 0))) );
