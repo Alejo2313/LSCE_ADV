@@ -363,11 +363,10 @@ RX_INBOUND:
         OUTPUT  sA, RX_STORE_CNT                ;> Store count value
         RETURN                                  ;> Return
 
-; After a LF character, the command is procesed
-ADDRESS B80
 NEW_COMMAND:
         ; Some sintax sugar
-
+        NAMEREG s7, tmp
+        NAMEREG s8, mode
         NAMEREG s9, cmdDir
         NAMEREG sA, cmd
         NAMEREG sB, pinN
@@ -397,13 +396,11 @@ GPIO_CMD:
         INPUT   cmd, (cmdDir)                   ;> Get port
 
         LOAD    gpioPort, GPIO_A                ;> Load GPIOA as default
-        LOAD    ModeReg, GPIO_MODEA_REG2        ;> 
 
         COMPARE cmd, ASCII_A                    ;> Check if GPIOA
         JUMP     Z, GPIO_GET_PIN                ;> If correct, continue
 
         LOAD    gpioPort, GPIO_B                ;> If no GPIOA, change to GPIOB
-        LOAD    ModeReg, GPIO_MODEB_REG2        ;> 
 
 ; Calculate PIN and registers
 GPIO_GET_PIN:
@@ -413,42 +410,28 @@ GPIO_GET_PIN:
         SUB     pinN, 30                        ;> Convert to ASCII to DEC
         JUMP     C, CLC_CMD                     ;> Check underflow. If true, the value is invalid so,
                                                 ;> go to clean registers. (FAIL)
-                                                
-        COMPARE pinN, 04                        ;> Check if pin number is below 4 to select correct registers
-        JUMP     C, GPIO_CALC_MASK              ;> if less than, continue
-        
-        SUB     ModeReg, 01                     ;> And update mode register
-
         COMPARE pinN, 08                        ;> Check if pin below 8 (MAX PIN)
         JUMP     C, GPIO_CALC_MASK              ;> if less than, continue        
         JUMP     CLC_CMD                        ;> if greater/equal, the values is invalid (FAIL)
 
 ; Calculate PIN MASK and MODE MASK
 GPIO_CALC_MASK:                                 
-        ADD     cmdDir, 01                      ;> Increment pointer 
-        INPUT   cmd, (cmdDir)                   ;> get Mode value
-
         LOAD    pinMask, 01                     ;> Set deault pin mask (PIN0)
-        LOAD    modeMask, 01                    ;> Set default mode mask (INPUT)
-        ;TODO: Change to ASCII?
-
-        AND    cmd, 01                          ;> Check mode
-        JUMP     Z, GPIO_MASK_LOOP              ;> if input, continue
-        LOAD    modeMask, 02                    ;> else, change to OUPUT and continue 
-
+        LOAD    modeMask, 03                    ;> Set default mode mask (INPUT)
+        LOAD    tmp, pinN                       ;> Save pin value
 GPIO_MASK_LOOP:
         
-        COMPARE pinN, 00                        ;> check pin counter equal 0
+        COMPARE tmp, 00                         ;> check pin counter equal 0
         JUMP     Z, GPIO_CMD_SELECT             ;> if true, continue
 
         RL      modeMask                        ;> Rotate left two positions mode mask
         RL      modeMask                        ;>
         RL      pinMask                         ;> Rotate left one position pin  
-        SUB     pinN, 01                        ;> Decrement pin counter
+        SUB     tmp, 01                         ;> Decrement pin counter
         JUMP    GPIO_MASK_LOOP
-
 ; Check command type
 GPIO_CMD_SELECT:
+
         LOAD    cmdDir, RX_STORE_BASE           ;> Load base pointer
         ADD     cmdDir, 01                      ;> Increment pointer one position
 
@@ -470,57 +453,172 @@ GPIO_CONF_CMD:
         ADD     cmdDir, 03                      ;> Increment pointer one position
         INPUT   cmd, (cmdDir)                   ;> Read command character
 
-        COMPARE cmd, ASCII_0
+        LOAD    ModeReg, 02                     ;> Load modeReg2 offsert
+        COMPARE pinN, 04                        ;> Check if offset is correct
+        JUMP    C, GPIO_CONTINUE
+        LOAD    ModeReg, 01                     ;> Load modeReg1 offset
+
+GPIO_CONTINUE:
+        ADD     ModeReg, gpioPort               ;> Calc modereg address
+
+        COMPARE cmd, ASCII_0                    ;> Configure mode output
         JUMP      Z, GPIO_CONF_OUT
 
-        COMPARE cmd, ASCII_1
+        COMPARE cmd, ASCII_1                    ;> Configure mode intput
         JUMP      Z, GPIO_CONF_IN
 
-        COMPARE cmd, ASCII_2
+        COMPARE cmd, ASCII_2                    ;> Configure mode input irq rissing
         JUMP      Z, GPIO_CONF_OR
 
-        COMPARE cmd, ASCII_3
+        COMPARE cmd, ASCII_3                    ;> Configure mode input irq falling
         JUMP      Z, GPIO_CONF_OF
 
-        COMPARE cmd, ASCII_4
-        JUMP      Z, GPIO_CONF_AF
+        COMPARE cmd, ASCII_4                    ;> Configure mode AF input
+        JUMP      Z, GPIO_CONF_AFI
+
+        COMPARE cmd, ASCII_5                    ;> Configure AF outpur
+        JUMP      Z, GPIO_CONF_AFO
 
         JUMP CLC_CMD
 
 GPIO_CONF_OUT:
-        AND     ModeReg, 55
-        JUMP    GPIO_CONF_PIN
+        LOAD    mode, 55                        ;> Load mode mask (all pin on)
+        JUMP    GPIO_CONF_PIN                   ;> Configure
+        
+ADDRESS B80
 GPIO_CONF_IN:
-        AND     ModeReg, AA
-        JUMP    GPIO_CONF_PIN
+        LOAD    mode, AA                        ;> Load mode mask (all pin on)
+
+        LOAD    cmdDir, gpioPort                ;> Load GPIO port
+        ADD     cmdDir, 04                      ;> Calc IRQ reg address
+
+        INPUT   cmd, (cmdDir)                   ;> Load IRQ reg value
+
+        XOR     pinMask, FF                     ;> No pinMask value
+        AND     cmd, pinMask                    ;> Clean current conf
+        XOR     pinMask, FF                     ;> Restore pinMask
+
+        OUTPUT  cmd, (cmdDir)                   ;> Save register
+
+
+        JUMP    GPIO_CONF_PIN                   ;> Configure
 
 GPIO_CONF_OR:
-        AND     ModeReg, 55
+        LOAD    mode, AA                        ;> Load mode mask (all pin on)
 
+        LOAD    cmdDir, gpioPort                ;> Load GPIO port
+        ADD     cmdDir, 04                      ;> Calc IRQ reg address
+
+        INPUT   cmd, (cmdDir)                   ;> Load IRQ reg value
+
+        XOR     pinMask, FF                     ;> No pinMask value
+        AND     cmd, pinMask                    ;> Clean current conf
+        XOR     pinMask, FF                     ;> Restore pinMask
+        OR      cmd, pinMask                    ;> Set IRQ enable
+
+        OUTPUT  cmd, (cmdDir)                   ;> Save register
+
+        ADD     cmdDir, 01                      ;> Calc IRQ mode register
+
+        INPUT   cmd, (cmdDir)                   ;> Load IRQ mode value
+
+        XOR     pinMask, FF                     ;> Not pin mask value
+        AND     cmd, pinMask                    ;> Clean current conf 
+        XOR     pinMask, FF                     ;> Restore pinMask
+        OR      cmd, pinMask                    ;> Set IRQ enable
+
+        OUTPUT  cmd, (cmdDir)                   ;> Save register
+
+        JUMP    GPIO_CONF_PIN
 
 GPIO_CONF_OF:
+        LOAD    mode, AA                        ;> Load mode mask (all pin on)
 
-GPIO_CONF_AF:
+        LOAD    cmdDir, gpioPort                ;> Load GPIO port
+        ADD     cmdDir, 04                      ;> Calc IRQ reg address
+
+        INPUT   cmd, (cmdDir)                   ;> Load IRQ reg value
+
+        XOR     pinMask, FF                     ;> No pinMask value
+        AND     cmd, pinMask                    ;> Clean current conf
+        XOR     pinMask, FF                     ;> Restore pinMask
+        OR      cmd, pinMask                    ;> Set IRQ enable
+
+        OUTPUT  cmd, (cmdDir)                   ;> Save register
+
+        ADD     cmdDir, 01                      ;> Calc IRQ mode register
+
+        INPUT   cmd, (cmdDir)                   ;> Load IRQ mode value
+
+        XOR     pinMask, FF                     ;> Not pin mask value
+        AND     cmd, pinMask                    ;> Clean current conf 
+        XOR     pinMask, FF                     ;> Restore pinMask
+
+        OUTPUT  cmd, (cmdDir)                   ;> Save register
+
+        JUMP    GPIO_CONF_PIN
+
+GPIO_CONF_AFI:
+        LOAD    mode, FF                        ;> Load mode mask (all pin on)
+
+        LOAD    cmdDir, gpioPort                ;> Load GPIO port
+        ADD     cmdDir, 03                      ;> Calc AF mode address
+
+        INPUT   cmd, (cmdDir)                   ;> Get AF mode vlaue
+
+        XOR     pinMask, FF                     ;> Not pinmask
+        AND     cmd, pinMask                    ;> Clear current value
+        XOR     pinMask, FF                     ;> restore pin mask
+        OR      cmd, pinMask                    ;> Set mode
+
+        OUTPUT  cmd, (cmdDir)                   ;> save value
+
+        JUMP    GPIO_CONF_PIN
+
+
+GPIO_CONF_AFO:
+
+        LOAD    mode, FF                        ;> Load mode mask (all pin on)
+
+        LOAD    cmdDir, gpioPort                ;> Load GPIO port
+        ADD     cmdDir, 03                      ;> Calc AF mode address
+
+        INPUT   cmd, (cmdDir)                   ;> Get AF mode vlaue
+
+        XOR     pinMask, FF                     ;> Not pinmask
+        AND     cmd, pinMask                    ;> Clear current value
+        XOR     pinMask, FF                     ;> restore pin mask
+
+        OUTPUT  cmd, (cmdDir)                   ;> save value
+
+        JUMP    GPIO_CONF_PIN
 
 GPIO_CONF_PIN:
-        INPUT  s8, (ModeReg)                    ;> Get current mode reg
-        OR     s8, modeMask                     ;> Update mode reg
-        OUTPUT s8, (ModeReg)                    ;> Set mode reg
+
+        INPUT   cmd, (ModeReg)                  ;> Get current mode reg
+
+        XOR     modeMask, FF                    ;> Not mode mask
+        AND     cmd, modeMask                   ;> Clean current value
+        XOR     modeMask, FF                    ;> Restore pinMask
+        AND     mode, modeMask                  ;> set pin mode (only selected pin)
+        OR      cmd, mode                       ;> Update mode reg
+        OUTPUT  cmd, (ModeReg)                  ;> Set mode reg
 
         JUMP CLC_CMD                            ;> Clean data
 
+
 GPIO_SET_CMD:
-        INPUT  s8, (gpioPort)                   ;> Get current GPIO reg
-        OR     s8, pinMask                      ;> Update GPIO reg
-        OUTPUT s8, (gpioPort)                   ;> set new GPIO reg
+        INPUT  cmd, (gpioPort)                   ;> Get current GPIO reg
+        OR     cmd, pinMask                      ;> Update GPIO reg
+        OUTPUT cmd, (gpioPort)                   ;> set new GPIO reg
 
         JUMP CLC_CMD                            ;> Clean data
 
 GPIO_RESET_CMD:
-        INPUT  s8, (gpioPort)                   ;> Get current GPIO reg
+        INPUT  cmd, (gpioPort)                   ;> Get current GPIO reg
         XOR    pinMask, FF                      ;> Update GPIO reg. (NOT is not implemented so, we use XOR)
-        AND    s8, pinMask                      ;> Clean bit
-        OUTPUT s8, (gpioPort)                   ;> Set new GPIO reg
+        AND    cmd, pinMask                      ;> Clean bit
+        OUTPUT cmd, (gpioPort)                   ;> Set new GPIO reg
 
         JUMP CLC_CMD                            ;> Clean data
 
@@ -534,6 +632,8 @@ REG_CMD:
 ; Clean
 CLC_CMD:
         ; Restore register names
+        NAMEREG tmp, s7
+        NAMEREG mode, s8
         NAMEREG cmdDir,  s9
         NAMEREG cmd,     sA
         NAMEREG pinN,    sB

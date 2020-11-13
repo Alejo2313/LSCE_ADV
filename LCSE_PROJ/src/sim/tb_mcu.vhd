@@ -31,6 +31,11 @@ architecture tb of tb_MCU is
 
     constant TbPeriod : time := 10 ns; -- EDIT Put right period here
     signal TbClock : std_logic := '0';
+    
+    constant inPeriod : time := 10us; -- EDIT Put right period here
+    signal gpioClk : std_logic := '0';
+    
+    
     signal TbSimEnded : std_logic := '0';
 
     signal send_en : std_logic := '0';
@@ -48,7 +53,9 @@ begin
 
     -- Clock generation
     TbClock <= not TbClock after TbPeriod/2 when TbSimEnded /= '1' else '0';
-
+    
+    gpioClk <= not gpioClk after inPeriod/2 when TbSimEnded /= '1' else '0';
+    GPIOB(7) <= gpioClk;
     -- EDIT: Check that Clk is really your main clock signal
     Clk <= TbClock;
 
@@ -65,34 +72,20 @@ begin
         Reset <= '0';
         wait for 125 ns;
         
-        
-        
-        wait for 4000 ns;
-        GPIOB(7) <= '1'; 
-        wait for 1000 ns;
-        GPIOB(7) <= '0';
-        wait for 1000 ns;
-        GPIOB(7) <= '1';
-        wait for 1000 ns;
-        GPIOB(7) <= '0';
-        wait for 1000 ns;
-        GPIOB(7) <= '1'; 
-        wait for 1000 ns;
-        GPIOB(7) <= '0';
-        wait for 1000 ns;
-        GPIOB(7) <= '1';
-        wait for 1000 ns;
-        GPIOB(7) <= '0';
-        wait for 100 us;        
-        
-        
+           
         
         GPIOA(1) <= '1';
         
         send_string("GCA60"&lf, GPIOA(1));
         send_string("GSA6"&lf, GPIOA(1));
-        send_string("GRA6"&lf, GPIOA(1));
-        send_string("GCA60"&lf, GPIOA(1));
+        send_string("GRA6"&lf, GPIOA(1));     
+        send_string("GCB72"&lf, GPIOA(1));
+        send_string("GCB71"&lf, GPIOA(1));
+        send_string("GCB71"&lf, GPIOA(1));
+        send_string("GCB31"&lf, GPIOA(1));
+        
+        
+        
         
         wait;
     end process;

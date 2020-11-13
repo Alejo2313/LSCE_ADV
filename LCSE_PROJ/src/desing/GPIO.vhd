@@ -186,7 +186,7 @@ begin
                     end if;
                     
                 when AF_MODE =>
-                    if( AFModeB(k) = '0') then
+                    if( AFModeB(k) = '0') then --output
                         GPIOB_reg(k) <= GPIOB_AF_IN(k);
                     else
                         GPIOB_reg(k) <= 'Z'; -- Set to high impedance to avoid collision    
