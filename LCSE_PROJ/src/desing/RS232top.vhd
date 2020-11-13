@@ -216,7 +216,7 @@ begin
     end if;
     
     if ( EOR = '1' ) then
-        dev_mem_n(RS232_CONF_offset)(rx_en)     <= '0';
+       -- dev_mem_n(RS232_CONF_offset)(rx_en)     <= '0';
         dev_mem_n(RS232_STATUS_offset)(rx_en)   <= '1';
         dev_mem_n(RS232_RX_DATA_offset)         <= data_out;
         
@@ -229,7 +229,7 @@ begin
         end if;
         
     elsif ( rx_en_bit = '1' ) then
-        dev_mem_n(RS232_STATUS_offset)(rx_en) <= '0';
+     --  dev_mem_n(RS232_STATUS_offset)(rx_en) <= '0';
         DMA_RX_reg_n  <= '0';
         IRQ_RX_reg_n  <= '0';
     end if;

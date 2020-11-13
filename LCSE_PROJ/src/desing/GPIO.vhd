@@ -116,8 +116,8 @@ begin
             IRQA_reg <= '0';
             IRQB_reg <= '0';
             dev_mem <= (others => (others => '0'));
-            dev_mem(gpioa_offset) <= (others => 'Z');
-            dev_mem(gpiob_offset) <= (others => 'Z');
+    --       dev_mem(gpioa_offset) <= (others => 'Z');
+    --       dev_mem(gpiob_offset) <= (others => 'Z');
        elsif (Clk'event and clk = '1' ) then
             IRQA_reg <= IRQA_reg_n;
             IRQB_reg <= IRQB_reg_n;

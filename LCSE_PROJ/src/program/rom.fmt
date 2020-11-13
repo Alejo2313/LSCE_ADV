@@ -1,80 +1,455 @@
-       ; LCSE picoblaze test program
-       ;Memory Map definition
-       CONSTANT sRAM, 10               ; RAM Start address
-       CONSTANT eRAM, 1F               ; RAM end address
-       CONSTANT DMA_MEM_BASE, C0       ;
-       CONSTANT DMA_CONF_CH1, C0       ;
-       CONSTANT DMA_SRC_CH1, C1        ;
-       CONSTANT DMA_DEST_CH1, C2       ;
-       CONSTANT DMA_CNT_CH1, C3        ;
-       CONSTANT DMA_CONF_CH2, C4       ;
-       CONSTANT DMA_SRC_CH2, C5        ;
-       CONSTANT DMA_DEST_CH2, C6       ;
-       CONSTANT DMA_CNT_CH2, C7        ;
-       CONSTANT DMA_CONF_CH3, C8       ;
-       CONSTANT DMA_SRC_CH3, C9        ;
-       CONSTANT DMA_DEST_CH3, CA       ;
-       CONSTANT DMA_CNT_CH3, CB        ;
-       CONSTANT RS232_BASE, D0         ;
-       CONSTANT RS232_CONF, D0         ;
-       CONSTANT RS232_STATUS, D1       ;
-       CONSTANT RS232_TX_DATA, D2      ;
-       CONSTANT RS232_RX_DAT, D3       ;
-       CONSTANT GPIO_BASE, E0          ;
-       CONSTANT GPIO_IRQA_MASK, E0     ;
-       CONSTANT GPIO_IRQB_MASK, E1     ;
-       CONSTANT GPIO_IRQMODEA_MASK, E2 ;
-       CONSTANT GPIO_IRQMODEB_MASK, E3 ;
-       CONSTANT GPIO_MODEA_REG1, E4    ;
-       CONSTANT GPIO_MODEA_REG2, E5    ;
-       CONSTANT GPIO_MODEB_REG1, E6    ;
-       CONSTANT GPIO_MODEB_REG2, E7    ;
-       CONSTANT GPIO_AFMODEA_REG, E8
-       CONSTANT GPIO_AFMODEB_REG, E9
-       CONSTANT GPIO_A, EA             ;
-       CONSTANT GPIO_B, EB             ;
-       CONSTANT ISR_VECTOR, 00         ;
-start: LOAD s0, A1
-       LOAD s1, sRAM
-       OUTPUT s0, (s1)
-       ADD s1, 01
-       LOAD s0, A2
-       OUTPUT s0, (s1)
-       ADD s1, 01
-       LOAD s0, A3
-       OUTPUT s0, (s1)
-       ADD s1, 01
-       LOAD s0, 55                     ;
-       OUTPUT s0, GPIO_MODEA_REG1
-       LOAD s0, 5F                     ;
-       OUTPUT s0, GPIO_MODEA_REG2
-       LOAD s0, A0
-       OUTPUT s0, GPIO_MODEB_REG1
-       LOAD s0, 80
-       OUTPUT s0, GPIO_IRQMODEB_MASK
-       OUTPUT s0, GPIO_IRQB_MASK
-       LOAD s0, 02
-       OUTPUT s0, GPIO_AFMODEA_REG
-       LOAD s0, FF
-       OUTPUT s0, GPIO_A
-       LOAD s0, RS232_TX_DATA
-       OUTPUT s0, DMA_DEST_CH1
-       LOAD s0, sRAM
-       OUTPUT s0, DMA_SRC_CH1
-       LOAD s0, 12
-       OUTPUT s0, DMA_CNT_CH1
-       LOAD s0, A0                     ;
-       OUTPUT s0, DMA_CONF_CH1
-       INPUT s0, sRAM
-       OUTPUT s0, RS232_TX_DATA
-       LOAD s0, CF
-       OUTPUT s0, RS232_CONF
-       LOAD s8, 00
-       OUTPUT s8, ISR_VECTOR
-       ENABLE INTERRUPT
- loop: JUMP loop
-       ADDRESS F80
-  ISR: INPUT s8, ISR_VECTOR
-       LOAD s8, 00
-       OUTPUT s8, ISR_VECTOR
-       RETURNI ENABLE
+                  ; LCSE picoblaze test program
+                  ;Memory Map definition
+                  CONSTANT sRAM, 10               ; RAM Start address
+                  CONSTANT eRAM, 1F               ; RAM end address
+                  CONSTANT DMA_MEM_BASE, C0       ;
+                  CONSTANT DMA_CONF_CH1, C0       ;
+                  CONSTANT DMA_SRC_CH1, C1        ;
+                  CONSTANT DMA_DEST_CH1, C2       ;
+                  CONSTANT DMA_CNT_CH1, C3        ;
+                  CONSTANT DMA_CONF_CH2, C4       ;
+                  CONSTANT DMA_SRC_CH2, C5        ;
+                  CONSTANT DMA_DEST_CH2, C6       ;
+                  CONSTANT DMA_CNT_CH2, C7        ;
+                  CONSTANT DMA_CONF_CH3, C8       ;
+                  CONSTANT DMA_SRC_CH3, C9        ;
+                  CONSTANT DMA_DEST_CH3, CA       ;
+                  CONSTANT DMA_CNT_CH3, CB        ;
+                  CONSTANT RS232_BASE, D0         ;
+                  CONSTANT RS232_CONF, D0         ;
+                  CONSTANT RS232_STATUS, D1       ;
+                  CONSTANT RS232_TX_DATA, D2      ;
+                  CONSTANT RS232_RX_DAT, D3       ;
+                  CONSTANT GPIO_BASE, E0          ;
+                  CONSTANT GPIO_IRQA_MASK, E0     ;
+                  CONSTANT GPIO_IRQB_MASK, E1     ;
+                  CONSTANT GPIO_IRQMODEA_MASK, E2 ;
+                  CONSTANT GPIO_IRQMODEB_MASK, E3 ;
+                  CONSTANT GPIO_MODEA_REG1, E4    ;
+                  CONSTANT GPIO_MODEA_REG2, E5    ;
+                  CONSTANT GPIO_MODEB_REG1, E6    ;
+                  CONSTANT GPIO_MODEB_REG2, E7    ;
+                  CONSTANT GPIO_AFMODEA_REG, E8
+                  CONSTANT GPIO_AFMODEB_REG, E9
+                  CONSTANT GPIO_A, EA             ;
+                  CONSTANT GPIO_B, EB             ;
+                  CONSTANT ISR_VECTOR, 00         ;
+                  CONSTANT DMA_CH1_IRQ_MASK, 01
+                  CONSTANT DMA_CH2_IRQ_MASK, 02
+                  CONSTANT DMA_CH3_IRQ_MASK, 04
+                  CONSTANT TX_IRQ_MASK, 10
+                  CONSTANT RX_IRQ_MASK, 20
+                  CONSTANT GPIOA_IRQ_MASK, 40
+                  CONSTANT GPIOB_IRQ_MASK, 80
+                  ; COMMADS -> ASCII to hex
+                  CONSTANT ASCII_LF, 0A
+                  CONSTANT ASCII_0, 30
+                  CONSTANT ASCII_1, 31
+                  CONSTANT ASCII_2, 32
+                  CONSTANT ASCII_3, 33
+                  CONSTANT ASCII_4, 34
+                  CONSTANT ASCII_5, 35
+                  CONSTANT ASCII_6, 36
+                  CONSTANT ASCII_7, 37
+                  CONSTANT ASCII_8, 38
+                  CONSTANT ASCII_9, 39
+                  CONSTANT ASCII_A, 41
+                  CONSTANT ASCII_B, 42
+                  CONSTANT ASCII_C, 43
+                  CONSTANT ASCII_D, 44
+                  CONSTANT ASCII_E, 45
+                  CONSTANT ASCII_F, 46
+                  CONSTANT ASCII_G, 47
+                  CONSTANT ASCII_H, 48
+                  CONSTANT ASCII_I, 49
+                  CONSTANT ASCII_J, 4A
+                  CONSTANT ASCII_K, 4B
+                  CONSTANT ASCII_L, 4C
+                  CONSTANT ASCII_M, 4D
+                  CONSTANT ASCII_N, 4E
+                  CONSTANT ASCII_O, 4F
+                  CONSTANT ASCII_P, 50
+                  CONSTANT ASCII_Q, 51
+                  CONSTANT ASCII_R, 52
+                  CONSTANT ASCII_S, 53
+                  CONSTANT ASCII_T, 54
+                  CONSTANT ASCII_U, 55
+                  CONSTANT ASCII_V, 56
+                  CONSTANT ASCII_W, 57
+                  CONSTANT ASCII_X, 58
+                  CONSTANT ASCII_Y, 59
+                  CONSTANT ASCII_Z, 5A
+                  STRING HEXAVAL$, "0123456789ABCDEF"
+                  STRING SAYHELLOW$, "Hello World!"
+                  STRING MERCADONA$, "Quiere bolsa?"
+                  ; Static memory pointers
+                  CONSTANT RX_STORE_CNT, 10
+                  CONSTANT RX_STORE_BASE, 11
+                  CONSTANT DMA_STR_BASE, 1A
+           start: 
+                  LOAD s0, 00
+                  OUTPUT s0, RX_STORE_CNT
+                  OUTPUT s0, RX_STORE_BASE
+                  LOAD s0, 82
+                  OUTPUT s0, RS232_CONF
+                  LOAD s0, 0C                     ;
+                  OUTPUT s0, GPIO_MODEA_REG2
+                  LOAD s0, 02
+                  OUTPUT s0, GPIO_AFMODEA_REG
+                  ENABLE INTERRUPT
+            loop: JUMP loop
+     DMA_TX_TEST: 
+                  LOAD sB, cajero'upper
+                  LOAD sA, cajero'lower
+                  CALL DMA_TX_STR
+                  RETURN 
+         RX_TEST: 
+                  ENABLE INTERRUPT
+                  LOAD s1, RX_IRQ_MASK
+                  LOAD s0, 00
+                  OUTPUT s0, RX_STORE_CNT
+                  OUTPUT s0, RX_STORE_BASE
+                  LOAD s0, ASCII_G
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_C
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_A
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, 35
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, 30
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_LF
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_G
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_S
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_A
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, 35
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, 30
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  LOAD s7, 00
+                  LOAD s7, 00
+                  LOAD s0, ASCII_LF
+                  OUTPUT s0, RS232_RX_DAT
+                  OUTPUT s1, ISR_VECTOR
+                  RETURN 
+    DEFAULT_TEST: 
+                  LOAD s0, A1
+                  LOAD s1, sRAM
+                  OUTPUT s0, (s1)
+                  ADD s1, 01
+                  LOAD s0, A2
+                  OUTPUT s0, (s1)
+                  ADD s1, 01
+                  LOAD s0, A3
+                  OUTPUT s0, (s1)
+                  ADD s1, 01
+                  LOAD s0, 55                     ;
+                  OUTPUT s0, GPIO_MODEA_REG1
+                  LOAD s0, 5F                     ;
+                  OUTPUT s0, GPIO_MODEA_REG2
+                  LOAD s0, 02
+                  OUTPUT s0, GPIO_AFMODEA_REG
+                  LOAD s0, A0
+                  OUTPUT s0, GPIO_MODEB_REG1
+                  LOAD s0, 80
+                  OUTPUT s0, GPIO_IRQMODEB_MASK
+                  OUTPUT s0, GPIO_IRQB_MASK
+                  LOAD s0, FF
+                  OUTPUT s0, GPIO_A
+                  LOAD s0, RS232_TX_DATA
+                  OUTPUT s0, DMA_DEST_CH1
+                  LOAD s0, sRAM
+                  OUTPUT s0, DMA_SRC_CH1
+                  LOAD s0, 12
+                  OUTPUT s0, DMA_CNT_CH1
+                  LOAD s0, A0
+                  OUTPUT s0, DMA_CONF_CH1
+                  INPUT s0, sRAM
+                  OUTPUT s0, RS232_TX_DATA
+                  LOAD s0, CF
+                  OUTPUT s0, RS232_CONF
+                  LOAD s8, 00
+                  OUTPUT s8, ISR_VECTOR
+                  ENABLE INTERRUPT
+                  RETURN 
+        DELAY_MS: 
+                  CALL DELAY_1MS
+                  SUB s0, 01
+                  JUMP NZ, DELAY_MS
+                  RETURN 
+       DELAY_1MS: 
+                  LOAD s8, 00
+                  LOAD s9, 00
+  DELAY_1MS_LOOP: 
+                  ADD s8, 08
+                  ADDCY s9, 00
+                  COMPARE s9, 4E
+                  JUMP C, DELAY_1MS_LOOP
+                  RETURN 
+DMA_CH1_CALLBACK: 
+                  RETURN 
+DMA_CH2_CALLBACK: 
+                  RETURN 
+DMA_CH3_CALLBACK: 
+                  RETURN 
+  GPIOA_CALLBACK: 
+                  RETURN 
+  GPIOB_CALLBACK: 
+                  RETURN 
+     TX_CALLBACK: 
+                  RETURN 
+                  ADDRESS A80
+     RX_CALLBACK: 
+                  INPUT s9, RS232_RX_DAT          ;> Load RX data
+                  COMPARE s9, ASCII_LF            ;> Check end of line
+                  JUMP Z, NEW_COMMAND
+                  INPUT sA, RX_STORE_CNT          ;> Load mem counter
+                  LOAD sB, sA
+                  ADD sB, RX_STORE_BASE           ;> Calc save address
+                  OUTPUT s9, (sB)                 ;> Store new value
+                  ADD sA, 01                      ;> Increment counter
+                  ; Avoid memory overflow
+                  COMPARE sA, 06                  ;> Compare counter with max value
+                  JUMP C, RX_INBOUND
+                  SUB sA, 01                      ;> if greater, return to previus value
+      RX_INBOUND: 
+                  OUTPUT sA, RX_STORE_CNT         ;> Store count value
+                  RETURN                          ;> Return
+                  ; After a LF character, the command is procesed
+                  ADDRESS B80
+     NEW_COMMAND: 
+                  ; Some sintax sugar
+                  NAMEREG s9, cmdDir
+                  NAMEREG sA, cmd
+                  NAMEREG sB, pinN
+                  NAMEREG sC, modeMask
+                  NAMEREG sD, pinMask
+                  NAMEREG sE, ModeReg
+                  NAMEREG sF, gpioPort
+                  ; Get the first command character
+                  LOAD cmdDir, RX_STORE_BASE      ;> Store input value pointer
+                  INPUT cmd, (cmdDir)             ;> Load first input value
+                  COMPARE cmd, ASCII_G            ;> Look for GPIO command
+                  JUMP Z, GPIO_CMD
+                  COMPARE cmd, ASCII_T            ;> Look for TEMP command
+                  JUMP Z, TEMP_CMD
+                  COMPARE cmd, ASCII_R            ;> Look for REGISTER command
+                  JUMP Z, REG_CMD
+                  JUMP CLC_CMD                    ;> If no matching commad, clear registers
+                  ; When GPIO command
+        GPIO_CMD: 
+                  ADD cmdDir, 02                  ;> Increment pointer
+                  INPUT cmd, (cmdDir)             ;> Get port
+                  LOAD gpioPort, GPIO_A           ;> Load GPIOA as default
+                  LOAD ModeReg, GPIO_MODEA_REG2   ;>
+                  COMPARE cmd, ASCII_A            ;> Check if GPIOA
+                  JUMP Z, GPIO_GET_PIN            ;> If correct, continue
+                  LOAD gpioPort, GPIO_B           ;> If no GPIOA, change to GPIOB
+                  LOAD ModeReg, GPIO_MODEB_REG2   ;>
+                  ; Calculate PIN and registers
+    GPIO_GET_PIN: 
+                  ADD cmdDir, 01                  ;> Increment pointer
+                  INPUT pinN, (cmdDir)            ;> Load pin value
+                  SUB pinN, 30                    ;> Convert to ASCII to DEC
+                  JUMP C, CLC_CMD                 ;> Check underflow. If true, the value is invalid so,
+                  ;> go to clean registers. (FAIL)
+                  COMPARE pinN, 04                ;> Check if pin number is below 4 to select correct registers
+                  JUMP C, GPIO_CALC_MASK          ;> if less than, continue
+                  SUB ModeReg, 01                 ;> And update mode register
+                  COMPARE pinN, 08                ;> Check if pin below 8 (MAX PIN)
+                  JUMP C, GPIO_CALC_MASK          ;> if less than, continue
+                  JUMP CLC_CMD                    ;> if greater/equal, the values is invalid (FAIL)
+                  ; Calculate PIN MASK and MODE MASK
+  GPIO_CALC_MASK: 
+                  ADD cmdDir, 01                  ;> Increment pointer
+                  INPUT cmd, (cmdDir)             ;> get Mode value
+                  LOAD pinMask, 01                ;> Set deault pin mask (PIN0)
+                  LOAD modeMask, 01               ;> Set default mode mask (INPUT)
+                  ;TODO: Change to ASCII?
+                  AND cmd, 01                     ;> Check mode
+                  JUMP Z, GPIO_MASK_LOOP          ;> if input, continue
+                  LOAD modeMask, 02               ;> else, change to OUPUT and continue
+  GPIO_MASK_LOOP: 
+                  COMPARE pinN, 00                ;> check pin counter equal 0
+                  JUMP Z, GPIO_CMD_SELECT         ;> if true, continue
+                  RL modeMask                     ;> Rotate left two positions mode mask
+                  RL modeMask                     ;>
+                  RL pinMask                      ;> Rotate left one position pin
+                  SUB pinN, 01                    ;> Decrement pin counter
+                  JUMP GPIO_MASK_LOOP
+                  ; Check command type
+ GPIO_CMD_SELECT: 
+                  LOAD cmdDir, RX_STORE_BASE      ;> Load base pointer
+                  ADD cmdDir, 01                  ;> Increment pointer one position
+                  INPUT cmd, (cmdDir)             ;> Read command character
+                  COMPARE cmd, ASCII_C            ;> Check configurarion command
+                  JUMP Z, GPIO_CONF_CMD
+                  COMPARE cmd, ASCII_S            ;> Check set command
+                  JUMP Z, GPIO_SET_CMD
+                  COMPARE cmd, ASCII_R            ;> Check reset command
+                  JUMP Z, GPIO_RESET_CMD
+                  JUMP CLC_CMD
+                  ; When configuration command
+   GPIO_CONF_CMD: 
+                  INPUT s8, (ModeReg)             ;> Get current mode reg
+                  OR s8, modeMask                 ;> Update mode reg
+                  OUTPUT s8, (ModeReg)            ;> Set mode reg
+                  JUMP CLC_CMD                    ;> Clean data
+    GPIO_SET_CMD: 
+                  INPUT s8, (gpioPort)            ;> Get current GPIO reg
+                  OR s8, pinMask                  ;> Update GPIO reg
+                  OUTPUT s8, (gpioPort)           ;> set new GPIO reg
+                  JUMP CLC_CMD                    ;> Clean data
+  GPIO_RESET_CMD: 
+                  INPUT s8, (gpioPort)            ;> Get current GPIO reg
+                  XOR pinMask, FF                 ;> Update GPIO reg. (NOT is not implemented so, we use XOR)
+                  AND s8, pinMask                 ;> Clean bit
+                  OUTPUT s8, (gpioPort)           ;> Set new GPIO reg
+                  JUMP CLC_CMD                    ;> Clean data
+        TEMP_CMD: 
+                  JUMP CLC_CMD                    ;> Clean data
+         REG_CMD: 
+                  JUMP CLC_CMD                    ;> Clean data
+                  ; Clean
+         CLC_CMD: 
+                  ; Restore register names
+                  NAMEREG cmdDir, s9
+                  NAMEREG cmd, sA
+                  NAMEREG pinN, sB
+                  NAMEREG modeMask, sC
+                  NAMEREG pinMask, sD
+                  NAMEREG ModeReg, sE
+                  NAMEREG gpioPort, sF
+                  INPUT sB, RX_STORE_CNT          ;> Get counter
+                  LOAD sC, 00                     ;> Set 0 value
+                  OUTPUT sC, RX_STORE_CNT
+    LOOP_CMD_CLC: 
+                  LOAD sA, RX_STORE_BASE          ;> Load base register
+                  ADD sA, sB                      ;> Set address
+                  OUTPUT sC, (sA)                 ;> Clean register
+                  SUB sB, 01                      ;> decrement counter
+                  JUMP NZ, LOOP_CMD_CLC           ;> While not 0
+                  RETURN 
+          hellow: LOAD&RETURN s1, SAYHELLOW$
+                  LOAD&RETURN s1, ASCII_LF
+          cajero: LOAD&RETURN s1, MERCADONA$
+                  LOAD&RETURN s1, ASCII_LF
+            hexv: LOAD&RETURN s1, HEXAVAL$
+                  LOAD&RETURN s1, 0D
+                  ;LOAD sA and sB with the string load address
+      DMA_TX_STR: 
+                  LOAD s0, 00
+                  LOAD s2, DMA_STR_BASE
+ DMA_TX_STR_LOOP: 
+                  CALL@ (sB, sA)
+                  LOAD s2, DMA_STR_BASE
+                  ADD s2, s0
+                  OUTPUT s1, (s2)
+                  COMPARE s1, ASCII_LF
+                  JUMP Z, DMA_TX_LOAD
+                  ADD s0, 01
+                  ADD sA, 01
+                  ADDCY sB, 00
+                  JUMP DMA_TX_STR_LOOP
+     DMA_TX_LOAD: 
+                  LOAD s1, RS232_TX_DATA
+                  OUTPUT s1, DMA_DEST_CH1
+                  LOAD s1, DMA_STR_BASE
+                  OUTPUT s1, DMA_SRC_CH1
+                  AND s0, 0F
+                  OR s0, 10
+                  OUTPUT s0, DMA_CNT_CH1
+                  LOAD s0, A0
+                  OUTPUT s0, DMA_CONF_CH1
+                  INPUT s0, DMA_STR_BASE
+                  OUTPUT s0, RS232_TX_DATA
+                  LOAD s0, CF
+                  OUTPUT s0, RS232_CONF
+                  RETURN 
+         HEX2DEC: 
+                  LOAD sB, hexv'upper
+                  LOAD sA, hexv'lower
+                  LOAD sF, 00
+          HEXCMP: 
+                  CALL@ (sB, sA)
+                  COMPARE s1, s0
+                  JUMP Z, HEXVAL_RETURN
+                  ADD sA, 01
+                  ADDCY sB, 00
+                  ADD sF, 01
+                  COMPARE s1, D0
+                  JUMP Z, HEXVAL_RETURN
+                  JUMP HEXCMP
+   HEXVAL_RETURN: 
+                  RETURN 
+         DEC2HEX: 
+                  LOAD sB, hexv'upper
+                  LOAD sA, hexv'lower
+                  COMPARE s0, 10
+                  JUMP C, DEC2HEX_C
+                  RETURN 
+       DEC2HEX_C: 
+                  ADD sA, s0
+                  ADDCY sB, 00
+                  CALL@ (sB, sA)
+                  RETURN 
+                  ADDRESS F80
+             ISR: 
+                  DISABLE INTERRUPT
+                  INPUT s8, ISR_VECTOR            ;Read ISR vector
+                  ; Check DMA IRQ
+                  TEST s8, DMA_CH1_IRQ_MASK       ;DMA Channel 1
+                  CALL NZ, DMA_CH1_CALLBACK
+                  TEST s8, DMA_CH2_IRQ_MASK       ;DMA Channel 2
+                  CALL NZ, DMA_CH2_CALLBACK
+                  TEST s8, DMA_CH3_IRQ_MASK       ;DMA Channel 3
+                  CALL NZ, DMA_CH3_CALLBACK
+                  ; Check GPIO IRQ
+                  TEST s8, GPIOA_IRQ_MASK         ;GPIOA
+                  CALL NZ, GPIOA_CALLBACK
+                  TEST s8, GPIOA_IRQ_MASK         ;GPIOB
+                  CALL NZ, GPIOA_CALLBACK
+                  ; Check RS232 IRQ
+                  TEST s8, TX_IRQ_MASK            ;RS232 TX
+                  CALL NZ, TX_CALLBACK
+                  TEST s8, RX_IRQ_MASK            ;RS232 RX
+                  CALL NZ, RX_CALLBACK
+                  LOAD s8, 00
+                  OUTPUT s8, ISR_VECTOR           ;Clean vector
+                  RETURNI ENABLE

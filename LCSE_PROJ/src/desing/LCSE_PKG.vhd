@@ -25,6 +25,10 @@ use IEEE.NUMERIC_STD.ALL;
 
 
 package LCSE_PKG is
+
+    procedure send_string
+        (  cmd : in string;
+           signal tx : out std_logic);
 -------------------------------------------------------------------------------
 -- MEMORY MAP
 -------------------------------------------------------------------------------
@@ -34,7 +38,7 @@ package LCSE_PKG is
     CONSTANT eIRQ                   : UNSIGNED( 7 downto 0) := X"00" ;
     
     CONSTANT sRAM                   : UNSIGNED( 7 downto 0) := X"10" ;
-    CONSTANT eRAM                   : UNSIGNED( 7 downto 0) := X"1F" ;
+    CONSTANT eRAM                   : UNSIGNED( 7 downto 0) := X"BF" ;
     
     constant sDMA                   : UNSIGNED( 7 downto 0 ) := X"C0";
     constant DMA_MEM_BASE           : UNSIGNED( 7 downto 0 ) := sDMA;
@@ -116,4 +120,30 @@ package body LCSE_PKG is
         end loop;
         return m;
     end log2c;
+    
+    
+    procedure send_string (   cmd : in string;
+                             signal tx : out std_logic) is
+                             
+        variable tmp : std_logic_vector(7 downto 0);
+    begin 
+       
+        for i in cmd'range  loop
+            wait for 8.68us;
+            tmp := std_logic_vector(to_unsigned(character'pos(cmd(i)), 8))  AND X"7F";
+            
+            tx <= '0';
+            wait for 8.68us;
+            for i in 0 to (tmp'length -1) loop
+                tx <= tmp(i);
+                wait for 8.68us;
+            end loop;
+            tx <= '1';
+            wait for 8.68us;
+        end loop;
+     
+        
+    end send_string;
+    
+
 end LCSE_PKG;

@@ -4,6 +4,9 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use work.LCSE_PKG.all;
+use IEEE.numeric_std.all;
+
 
 entity tb_MCU is
 end tb_MCU;
@@ -30,6 +33,9 @@ architecture tb of tb_MCU is
     signal TbClock : std_logic := '0';
     signal TbSimEnded : std_logic := '0';
 
+    signal send_en : std_logic := '0';
+    signal cmd    : std_logic_vector(0 downto 6) ;
+    
 begin
 
     dut : MCU
@@ -80,26 +86,17 @@ begin
         wait for 100 us;        
         
         
-        GPIOA(1) <= '1',
-           '0' after 500 ns,    -- StartBit
-           '1' after 9150 ns,   -- LSb
-           '0' after 17800 ns,
-           '0' after 26450 ns,
-           '1' after 35100 ns,
-           '1' after 43750 ns,
-           '1' after 52400 ns,
-           '1' after 61050 ns,
-           '0' after 69700 ns,  -- MSb
-           '1' after 78350 ns,  -- Stopbit
-           '1' after 87000 ns;
+        
+        GPIOA(1) <= '1';
+        
+        send_string("GCA60"&lf, GPIOA(1));
+        send_string("GSA6"&lf, GPIOA(1));
+        send_string("GRA6"&lf, GPIOA(1));
+        send_string("GCA60"&lf, GPIOA(1));
+        
         wait;
     end process;
 
 end tb;
 
--- Configuration block below is required by some simulators. Usually no need to edit.
 
-configuration cfg_tb_MCU of tb_MCU is
-    for tb
-    end for;
-end cfg_tb_MCU;
