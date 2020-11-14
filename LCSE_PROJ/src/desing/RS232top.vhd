@@ -9,6 +9,8 @@ entity RS232top is
   port (
     Reset       : in  std_logic;   -- Low_level-active asynchronous reset
     Clk         : in  std_logic;   -- System clock (20MHz), rising edge used
+    -- Configuration 
+--    Conf        : in STD_LOGIC_VECTOR (7 DOWNTO 0);
     -- Transmission lines 
     TX          : out std_logic;
     RX          : in  std_logic;
@@ -78,6 +80,7 @@ architecture RTL of RS232top is
       Reset : in  std_logic;
       Start : in  std_logic;
       Data  : in  std_logic_vector(7 downto 0);
+      Conf  : in STD_LOGIC_VECTOR (7 DOWNTO 0);
       EOT   : out std_logic;
       TX    : out std_logic);
   end component;
@@ -100,6 +103,7 @@ architecture RTL of RS232top is
       Clk       : in  std_logic;
       Reset     : in  std_logic;
       LineRD_in : in  std_logic;
+      Conf      : in STD_LOGIC_VECTOR (7 DOWNTO 0);
       Valid_out : out std_logic;
       Code_out  : out std_logic;
       Store_out : out std_logic);
@@ -141,6 +145,7 @@ data_in     <= dev_mem(RS232_TX_DATA_offset);
       Reset => Reset,
       Start => tx_en_bit,
       Data  => data_in,
+      Conf  => dev_mem(RS232_STATUS_offset),
       EOT   => EOT, ---ToDo: RQ DMA, IRQ CORE, BIT STATE. debe durar 1 ciclo
       TX    => TX);
 
@@ -152,6 +157,7 @@ data_in     <= dev_mem(RS232_TX_DATA_offset);
       Clk       => Clk,
       Reset     => Reset,
       LineRD_in => rx_in,
+      Conf      => dev_mem(RS232_STATUS_offset),
       Valid_out => Valid_out,
       Code_out  => Code_out,
       Store_out => EOR); --- ToDo: RQ DMA, IRQ CORE, BIT STATE 
@@ -216,7 +222,7 @@ begin
     end if;
     
     if ( EOR = '1' ) then
-       -- dev_mem_n(RS232_CONF_offset)(rx_en)     <= '0';
+--        dev_mem_n(RS232_CONF_offset)(rx_en)     <= '0';
         dev_mem_n(RS232_STATUS_offset)(rx_en)   <= '1';
         dev_mem_n(RS232_RX_DATA_offset)         <= data_out;
         
@@ -229,7 +235,7 @@ begin
         end if;
         
     elsif ( rx_en_bit = '1' ) then
-     --  dev_mem_n(RS232_STATUS_offset)(rx_en) <= '0';
+ --       dev_mem_n(RS232_STATUS_offset)(rx_en) <= '0';
         DMA_RX_reg_n  <= '0';
         IRQ_RX_reg_n  <= '0';
     end if;
