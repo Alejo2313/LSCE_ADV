@@ -13,15 +13,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="9540000001fs"></ZoomEndTime>
-      <Cursor1Time time="1508015000fs"></Cursor1Time>
+      <ZoomStartTime time="1029815000fs"></ZoomStartTime>
+      <ZoomEndTime time="1273315001fs"></ZoomEndTime>
+      <Cursor1Time time="1143815000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="247"></NameColumnWidth>
-      <ValueColumnWidth column_width="104"></ValueColumnWidth>
+      <ValueColumnWidth column_width="94"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="36" />
+   <WVObjectSize size="39" />
    <wvobject fp_name="/tb_MCU/dut/Clk" type="logic">
       <obj_property name="ElementShortName">Clk</obj_property>
       <obj_property name="ObjectShortName">Clk</obj_property>
@@ -73,21 +73,32 @@
       <obj_property name="ElementShortName">RX</obj_property>
       <obj_property name="ObjectShortName">RX</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_MCU/dut/out_display" type="array">
+      <obj_property name="ElementShortName">out_display[7:0]</obj_property>
+      <obj_property name="ObjectShortName">out_display[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_MCU/dut/anode" type="array">
+      <obj_property name="ElementShortName">anode[7:0]</obj_property>
+      <obj_property name="ObjectShortName">anode[7:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_MCU/dut/IRQV" type="array">
       <obj_property name="ElementShortName">IRQV[7:0]</obj_property>
       <obj_property name="ObjectShortName">IRQV[7:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_MCU/dut/DISP7/mem_r" type="array">
+      <obj_property name="ElementShortName">mem_r[0:7][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_r[0:7][7:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_MCU/dut/GPIOA" type="array">
       <obj_property name="ElementShortName">GPIOA[7:0]</obj_property>
       <obj_property name="ObjectShortName">GPIOA[7:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/tb_MCU/dut/RS232/dev_mem[3]" type="array">
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">[3][7:0]</obj_property>
       <obj_property name="ObjectShortName">[3][7:0]</obj_property>
       <obj_property name="label">RX_DATA</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_MCU/dut/RS232/Receiver/LineRD_in" type="logic">
       <obj_property name="ElementShortName">LineRD_in</obj_property>

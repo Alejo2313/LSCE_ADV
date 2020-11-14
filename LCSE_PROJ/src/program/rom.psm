@@ -47,6 +47,12 @@ CONSTANT GPIO_IRQB_MASK     , EA;
 CONSTANT GPIO_IRQMODEB_MASK , EB;
 
 
+CONSTANT DISPLAY_EN     ,D8;
+CONSTANT DISPLAY_IEN    ,D9;
+CONSTANT DISPLAY_01     ,DA;
+CONSTANT DISPLAY_23     ,DB;
+CONSTANT DISPLAY_45     ,DC;
+CONSTANT DISPLAY_67     ,DD;
 
 
 CONSTANT ISR_VECTOR         , 00;
@@ -106,7 +112,8 @@ CONSTANT ASCII_Z , 5A
 STRING HEXAVAL$,   "0123456789ABCDEF"
 STRING SAYHELLOW$, "Hello World!"
 STRING MERCADONA$,  "Quiere bolsa?"
-
+STRING NACK$, "ERROR!"
+STRING ACK$,  "OK!"
 
 
 
@@ -127,174 +134,20 @@ start:
         OUTPUT  s0, RX_STORE_CNT
         OUTPUT  s0, RX_STORE_BASE
 
-
-        LOAD    s0  , 82
-        OUTPUT  s0  , RS232_CONF
-
         LOAD    s0  , 0C;
         OUTPUT  s0  , GPIO_MODEA_REG2
         LOAD    s0  , 02
         OUTPUT  s0  , GPIO_AFMODEA_REG
-        ENABLE INTERRUPT
 
-loop:   Jump    loop
-
-
-DMA_TX_TEST:
-        LOAD sB, cajero'upper
-        LOAD sA, cajero'lower
-
-        CALL DMA_TX_STR
-
-        RETURN
-
-
-RX_TEST:
-        ENABLE INTERRUPT
-        
-        LOAD    s1, RX_IRQ_MASK
-
-        LOAD    s0, 00
-        OUTPUT  s0, RX_STORE_CNT
-        OUTPUT  s0, RX_STORE_BASE
-
-        LOAD    s0, ASCII_G
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_C
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_A
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, 35
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, 30
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_LF
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_G
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_S
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_A
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, 35
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, 30
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-
-        LOAD    s7, 00
-        LOAD    s7, 00
-
-        LOAD    s0, ASCII_LF
-        OUTPUT  s0, RS232_RX_DAT
-        OUTPUT  s1, ISR_VECTOR
-        RETURN
-
-DEFAULT_TEST:
-        LOAD    s0  , A1
-        LOAD    s1  , sRAM
-        OUTPUT  s0  , (s1)
-        ADD     s1  , 01
-    
-        LOAD    s0  , A2
-        OUTPUT  s0  , (s1)
-        ADD     s1  , 01
-
-        LOAD    s0  , A3
-        OUTPUT  s0  , (s1)
-        ADD     s1  , 01
-
-        LOAD    s0  , 55;
-        OUTPUT  s0  , GPIO_MODEA_REG1
-
-        LOAD    s0  , 5F;
-        OUTPUT  s0  , GPIO_MODEA_REG2
-        LOAD    s0,   02
-        OUTPUT  s0  , GPIO_AFMODEA_REG
-
-        LOAD    s0  , A0
-        OUTPUT  s0  , GPIO_MODEB_REG1
-
-        LOAD    s0  , 80
-        OUTPUT  s0  , GPIO_IRQMODEB_MASK
-        OUTPUT  s0  , GPIO_IRQB_MASK
-
-
-
-        LOAD    s0  , FF
-        OUTPUT  s0  , GPIO_A
-
-        
-        LOAD    s0  , RS232_TX_DATA
-        OUTPUT  s0  , DMA_DEST_CH1
-        LOAD    s0  , sRAM 
-        OUTPUT  s0  , DMA_SRC_CH1
-        LOAD    s0  , 12
-        OUTPUT  s0  , DMA_CNT_CH1
-        LOAD    s0  , A0              
-        OUTPUT  s0  , DMA_CONF_CH1
-
-
-        INPUT   s0  , sRAM
-        OUTPUT  s0  , RS232_TX_DATA
-
-        LOAD    s0  , CF
+        LOAD    s0  , 82
         OUTPUT  s0  , RS232_CONF
 
         LOAD    s8, 00
         OUTPUT  s8, ISR_VECTOR
+
         ENABLE INTERRUPT
-        RETURN
+
+loop:   Jump    loop
 
 
 
@@ -355,7 +208,7 @@ RX_CALLBACK:
         ADD     sA, 01                          ;> Increment counter
 
         ; Avoid memory overflow
-        COMPARE sA, 06                          ;> Compare counter with max value
+        COMPARE sA, 08                          ;> Compare counter with max value
         JUMP     C, RX_INBOUND          
         SUB     sA, 01                          ;> if greater, return to previus value
 
@@ -365,15 +218,17 @@ RX_INBOUND:
 
 NEW_COMMAND:
         ; Some sintax sugar
-        NAMEREG s7, tmp
-        NAMEREG s8, mode
+
         NAMEREG s9, cmdDir
         NAMEREG sA, cmd
+
         NAMEREG sB, pinN
         NAMEREG sC, modeMask
         NAMEREG sD, pinMask
         NAMEREG sE, ModeReg
         NAMEREG sF, gpioPort
+        NAMEREG s7, tmp
+        NAMEREG s8, mode
 
         ; Get the first command character
         LOAD    cmdDir, RX_STORE_BASE           ;> Store input value pointer
@@ -388,7 +243,7 @@ NEW_COMMAND:
         COMPARE cmd, ASCII_R                    ;> Look for REGISTER command
         JUMP     Z, REG_CMD
 
-        JUMP CLC_CMD                            ;> If no matching commad, clear registers
+        JUMP ERROR_CMD                            ;> If no matching commad, clear registers
 
 ; When GPIO command
 GPIO_CMD:
@@ -408,11 +263,11 @@ GPIO_GET_PIN:
         INPUT   pinN, (cmdDir)                  ;> Load pin value
 
         SUB     pinN, 30                        ;> Convert to ASCII to DEC
-        JUMP     C, CLC_CMD                     ;> Check underflow. If true, the value is invalid so,
+        JUMP     C, ERROR_CMD                   ;> Check underflow. If true, the value is invalid so,
                                                 ;> go to clean registers. (FAIL)
         COMPARE pinN, 08                        ;> Check if pin below 8 (MAX PIN)
         JUMP     C, GPIO_CALC_MASK              ;> if less than, continue        
-        JUMP     CLC_CMD                        ;> if greater/equal, the values is invalid (FAIL)
+        JUMP     ERROR_CMD                      ;> if greater/equal, the values is invalid (FAIL)
 
 ; Calculate PIN MASK and MODE MASK
 GPIO_CALC_MASK:                                 
@@ -446,7 +301,7 @@ GPIO_CMD_SELECT:
         COMPARE cmd, ASCII_R                    ;> Check reset command
         JUMP     Z, GPIO_RESET_CMD
 
-        JUMP CLC_CMD
+        JUMP ERROR_CMD
 
 ; When configuration command
 GPIO_CONF_CMD:
@@ -476,7 +331,7 @@ GPIO_CONTINUE:
         COMPARE cmd, ASCII_4                    ;> Configure mode AF input
         JUMP      Z, GPIO_CONF_AFI
 
-        COMPARE cmd, ASCII_5                    ;> Configure AF outpur
+        COMPARE cmd, ASCII_5                    ;> Configure AF output
         JUMP      Z, GPIO_CONF_AFO
 
         JUMP CLC_CMD
@@ -484,7 +339,7 @@ GPIO_CONTINUE:
 GPIO_CONF_OUT:
         LOAD    mode, 55                        ;> Load mode mask (all pin on)
         JUMP    GPIO_CONF_PIN                   ;> Configure
-        
+
 ADDRESS B80
 GPIO_CONF_IN:
         LOAD    mode, AA                        ;> Load mode mask (all pin on)
@@ -604,7 +459,7 @@ GPIO_CONF_PIN:
         OR      cmd, mode                       ;> Update mode reg
         OUTPUT  cmd, (ModeReg)                  ;> Set mode reg
 
-        JUMP CLC_CMD                            ;> Clean data
+        JUMP OK_CMD                            ;> Clean data
 
 
 GPIO_SET_CMD:
@@ -612,7 +467,7 @@ GPIO_SET_CMD:
         OR     cmd, pinMask                      ;> Update GPIO reg
         OUTPUT cmd, (gpioPort)                   ;> set new GPIO reg
 
-        JUMP CLC_CMD                            ;> Clean data
+        JUMP OK_CMD                            ;> Clean data
 
 GPIO_RESET_CMD:
         INPUT  cmd, (gpioPort)                   ;> Get current GPIO reg
@@ -620,27 +475,248 @@ GPIO_RESET_CMD:
         AND    cmd, pinMask                      ;> Clean bit
         OUTPUT cmd, (gpioPort)                   ;> Set new GPIO reg
 
-        JUMP CLC_CMD                            ;> Clean data
+        JUMP OK_CMD                            ;> Clean data
 
-TEMP_CMD: 
 
-        JUMP CLC_CMD                            ;> Clean data
-REG_CMD:
-
-        JUMP CLC_CMD                            ;> Clean data
-
-; Clean
-CLC_CMD:
-        ; Restore register names
-        NAMEREG tmp, s7
-        NAMEREG mode, s8
-        NAMEREG cmdDir,  s9
-        NAMEREG cmd,     sA
         NAMEREG pinN,    sB
         NAMEREG modeMask,sC
         NAMEREG pinMask, sD
         NAMEREG ModeReg, sE 
         NAMEREG gpioPort,sF
+        NAMEREG tmp, s7
+        NAMEREG mode, s8
+
+TEMP_CMD: 
+        
+        NAMEREG  sB, cmd2
+
+        ADD     cmdDir, 01
+        INPUT   cmd, (cmdDir)                   ;> Load cmd
+
+        COMPARE cmd, ASCII_S
+        JUMP    Z, SET_TEMP_CMD
+
+        COMPARE cmd, ASCII_G
+        JUMP    Z, GET_TEMP_CMD
+
+GET_TEMP_CMD:
+        INPUT   cmd, DISPLAY_01
+        LOAD    cmd2, cmd
+        SR0     cmd
+        SR0     cmd
+        SR0     cmd
+        SR0     cmd
+        AND     cmd2, 0F 
+
+        ADD     cmd, 30
+        ADD     cmd2, 30
+
+        CALL WAIT_DMA_CH1
+        
+        LOAD    cmdDir, DMA_STR_BASE
+        OUTPUT  cmd2, (cmdDir)
+        ADD     cmdDir, 01
+        OUTPUT  cmd, (cmdDir)
+        ADD     cmdDir, 01
+        LOAD    cmd, ASCII_LF
+        OUTPUT  cmd, (cmdDir)
+        LOAD s0, 02
+        CALL DMA_TX_LOAD
+
+        JUMP CLC_CMD
+
+
+SET_TEMP_CMD:
+    
+        ADD     cmdDir, 01
+        INPUT   cmd, (cmdDir) 
+        SUB     cmd, 30    
+        JUMP    C, ERROR_CMD
+
+        COMPARE cmd, 0A
+        JUMP    C, SET_TEMP_CONT1
+        JUMP ERROR_CMD
+
+SET_TEMP_CONT1:
+
+        ADD     cmdDir, 01
+        INPUT   cmd2, (cmdDir) 
+        SUB     cmd2, 30    
+        JUMP    C, ERROR_CMD
+
+        COMPARE cmd2, 0A
+        JUMP    C, SET_TEMP_CONT2
+        JUMP ERROR_CMD
+
+SET_TEMP_CONT2:
+        SL0     cmd2
+        SL0     cmd2
+        SL0     cmd2
+        SL0     cmd2
+
+        AND cmd, 0F 
+        OR  cmd, cmd2
+
+        OUTPUT cmd, DISPLAY_01 
+
+        LOAD cmd, 03
+        OUTPUT cmd, DISPLAY_IEN
+
+        LOAD cmd, 80
+        OUTPUT cmd, DISPLAY_EN
+
+        JUMP OK_CMD   
+
+                         
+REG_CMD:
+        ADD     cmdDir, 01
+        INPUT   cmd, (cmdDir)                   ;> Load cmd
+
+        COMPARE cmd, ASCII_S
+        JUMP    Z, SET_REG_CMD
+
+        COMPARE cmd, ASCII_G
+        JUMP    Z, GET_REG_CMD
+
+        JUMP ERROR_CMD                            ;> Clean data
+
+GET_REG_CMD:
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)   
+
+        CALL HEX2DEC
+        LOAD    s3, sF
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)  
+
+        CALL HEX2DEC
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        AND s3, FF
+        OR s3, sF
+
+        INPUT s0, (s3)
+
+        LOAD  s4, s0
+        SR0 s0
+        SR0 s0
+        SR0 s0
+        SR0 s0
+        AND s4, 0F
+
+        CALL DEC2HEX
+        LOAD s3, s1
+
+        LOAD s0,s4
+
+        CALL DEC2HEX
+        LOAD cmd, s1
+
+        CALL WAIT_DMA_CH1
+
+        LOAD    cmdDir, DMA_STR_BASE
+        OUTPUT  s3, (cmdDir)
+
+        ADD     cmdDir, 01
+        OUTPUT  cmd, (cmdDir)
+
+        ADD     cmdDir, 01
+        LOAD    cmd, ASCII_LF
+        OUTPUT  cmd, (cmdDir)
+
+        LOAD    s0, 02
+
+        CALL DMA_TX_LOAD
+
+        JUMP CLC_CMD
+
+SET_REG_CMD:
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)   
+
+        CALL HEX2DEC
+        LOAD    s3, sF
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)  
+
+        CALL HEX2DEC
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        AND s3, FF
+        OR s3, sF
+
+        LOAD s4, s3
+
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)   
+
+        CALL HEX2DEC
+        LOAD    s3, sF
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        ADD     cmdDir, 01
+        INPUT   s0, (cmdDir)  
+
+        CALL HEX2DEC
+
+        COMPARE sF, FF
+        JUMP Z, ERROR_CMD;
+
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        SL0 s3
+        AND s3, FF
+        OR s3, sF
+
+        OUTPUT s3, (s4)
+
+        JUMP OK_CMD
+        
+        NAMEREG cmd2, sB
+        NAMEREG cmdDir,  s9
+        NAMEREG cmd,     sA
+ERROR_CMD:
+        LOAD sB, errormsg'upper
+        LOAD sA, errormsg'lower
+        CALL WAIT_DMA_CH1
+        CALL DMA_TX_STR
+
+        JUMP CLC_CMD
+OK_CMD:
+        LOAD sB, okmsg'upper
+        LOAD sA, okmsg'lower
+        CALL WAIT_DMA_CH1
+        CALL DMA_TX_STR
+
+        JUMP CLC_CMD
+CLC_CMD:
+        ; Restore register names
+
+
+
 
         INPUT   sB, RX_STORE_CNT                ;> Get counter
         LOAD    sC, 00                          ;> Set 0 value
@@ -665,7 +741,11 @@ cajero: LOAD&RETURN s1, MERCADONA$
 hexv:   LOAD&RETURN s1, HEXAVAL$
         LOAD&RETURN s1, 0D
 
+okmsg:  LOAD&RETURN s1, ACK$        
+        LOAD&RETURN s1, ASCII_LF   
 
+errormsg:  LOAD&RETURN s1, NACK$        
+           LOAD&RETURN s1, ASCII_LF
 ;LOAD sA and sB with the string load address
 DMA_TX_STR:
         LOAD s0, 00
@@ -700,7 +780,7 @@ DMA_TX_LOAD:
         INPUT   s0  , DMA_STR_BASE
         OUTPUT  s0  , RS232_TX_DATA
 
-        LOAD    s0  , CF
+        LOAD    s0  , C6
         OUTPUT  s0  , RS232_CONF
 
         RETURN
@@ -719,9 +799,10 @@ HEXCMP:
         ADD     sF, 01
 
         COMPARE s1, D0 
-        JUMP     Z, HEXVAL_RETURN
+        JUMP     Z, HEX_VAL_ERROR
         JUMP     HEXCMP
-
+HEX_VAL_ERROR:
+        LOAD sF, FF
 HEXVAL_RETURN:  
         RETURN
 
@@ -739,6 +820,12 @@ DEC2HEX_C:
         RETURN
 
 
+
+WAIT_DMA_CH1:
+        INPUT s0, DMA_CONF_CH1
+        TEST s0, 80
+        JUMP  NZ, WAIT_DMA_CH1
+        RETURN
 
 ADDRESS F80
 ISR :   

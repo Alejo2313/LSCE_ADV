@@ -75,17 +75,15 @@ begin
            
         
         GPIOA(1) <= '1';
-        
-        send_string("GCA60"&lf, GPIOA(1));
-        send_string("GSA6"&lf, GPIOA(1));
-        send_string("GRA6"&lf, GPIOA(1));     
-        send_string("GCB72"&lf, GPIOA(1));
-        send_string("GCB71"&lf, GPIOA(1));
-        send_string("GCB71"&lf, GPIOA(1));
-        send_string("GCB31"&lf, GPIOA(1));
-        
-        
-        
+ 
+        send_string("GCA05"&lf, GPIOA(1));  -- CONFIG GPIOA0 AS AF OUTPUT
+        send_string("TS12"&lf, GPIOA(1));   -- SET TEMPERATURE TO 12º
+        send_string("TG"&lf, GPIOA(1));     -- GET TEMPERATURE
+        send_string("RGD0"&lf, GPIOA(1));   -- READ REGISTER 0xD0 (RS232 CONF)
+        send_string("RSDB69"&lf, GPIOA(1)); -- SET REGISTER 0xDB (DISPLAY 32) TO 0x69
+        send_string("RAD0"&lf, GPIOA(1));   -- INCORRECT SINTAX COMMAND 
+
+              
         
         wait;
     end process;

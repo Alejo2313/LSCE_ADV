@@ -78,7 +78,7 @@ architecture Behavioral of MCU is
   component rom                            
     generic(             C_FAMILY : string := "7S"; 
                 C_RAM_SIZE_KWORDS : integer := 1;
-             C_JTAG_LOADER_ENABLE : integer := 0);
+             C_JTAG_LOADER_ENABLE : integer := 1);
     Port (      address : in std_logic_vector(11 downto 0);
             instruction : out std_logic_vector(17 downto 0);
                  enable : in std_logic;
@@ -412,7 +412,7 @@ begin
               Reset     => Reset,
               Address_s => Addess_s,
               InBus_s   => InBus_s,
-              outBus_s  => open,
+              outBus_s  => outBus_s,
               WE_s      => WE_s,
               RE_s      => RE_s,
               anode => anode,
