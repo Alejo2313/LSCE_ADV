@@ -87,7 +87,7 @@ begin
         Reset <= '0';
         wait for 100 ns;
         Address_s <= "11011001";   
-        InBus_s <=   "11111101";
+        InBus_s <=   "00000011";
         wait for 20 ns;
         WE_s <= '1';
         wait for 20 ns;
