@@ -45,7 +45,7 @@ begin
     "10000101" when "1101",
     "01100001" when "1110",
     "01110001" when "1111",
-    "00000001" when others;
+    "11111101" when others;
 
 end a_decod7s;
 
