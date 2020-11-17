@@ -54,7 +54,6 @@ architecture Behavioral of display is
     
     signal mem_r,mem_n              : dev_mem_8;
     signal outBus_r                 : STD_LOGIC_VECTOR(7 downto 0);
-    signal outDisp_r, outDisp_n     : STD_LOGIC_VECTOR(7 downto 0);
     signal anode_r,anode_n          : STD_LOGIC_VECTOR(7 downto 0);
     signal cnt_r, cnt_n             : UNSIGNED(log2c(50000)-1 downto 0);    
     signal index_r, index_n         : UNSIGNED(log2c(8) -1 downto 0);  
@@ -83,7 +82,6 @@ begin
  begin
     if (Reset = '1') then
         mem_r       <= (others => (others => '0'));
-        outDisp_r   <= "00000001";
         index_r     <= (others => '0');
         cnt_r       <= (others => '0');
         anode_r     <= (others => '1');
@@ -92,7 +90,6 @@ begin
         
     elsif (Clk'event and Clk = '1') then
         mem_r       <= mem_n; 
-        outDisp_r   <= outDisp_n; 
         cnt_r       <= cnt_n;
         index_r     <= index_n;
         anode_r     <= anode_n;
@@ -108,17 +105,17 @@ disp_vector <=  mem_r(DREG01_offset)&
                 mem_r(DREG67_offset);
 
 
-logic: process(     cnt_r, index_r, d_r, anode_r, outDisp_r, mem_r, WE_s, 
+logic: process(     cnt_r, index_r, d_r, anode_r, mem_r, WE_s, 
                     RE_s,disp_vector, Address_s, InBus_s ) is
 begin
     outBus_r    <= (others => 'Z');
     mem_n       <= mem_r;
     cnt_n       <= cnt_r + 1;
     index_n     <= index_r;
-    anode_n     <= anode_r;
+    anode_n     <= (others => '1');
     d_n         <= d_r;
     
-    if(cnt_r = 400) then
+    if(cnt_r = 50000) then
         index_n  <= index_r + 1;
         cnt_n <= (others => '0');
     end if;
