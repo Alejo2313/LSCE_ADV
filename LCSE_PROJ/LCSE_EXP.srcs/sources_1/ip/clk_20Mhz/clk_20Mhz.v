@@ -56,7 +56,7 @@
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// _____Clk__20.00000______0.000______50.0______193.154____109.126
+// _____clk__20.00000______0.000______50.0______193.154____109.126
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -70,21 +70,21 @@
 module clk_20Mhz 
  (
   // Clock out ports
-  output        Clk,
+  output        clk,
   // Status and control signals
   input         reset,
  // Clock in ports
-  input         Clk_100Mhz
+  input         clk_100Mhz
  );
 
   clk_20Mhz_clk_wiz inst
   (
   // Clock out ports  
-  .Clk(Clk),
+  .clk(clk),
   // Status and control signals               
   .reset(reset), 
  // Clock in ports
-  .Clk_100Mhz(Clk_100Mhz)
+  .clk_100Mhz(clk_100Mhz)
   );
 
 endmodule

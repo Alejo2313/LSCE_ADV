@@ -1,4 +1,21 @@
-                  ; LCSE picoblaze test program
+                  ;       ...::: LCSE picoblaze test program :::...
+                  ;
+                  ;                               _____________
+                  ;              /\      /\     /             \
+                  ;             //\\____//\\   |   MAUUUU!!    |
+                  ;            /     '      \   \  ___________/
+                  ;           /   /\ '  /\    \ /_/
+                  ;          |    == o ==     |        /|
+                  ;           \      '        /       | |
+                  ;             \           /         \ \
+                  ;             /****<o>**** \         / /
+                  ;             |            ' \       \ \
+                  ;             |    |    | '   '\      \ \
+                  ;  _________  | ´´ |  ' |     '  \    / /
+                  ;  |  MAYA  | |  ' |    | '       |__/ /
+                  ;   \______/   \__/ \__/ \_______/____/
+                  ;               ..::: AGM&LFV 2020 :::..
+                  ;       https://github.com/Alejo2313/LSCE_ADV
                   ;Memory Map definition
                   CONSTANT sRAM, 10               ; RAM Start address
                   CONSTANT eRAM, 1F               ; RAM end address
@@ -88,26 +105,62 @@
                   STRING HEXAVAL$, "0123456789ABCDEF"
                   STRING SAYHELLOW$, "Hello World!"
                   STRING MERCADONA$, "Quiere bolsa?"
-                  STRING NACK$, "ERROR!"
+                  STRING NACK$, "ERROR!!"
                   STRING ACK$, "OK!"
+                  STRING PENE$, "Quiere bolsa?"
                   ; Static memory pointers
-                  CONSTANT RX_STORE_CNT, 10
-                  CONSTANT RX_STORE_BASE, 11
+                  CONSTANT RX_STORE_CNT, 20
+                  CONSTANT RX_STORE_BASE, 22
                   CONSTANT DMA_STR_BASE, 1A
            start: 
+                  CALL main_task
+            loop: JUMP loop
+       gpio_test: 
+                  LOAD s0, 09                     ;Set GPIOB0 as output and GPIOB1 as input
+                  OUTPUT s0, GPIO_MODEB_REG2
+                  LOAD s0, 02
+                  OUTPUT s0, GPIO_IRQB_MASK       ; Enable GPIOB1 rising IRQ
+                  LOAD s8, 00
+                  OUTPUT s8, ISR_VECTOR           ; Clean pending IRQ
+                  ENABLE INTERRUPT
+       gpio_loop: ; Toggle GPIOB0 every 1ms
+                  CALL DELAY_1MS
+                  INPUT s0, GPIO_B
+                  XOR s0, 01
+                  OUTPUT s0, GPIO_B
+                  JUMP gpio_loop
+                  RETURN 
+     hello_wordl: 
+                  LOAD sB, hellow'upper
+                  LOAD sA, hellow'lower
+                  CALL DMA_TX_STR
+                  RETURN 
+       main_task: 
                   LOAD s0, 00
                   OUTPUT s0, RX_STORE_CNT
                   OUTPUT s0, RX_STORE_BASE
-                  LOAD s0, 0C                     ;
+                  LOAD s0, 5F                     ;
                   OUTPUT s0, GPIO_MODEA_REG2
+                  LOAD s0, 55                     ;
+                  OUTPUT s0, GPIO_MODEA_REG1
                   LOAD s0, 02
                   OUTPUT s0, GPIO_AFMODEA_REG
                   LOAD s0, 82
                   OUTPUT s0, RS232_CONF
-                  LOAD s8, 00
-                  OUTPUT s8, ISR_VECTOR
+                  LOAD s0, 00
+                  OUTPUT s0, ISR_VECTOR
                   ENABLE INTERRUPT
-            loop: JUMP loop
+      gpio_loop2: 
+                  LOAD s0, FF
+                  CALL DELAY_MS
+                  LOAD s0, FF
+                  CALL DELAY_MS
+                  INPUT s1, GPIO_A
+                  XOR s1, 04
+                  OUTPUT s1, GPIO_A
+                  JUMP gpio_loop2
+                  RETURN 
+                  RETURN 
         DELAY_MS: 
                   CALL DELAY_1MS
                   SUB s0, 01
@@ -131,6 +184,7 @@ DMA_CH3_CALLBACK:
   GPIOA_CALLBACK: 
                   RETURN 
   GPIOB_CALLBACK: 
+                  CALL hello_wordl
                   RETURN 
      TX_CALLBACK: 
                   RETURN 
@@ -145,7 +199,7 @@ DMA_CH3_CALLBACK:
                   OUTPUT s9, (sB)                 ;> Store new value
                   ADD sA, 01                      ;> Increment counter
                   ; Avoid memory overflow
-                  COMPARE sA, 08                  ;> Compare counter with max value
+                  COMPARE sA, 0F                  ;> Compare counter with max value
                   JUMP C, RX_INBOUND
                   SUB sA, 01                      ;> if greater, return to previus value
       RX_INBOUND: 
@@ -237,7 +291,7 @@ DMA_CH3_CALLBACK:
                   JUMP Z, GPIO_CONF_AFI
                   COMPARE cmd, ASCII_5            ;> Configure AF output
                   JUMP Z, GPIO_CONF_AFO
-                  JUMP CLC_CMD
+                  JUMP ERROR_CMD
    GPIO_CONF_OUT: 
                   LOAD mode, 55                   ;> Load mode mask (all pin on)
                   JUMP GPIO_CONF_PIN              ;> Configure
@@ -381,11 +435,11 @@ DMA_CH3_CALLBACK:
                   JUMP C, SET_TEMP_CONT2
                   JUMP ERROR_CMD
   SET_TEMP_CONT2: 
-                  SL0 cmd2
-                  SL0 cmd2
-                  SL0 cmd2
-                  SL0 cmd2
-                  AND cmd, 0F
+                  SL0 cmd
+                  SL0 cmd
+                  SL0 cmd
+                  SL0 cmd
+                  AND cmd2, 0F
                   OR cmd, cmd2
                   OUTPUT cmd, DISPLAY_01
                   LOAD cmd, 03
@@ -460,7 +514,7 @@ DMA_CH3_CALLBACK:
                   SL0 s3
                   AND s3, FF
                   OR s3, sF
-                  LOAD s4, s3
+                  LOAD s4, s3                     ;DONDE VOY S4
                   ADD cmdDir, 01
                   INPUT s0, (cmdDir)
                   CALL HEX2DEC
@@ -500,12 +554,15 @@ DMA_CH3_CALLBACK:
                   INPUT sB, RX_STORE_CNT          ;> Get counter
                   LOAD sC, 00                     ;> Set 0 value
                   OUTPUT sC, RX_STORE_CNT
+                  TEST sB, 00
+                  JUMP Z, END_END
     LOOP_CMD_CLC: 
                   LOAD sA, RX_STORE_BASE          ;> Load base register
                   ADD sA, sB                      ;> Set address
                   OUTPUT sC, (sA)                 ;> Clean register
                   SUB sB, 01                      ;> decrement counter
                   JUMP NZ, LOOP_CMD_CLC           ;> While not 0
+         END_END: 
                   RETURN 
           hellow: LOAD&RETURN s1, SAYHELLOW$
                   LOAD&RETURN s1, ASCII_LF
@@ -522,30 +579,31 @@ DMA_CH3_CALLBACK:
                   LOAD s0, 00
                   LOAD s2, DMA_STR_BASE
  DMA_TX_STR_LOOP: 
-                  CALL@ (sB, sA)
-                  LOAD s2, DMA_STR_BASE
-                  ADD s2, s0
-                  OUTPUT s1, (s2)
-                  COMPARE s1, ASCII_LF
-                  JUMP Z, DMA_TX_LOAD
-                  ADD s0, 01
-                  ADD sA, 01
-                  ADDCY sB, 00
-                  JUMP DMA_TX_STR_LOOP
+                  CALL@ (sB, sA)                  ; Get character
+                  LOAD s2, DMA_STR_BASE           ; Load address
+                  ADD s2, s0                      ; Calc pointer
+                  OUTPUT s1, (s2)                 ; Save to RAM
+                  COMPARE s1, ASCII_LF            ; When LF
+                  JUMP Z, DMA_TX_LOAD             ; Go to load
+                  ADD s0, 01                      ; inc counter
+                  ADD sA, 01                      ; inc address
+                  ADDCY sB, 00                    ; Carry
+                  JUMP DMA_TX_STR_LOOP            ; loop
      DMA_TX_LOAD: 
-                  LOAD s1, RS232_TX_DATA
-                  OUTPUT s1, DMA_DEST_CH1
-                  LOAD s1, DMA_STR_BASE
-                  OUTPUT s1, DMA_SRC_CH1
-                  AND s0, 0F
-                  OR s0, 10
-                  OUTPUT s0, DMA_CNT_CH1
-                  LOAD s0, A0
-                  OUTPUT s0, DMA_CONF_CH1
-                  INPUT s0, DMA_STR_BASE
-                  OUTPUT s0, RS232_TX_DATA
-                  LOAD s0, C6
-                  OUTPUT s0, RS232_CONF
+                  LOAD s1, RS232_TX_DATA          ; set estination pointer
+                  OUTPUT s1, DMA_DEST_CH1         ;
+                  LOAD s1, DMA_STR_BASE           ; Set character source
+                  OUTPUT s1, DMA_SRC_CH1          ;
+                  AND s0, 0F                      ; Update DMA counter
+                  OR s0, 10                       ;
+                  OUTPUT s0, DMA_CNT_CH1          ; Save counter
+                  LOAD s0, A0                     ; Enable DMA
+                  OUTPUT s0, DMA_CONF_CH1         ;
+                  INPUT s0, DMA_STR_BASE          ; Read first char
+                  OUTPUT s0, RS232_TX_DATA        ; Save to tx reg
+                  INPUT s0, RS232_CONF
+                  OR s0, 44                       ; Enable TX with DMA
+                  OUTPUT s0, RS232_CONF           ;
                   RETURN 
          HEX2DEC: 
                   LOAD sB, hexv'upper
@@ -581,9 +639,17 @@ DMA_CH3_CALLBACK:
                   TEST s0, 80
                   JUMP NZ, WAIT_DMA_CH1
                   RETURN 
+     OK_CMD_TEST: 
+                  LOAD sB, okmsg'upper
+                  LOAD sA, okmsg'lower
+                  CALL WAIT_DMA_CH1
+                  CALL DMA_TX_STR
+                  CALL WAIT_DMA_CH1
+                  RETURN 
                   ADDRESS F80
              ISR: 
-                  DISABLE INTERRUPT
+                  ;    DISABLE INTERRUPT
+                  REGBANK B
                   INPUT s8, ISR_VECTOR            ;Read ISR vector
                   ; Check DMA IRQ
                   TEST s8, DMA_CH1_IRQ_MASK       ;DMA Channel 1
@@ -595,8 +661,8 @@ DMA_CH3_CALLBACK:
                   ; Check GPIO IRQ
                   TEST s8, GPIOA_IRQ_MASK         ;GPIOA
                   CALL NZ, GPIOA_CALLBACK
-                  TEST s8, GPIOA_IRQ_MASK         ;GPIOB
-                  CALL NZ, GPIOA_CALLBACK
+                  TEST s8, GPIOB_IRQ_MASK         ;GPIOB
+                  CALL NZ, GPIOB_CALLBACK
                   ; Check RS232 IRQ
                   TEST s8, TX_IRQ_MASK            ;RS232 TX
                   CALL NZ, TX_CALLBACK
@@ -604,4 +670,5 @@ DMA_CH3_CALLBACK:
                   CALL NZ, RX_CALLBACK
                   LOAD s8, 00
                   OUTPUT s8, ISR_VECTOR           ;Clean vector
+                  REGBANK A
                   RETURNI ENABLE

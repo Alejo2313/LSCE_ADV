@@ -55,7 +55,7 @@
 --  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 --   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 ------------------------------------------------------------------------------
--- _____Clk__20.00000______0.000______50.0______193.154____109.126
+-- _____clk__20.00000______0.000______50.0______193.154____109.126
 --
 ------------------------------------------------------------------------------
 -- Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -69,10 +69,10 @@ component clk_20Mhz
 port
  (-- Clock in ports
   -- Clock out ports
-  Clk          : out    std_logic;
+  clk          : out    std_logic;
   -- Status and control signals
   reset             : in     std_logic;
-  Clk_100Mhz           : in     std_logic
+  clk_100Mhz           : in     std_logic
  );
 end component;
 
@@ -83,10 +83,10 @@ end component;
 your_instance_name : clk_20Mhz
    port map ( 
   -- Clock out ports  
-   Clk => Clk,
+   clk => clk,
   -- Status and control signals                
    reset => reset,
    -- Clock in ports
-   Clk_100Mhz => Clk_100Mhz
+   clk_100Mhz => clk_100Mhz
  );
 -- INST_TAG_END ------ End INSTANTIATION Template ------------

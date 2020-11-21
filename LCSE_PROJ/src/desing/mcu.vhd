@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity MCU is
     Port ( Clk_100Mhz :   in STD_LOGIC;
-           Reset : in STD_LOGIC;
+           Reset_sys : in STD_LOGIC;
 --           TX    : out STD_LOGIC;
 --           RX    : in STD_LOGIC;
            anode         : out STD_LOGIC_VECTOR(7 downto 0);
@@ -247,8 +247,11 @@ architecture Behavioral of MCU is
     
    
     signal rdl       : std_logic;
+    signal reset       : std_logic;
     signal IRQV      : std_logic_vector (7 downto 0);
     signal IRQ_E     : std_logic;   
+    
+    
     
     
     signal GPIOA_IRQ, GPIOB_IRQ : std_logic;
@@ -305,16 +308,17 @@ begin
                 clk             => clk);
                        
                        
+   reset <=  Reset_sys;
                        
   program_rom: rom              
     generic map(C_FAMILY             => "7S",   --Family 'S6', 'V6' or '7S'
                 C_RAM_SIZE_KWORDS    => 4,      --Program size '1', '2' or '4'
-                C_JTAG_LOADER_ENABLE => 0)      --Include JTAG Loader when set to '1' 
+                C_JTAG_LOADER_ENABLE => 1)      --Include JTAG Loader when set to '1' 
                 
     port map(   address     => address,      
                 instruction => instruction,
                 enable      => bram_enable,
-                rdl         => kcpsm6_reset,
+                rdl         => rdl,
                 clk         => clk);                       
   
   

@@ -99,10 +99,10 @@ begin
     
  end process;
  
-disp_vector <=  mem_r(DREG01_offset)&
-                mem_r(DREG23_offset)&
+disp_vector <=  mem_r(DREG67_offset)&
                 mem_r(DREG45_offset)&
-                mem_r(DREG67_offset);
+                mem_r(DREG23_offset)&
+                mem_r(DREG01_offset);
 
 
 logic: process(     cnt_r, index_r, d_r, anode_r, mem_r, WE_s, 
@@ -110,10 +110,15 @@ logic: process(     cnt_r, index_r, d_r, anode_r, mem_r, WE_s,
 begin
     outBus_r    <= (others => 'Z');
     mem_n       <= mem_r;
-    cnt_n       <= cnt_r + 1;
+    
+    cnt_n       <= cnt_r;
     index_n     <= index_r;
     anode_n     <= (others => '1');
     d_n         <= d_r;
+    
+    if(mem_r(EN_offset)(7) = '1' ) then
+        cnt_n       <= cnt_r + 1;
+    end if;
     
     if(cnt_r = 50000) then
         index_n  <= index_r + 1;
@@ -121,9 +126,9 @@ begin
     end if;
 
     for k in 0 to 7 loop
-        if ( k = index_r) then
+        if ( k = index_r and mem_r(EN_offset)(7) = '1') then
             d_n <= disp_vector(4*k+3 downto 4*k);
-            anode_n(k) <= not ( mem_r(EN_offset)(7) and mem_r(IEN_offset)(TO_INTEGER(index_r)));
+            anode_n(k) <= not ( mem_r(IEN_offset)(TO_INTEGER(index_r) ));
         end if;
     end loop;
     
@@ -138,7 +143,7 @@ begin
 end process;
 
 
-anode       <= anode_r;  
+anode       <= anode_r ;  
 outBus_s    <= outBus_r;  
 out_display <= S; 
 

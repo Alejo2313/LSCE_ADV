@@ -15,7 +15,7 @@ architecture tb of tb_MCU is
 
     component MCU
         port (Clk_100Mhz   : in std_logic;
-              Reset : in std_logic;
+              Reset_sys : in std_logic;
 --              TX    : out std_logic;
 --              RX    : in std_logic;
               GPIOA : inout std_logic_vector (7 downto 0);
@@ -45,7 +45,7 @@ begin
 
     dut : MCU
     port map (Clk_100Mhz   => Clk,
-              Reset => Reset,
+              Reset_sys => Reset,
 --              TX    => TX,
 --              RX    => RX,
               GPIOA => GPIOA,
@@ -76,7 +76,7 @@ begin
         
         GPIOA(1) <= '1';
  
-        send_string("GCA05"&lf, GPIOA(1));  -- CONFIG GPIOA0 AS AF OUTPUT
+     --   send_string("GCA05"&lf, GPIOA(1));  -- CONFIG GPIOA0 AS AF OUTPUT
         send_string("TS12"&lf, GPIOA(1));   -- SET TEMPERATURE TO 12º
         send_string("TG"&lf, GPIOA(1));     -- GET TEMPERATURE
         send_string("RGD0"&lf, GPIOA(1));   -- READ REGISTER 0xD0 (RS232 CONF)

@@ -56,7 +56,7 @@
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// _____Clk__20.00000______0.000______50.0______193.154____109.126
+// _____clk__20.00000______0.000______50.0______193.154____109.126
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -69,18 +69,18 @@ module clk_20Mhz_clk_wiz
 
  (// Clock in ports
   // Clock out ports
-  output        Clk,
+  output        clk,
   // Status and control signals
   input         reset,
-  input         Clk_100Mhz
+  input         clk_100Mhz
  );
   // Input buffering
   //------------------------------------
-wire Clk_100Mhz_clk_20Mhz;
+wire clk_100Mhz_clk_20Mhz;
 wire clk_in2_clk_20Mhz;
   IBUF clkin1_ibufg
-   (.O (Clk_100Mhz_clk_20Mhz),
-    .I (Clk_100Mhz));
+   (.O (clk_100Mhz_clk_20Mhz),
+    .I (clk_100Mhz));
 
 
 
@@ -92,7 +92,7 @@ wire clk_in2_clk_20Mhz;
   //    * Unused inputs are tied off
   //    * Unused outputs are labeled unused
 
-  wire        Clk_clk_20Mhz;
+  wire        clk_clk_20Mhz;
   wire        clk_out2_clk_20Mhz;
   wire        clk_out3_clk_20Mhz;
   wire        clk_out4_clk_20Mhz;
@@ -140,7 +140,7 @@ wire clk_in2_clk_20Mhz;
    (
     .CLKFBOUT            (clkfbout_clk_20Mhz),
     .CLKFBOUTB           (clkfboutb_unused),
-    .CLKOUT0             (Clk_clk_20Mhz),
+    .CLKOUT0             (clk_clk_20Mhz),
     .CLKOUT0B            (clkout0b_unused),
     .CLKOUT1             (clkout1_unused),
     .CLKOUT1B            (clkout1b_unused),
@@ -153,7 +153,7 @@ wire clk_in2_clk_20Mhz;
     .CLKOUT6             (clkout6_unused),
      // Input clock control
     .CLKFBIN             (clkfbout_buf_clk_20Mhz),
-    .CLKIN1              (Clk_100Mhz_clk_20Mhz),
+    .CLKIN1              (clk_100Mhz_clk_20Mhz),
     .CLKIN2              (1'b0),
      // Tied to always select the primary input clock
     .CLKINSEL            (1'b1),
@@ -193,8 +193,8 @@ wire clk_in2_clk_20Mhz;
 
 
   BUFG clkout1_buf
-   (.O   (Clk),
-    .I   (Clk_clk_20Mhz));
+   (.O   (clk),
+    .I   (clk_clk_20Mhz));
 
 
 
