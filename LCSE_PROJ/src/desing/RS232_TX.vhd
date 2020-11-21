@@ -69,7 +69,7 @@ FFs: process ( Clk, Reset ) is
 begin
     -- Async reset
     if ( Reset = '1' ) then
-        config_r    <= (others =>  '0');
+ --       config_r    <= (others =>  '0');
         counter_reg <= (others => '0');
         state_reg   <= IDLE;
         tx_reg      <= '1';
@@ -80,7 +80,7 @@ begin
         
     -- clock event       
     elsif ( Clk'event and Clk = '1' ) then 
-        config_r    <= config_n;
+     --   config_r    <= config_n;
         counter_reg <= counter_reg_n;
         state_reg   <= state_reg_n;
         tx_reg      <= tx_reg_n;
@@ -94,7 +94,7 @@ end process;
 
 
 -- Next state logic
-NSL: process (bit_reg, start, counter_reg, state_reg , pulse_w,midcnt_r,config_r) is
+NSL: process (bit_reg, start, counter_reg, state_reg , pulse_w,midcnt_r,conf) is
 
 begin
     -- Avoid latches
@@ -123,11 +123,11 @@ begin
             end if;
             
         when STOP_BIT   =>
-            if (config_r(3 downto 2) = "00" and midcnt_r = "010") then
+            if (conf(3 downto 2) = "00" and midcnt_r = "010") then
                 state_reg_n <= IDLE;
-            elsif (config_r(3 downto 2) = "01" and midcnt_r = "011") then
+            elsif (conf(3 downto 2) = "01" and midcnt_r = "011") then
                 state_reg_n <= IDLE;
-            elsif(config_r(3 downto 2) = "10" and midcnt_r = "100") then
+            elsif(conf(3 downto 2) = "10" and midcnt_r = "100") then
                 state_reg_n <= IDLE;
             else
                 state_reg_n <= STOP_BIT;
@@ -138,11 +138,11 @@ begin
 end process;
 
 
-logic: process (eot_reg, tx_reg, state_reg, start, data, counter_reg, bit_reg, data_reg,config_r,pulse_w,midcnt_r,Conf) is
+logic: process (eot_reg, tx_reg, state_reg, start, data, counter_reg, bit_reg, data_reg,conf,pulse_w,midcnt_r,Conf) is
 
 begin
     -- Avoid latches 
-    config_n        <= config_r;
+ --   config_n        <= config_r;
     counter_reg_n   <= counter_reg + 1;
     eot_reg_n       <= eot_reg;
     data_reg_n      <= data_reg;
@@ -198,9 +198,9 @@ begin
 end process;
 
 -- BAUD RATE CONFIGURATION
-pulse_w <= TO_UNSIGNED(174,13)   when config_r(4 downto 3) = "00" else  -- 4800
-           TO_UNSIGNED(521,13)   when config_r(4 downto 3) = "01" else  -- 9600
-           TO_UNSIGNED(2084,13)  when config_r(4 downto 3) = "10" else  -- 38400
+pulse_w <= TO_UNSIGNED(174,13)   when conf(4 downto 3) = "00" else  -- 4800
+           TO_UNSIGNED(521,13)   when conf(4 downto 3) = "01" else  -- 9600
+           TO_UNSIGNED(2084,13)  when conf(4 downto 3) = "10" else  -- 38400
            TO_UNSIGNED(4167,13);                                        -- 115200
 
 -- output

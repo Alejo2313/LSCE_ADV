@@ -63,7 +63,7 @@ FFs: process ( clk, reset ) is
 begin
     if ( Reset = '1' ) then
         state_reg       <= IDLE;
-        config_r        <= ( others => '0' );
+   --     config_r        <= ( others => '0' );
         counter_reg     <= ( others => '0' );
         midcnt_r        <= ( others => '0' );
         Valid_out_reg   <= '0';
@@ -73,7 +73,7 @@ begin
         
     elsif ( Clk'event and Clk = '1' ) then
         state_reg       <= state_reg_n;
-        config_r        <= config_n;
+   --     config_r        <= config_n;
         counter_reg     <= counter_reg_n;
         midcnt_r        <= midcnt_n;
         Valid_out_reg   <= Valid_out_reg_n;
@@ -85,7 +85,7 @@ begin
 
 end process;
 
-NSL: process ( state_reg, LineRD_in, counter_reg, bit_reg,pulse_w, midcnt_r, config_r ) is
+NSL: process ( state_reg, LineRD_in, counter_reg, bit_reg,pulse_w, midcnt_r, conf) is
 
 begin
     state_reg_n <= state_reg;
@@ -106,11 +106,11 @@ begin
             end if;
         
         when STOP_BIT =>
-            if (config_r(3 downto 2) = "00" and midcnt_r = "010") then
+            if (conf(3 downto 2) = "00" and midcnt_r = "010") then
                 state_reg_n <= IDLE;
-            elsif (config_r(3 downto 2) = "01" and midcnt_r = "011") then
+            elsif (conf(3 downto 2) = "01" and midcnt_r = "011") then
                 state_reg_n <= IDLE;
-            elsif(config_r(3 downto 2) = "10" and midcnt_r = "100") then
+            elsif(conf(3 downto 2) = "10" and midcnt_r = "100") then
                 state_reg_n <= IDLE;
             else
                 state_reg_n <= STOP_BIT;
@@ -120,7 +120,7 @@ begin
 end process;
 
 
-LOGIC: process ( LineRD_in, code_out_reg, state_reg, counter_reg, bit_reg,config_r,pulse_w,midcnt_r,Conf ) is
+LOGIC: process ( LineRD_in, code_out_reg, state_reg, counter_reg, bit_reg,conf,pulse_w,midcnt_r,Conf ) is
 
 begin
     counter_reg_n   <= counter_reg + 1;
@@ -128,7 +128,7 @@ begin
     code_out_reg_n  <= code_out_reg;
     Valid_out_reg_n <= '0';
     store_out_reg_n <= '0';
-    config_n        <= config_r;
+   -- config_n        <= config_r;
     midcnt_n        <= midcnt_r;
     
     case state_reg is 
@@ -176,9 +176,9 @@ begin
 end process;
 
 -- BAUD RATE CONFIGURATION
-pulse_w <= TO_UNSIGNED(174,13)   when config_r(4 downto 3) = "00" else  -- 4800
-           TO_UNSIGNED(521,13)   when config_r(4 downto 3) = "01" else  -- 9600
-           TO_UNSIGNED(2084,13)  when config_r(4 downto 3) = "10" else  -- 38400
+pulse_w <= TO_UNSIGNED(174,13)   when conf(4 downto 3) = "00" else  -- 4800
+           TO_UNSIGNED(521,13)   when conf(4 downto 3) = "01" else  -- 9600
+           TO_UNSIGNED(2084,13)  when conf(4 downto 3) = "10" else  -- 38400
            TO_UNSIGNED(4167,13);                                        -- 115200
 
 -- Output
